@@ -80,11 +80,7 @@ export HISTSIZE=1000 LESSHISTFILE=/dev/null HISTFILE=/dev/null
 EOF
 
 cat << EOF > ${MNTDIR}/etc/stack-install.conf
-APPS="mariadb-server python3-pymysql \
-rabbitmq-server \
-memcached python3-memcache \
-etcd \
-apache2 libapache2-mod-wsgi"
+APPS="mariadb-server python3-pymysql rabbitmq-server"
 EOF
 
 cat << EOF > ${MNTDIR}/etc/stack-install.conf.bak
