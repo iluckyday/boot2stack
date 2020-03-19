@@ -189,4 +189,4 @@ qemu-img convert -f raw -c -O qcow2 $WORKDIR/disk.raw /dev/shm/stack.img
 echo "Compressed image size:"
 ls -lh /dev/shm/stack.img
 
-exit 1
+exit 0
