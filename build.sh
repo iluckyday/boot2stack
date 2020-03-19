@@ -92,6 +92,7 @@ ConditionFileNotEmpty=/etc/stack-install.conf
 
 [Service]
 Type=oneshot
+StandardOutput=journal+console
 Environment=DEBIAN_FRONTEND=noninteractive
 EnvironmentFile=/etc/stack-install.conf
 ExecStart=/usr/bin/apt update
@@ -146,6 +147,7 @@ do
 	ln -sf /etc/systemd/system/$i ${MNTDIR}/etc/systemd/system/multi-user.target.wants/$i
 done
 
+chroot $MNTDIR ssh-keygen -A
 sync ${MNTDIR}
 sleep 1
 umount ${MNTDIR}
