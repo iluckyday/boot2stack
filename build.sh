@@ -98,7 +98,7 @@ cat << "EOF" > ${MNTDIR}/etc/systemd/system/stack-install.service
 [Unit]
 Description=stack install script
 After=network.target
-SuccessAction=poweroff
+SuccessAction=poweroff-force
 
 [Service]
 Type=oneshot
