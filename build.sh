@@ -91,13 +91,14 @@ glance \
 placement-api \
 nova-api nova-conductor nova-novncproxy nova-scheduler \
 neutron-server neutron-linuxbridge-agent neutron-dhcp-agent neutron-metadata-agent neutron-l3-agent"
+DISABLE_SERVICES="etcd"
 EOF
 
 cat << "EOF" > ${MNTDIR}/etc/systemd/system/stack-install.service
 [Unit]
 Description=stack install script
 After=network.target
-ConditionFileNotEmpty=/etc/stack-install.conf
+SuccessAction=poweroff
 
 [Service]
 Type=oneshot
@@ -106,6 +107,9 @@ Environment=DEBIAN_FRONTEND=noninteractive
 EnvironmentFile=/etc/stack-install.conf
 ExecStart=/usr/bin/apt update
 ExecStart=/usr/bin/apt install -y "${APPS}"
+ExecStart=/usr/bin/systemctl daemon-reload
+ExecStart=/usr/bin/systemctl disable "${DISABLE_SERVICES}"
+ExecStart=/usr/bin/apt remove --purge ifupdown
 ExecStartPost=/bin/rm -f /etc/systemd/system/stack-install.service /etc/systemd/system/multi-user.target.wants/stack-install.service /etc/stack-install.conf
 RemainAfterExit=true
 EOF
@@ -124,10 +128,15 @@ EOF
 cat << "EOF" > ${MNTDIR}/usr/sbin/stack-init.sh
 #!/bin/sh
 
+dhcp_nic=$(basename /sys/class/net/en*20)
+if [ -z "$dhcp_nic" ]
+then
+	exit
+fi
+
 ii=0
 while [ $ii -lt 5 ]; do
 ((ii++))
-dhcp_nic=$(ls -d /sys/class/net/en*20 | awk -F'/' '{print $5}')
 udhcpc -n -q -f -i $dhcp_nic > /dev/null 2>&1 || continue
 curl -skLo /tmp/run.sh http://router/run.sh
 if [ $? -eq 0 ]; then
@@ -140,7 +149,7 @@ done
 EOF
 chmod +x ${MNTDIR}/usr/sbin/stack-init.sh
 
-sed -i '/src/d' ${MNTDIR}/etc/apt/sources.list
+echo 'deb http://deb.debian.org/debian sid main contrib non-free' > ${MNTDIR}/etc/apt/sources.list
 rm -rf ${MNTDIR}/etc/hostname ${MNTDIR}/etc/resolv.conf ${MNTDIR}/tmp/apt ${MNTDIR}/usr/share/doc ${MNTDIR}/usr/share/man ${MNTDIR}/tmp/* ${MNTDIR}/var/tmp/* ${MNTDIR}/var/cache/apt/*
 find ${MNTDIR}/ ! -path /proc ! -path /sys -type d -name __pycache__ -exec rm -rf {} + || true
 find ${MNTDIR}/usr/share/locale -mindepth 1 -maxdepth 1 ! -name 'en' -exec rm -rf {} + || true
