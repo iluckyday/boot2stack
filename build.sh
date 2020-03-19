@@ -108,8 +108,8 @@ EnvironmentFile=/etc/stack-install.conf
 ExecStart=/usr/bin/apt update
 ExecStart=/usr/bin/apt install -y "$APPS"
 ExecStart=/usr/bin/systemctl daemon-reload
-ExecStart=/usr/bin/systemctl disable "${DISABLE_SERVICES}"
-ExecStart=/usr/bin/apt remove --purge ifupdown
+ExecStart=/usr/bin/systemctl disable "$DISABLE_SERVICES"
+ExecStart=/usr/bin/apt remove --purge -y ifupdown
 ExecStartPost=/bin/rm -f /etc/systemd/system/stack-install.service /etc/systemd/system/multi-user.target.wants/stack-install.service /etc/stack-install.conf
 RemainAfterExit=true
 EOF
