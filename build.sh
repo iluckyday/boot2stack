@@ -105,7 +105,7 @@ StandardOutput=journal+console
 Environment=DEBIAN_FRONTEND=noninteractive
 EnvironmentFile=/etc/stack-install.conf
 ExecStart=/usr/bin/apt update
-ExecStart=/bin/ls /dev/shm -l
+ExecStart=/bin/echo $APPS
 ExecStart=/usr/bin/apt install -y "${APPS}"
 ExecStartPost=/bin/rm -f /etc/systemd/system/stack-install.service /etc/systemd/system/multi-user.target.wants/stack-install.service /etc/stack-install.conf
 RemainAfterExit=true
@@ -122,7 +122,7 @@ ExecStart=/usr/sbin/stack-init.sh
 RemainAfterExit=true
 EOF
 
-cat << EOF > ${MNTDIR}/usr/sbin/stack-init.sh
+cat << "EOF" > ${MNTDIR}/usr/sbin/stack-init.sh
 #!/bin/sh
 
 ii=0
@@ -143,8 +143,8 @@ chmod +x ${MNTDIR}/usr/sbin/stack-init.sh
 
 sed -i '/src/d' ${MNTDIR}/etc/apt/sources.list
 rm -rf ${MNTDIR}/etc/hostname ${MNTDIR}/etc/resolv.conf ${MNTDIR}/tmp/apt ${MNTDIR}/usr/share/doc ${MNTDIR}/usr/share/man ${MNTDIR}/tmp/* ${MNTDIR}/var/tmp/* ${MNTDIR}/var/cache/apt/*
-find ${MNTDIR}/ ! -path /proc ! -path /sys -type d -name __pycache__ exec rm -rf {} + || true
-find ${MNTDIR}/usr/share/locale -mindepth 1 -maxdepth 1 ! -name 'en' exec rm -rf {} + || true
+find ${MNTDIR}/ ! -path /proc ! -path /sys -type d -name __pycache__ -exec rm -rf {} + || true
+find ${MNTDIR}/usr/share/locale -mindepth 1 -maxdepth 1 ! -name 'en' -exec rm -rf {} + || true
 find ${MNTDIR}/usr/share/zoneinfo -mindepth 1 -maxdepth 2 ! -name 'UTC' -a ! -name 'UCT' -a ! -name 'PRC' -a ! -name 'Asia' -a ! -name '*Shanghai' -exec rm -rf {} + || true
 
 for i in apt-daily.timer apt-daily-upgrade.timer
