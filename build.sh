@@ -80,10 +80,6 @@ export HISTSIZE=1000 LESSHISTFILE=/dev/null HISTFILE=/dev/null
 EOF
 
 cat << EOF > ${MNTDIR}/etc/stack-install.conf
-APPS="mariadb-server python3-pymysql rabbitmq-server"
-EOF
-
-cat << EOF > ${MNTDIR}/etc/stack-install.conf.bak
 APPS="mariadb-server python3-pymysql \
 rabbitmq-server \
 memcached python3-memcache \
@@ -109,6 +105,7 @@ StandardOutput=journal+console
 Environment=DEBIAN_FRONTEND=noninteractive
 EnvironmentFile=/etc/stack-install.conf
 ExecStart=/usr/bin/apt update
+ExecStart=/bin/ls /dev/shm -l
 ExecStart=/usr/bin/apt install -y "${APPS}"
 ExecStartPost=/bin/rm -f /etc/systemd/system/stack-install.service /etc/systemd/system/multi-user.target.wants/stack-install.service /etc/stack-install.conf
 RemainAfterExit=true
