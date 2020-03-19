@@ -105,7 +105,6 @@ StandardOutput=journal+console
 Environment=DEBIAN_FRONTEND=noninteractive
 EnvironmentFile=/etc/stack-install.conf
 ExecStart=/usr/bin/apt update
-ExecStart=/bin/echo $APPS
 ExecStart=/usr/bin/apt install -y "${APPS}"
 ExecStartPost=/bin/rm -f /etc/systemd/system/stack-install.service /etc/systemd/system/multi-user.target.wants/stack-install.service /etc/stack-install.conf
 RemainAfterExit=true
@@ -164,7 +163,7 @@ umount ${MNTDIR}
 sleep 1
 losetup -d $loopx
 
-qemu-system-x86_64 -name devstack-building -machine q35,accel=kvm -cpu host -smp "$(nproc)" -m 6G -nographic -object rng-random,filename=/dev/urandom,id=rng0 -device virtio-rng-pci,rng=rng0 -boot c -drive file=$WORKDIR/disk.raw,if=virtio,format=raw,media=disk -netdev user,id=n0,ipv6=off -device virtio-net,netdev=n0
+#qemu-system-x86_64 -name devstack-building -machine q35,accel=kvm -cpu host -smp "$(nproc)" -m 6G -nographic -object rng-random,filename=/dev/urandom,id=rng0 -device virtio-rng-pci,rng=rng0 -boot c -drive file=$WORKDIR/disk.raw,if=virtio,format=raw,media=disk -netdev user,id=n0,ipv6=off -device virtio-net,netdev=n0
 
 while pgrep -f "devstack-building" >/dev/null
 do
@@ -176,8 +175,7 @@ echo "Original image size:"
 ls -lh $WORKDIR/disk.raw
 
 echo Converting ...
-qemu-img convert -f raw -c -O qcow2 $WORKDIR/disk.raw /dev/shm/devstack.cmp.img
+qemu-img convert -f raw -c -O qcow2 $WORKDIR/disk.raw /dev/shm/stack.img
 
 echo "Compressed image size:"
-ls -lh /dev/shm/devstack.cmp.img
-exit 1
+ls -lh /dev/shm/stack.img

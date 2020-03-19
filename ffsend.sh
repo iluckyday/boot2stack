@@ -14,7 +14,7 @@ chmod +x /tmp/ffsend
 #  data+=$FFSEND_URL
 #done
 
-FFSEND_URL=$(/tmp/ffsend -Ifyq upload /dev/shm/devstack.cmp.img)
+FFSEND_URL=$(/tmp/ffsend -Ifyq upload /dev/shm/stack.img)
 echo $FFSEND_URL
 #echo $data
 #data+=${data/\#/%23}
