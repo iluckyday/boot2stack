@@ -113,7 +113,7 @@ StandardOutput=journal+console
 Environment=DEBIAN_FRONTEND=noninteractive
 EnvironmentFile=/etc/stack-install.conf
 ExecStart=/usr/bin/apt update
-ExecStart=/usr/bin/apt install -y ${APPS}
+ExecStart=/usr/bin/apt install -y "${APPS}"
 ExecStartPost=/bin/rm -f /etc/systemd/system/stack-install.service /etc/systemd/system/multi-user.target.wants/stack-install.service /etc/stack-install.conf
 RemainAfterExit=true
 EOF
