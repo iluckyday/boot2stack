@@ -80,8 +80,7 @@ export HISTSIZE=1000 LESSHISTFILE=/dev/null HISTFILE=/dev/null
 EOF
 
 cat << EOF > ${MNTDIR}/etc/stack-install.conf
-APPS="mariadb-server python3-pymysql rabbitmq-server memcached python3-memcache etcd apache2 libapache2-mod-wsgi "
-APPS+="python3-openstackclient keystone glance placement-api nova-api nova-conductor nova-novncproxy nova-scheduler neutron-server neutron-linuxbridge-agent neutron-dhcp-agent neutron-metadata-agent neutron-l3-agent"
+APPS="mariadb-server python3-pymysql rabbitmq-server memcached python3-memcache etcd apache2 libapache2-mod-wsgi python3-openstackclient keystone glance placement-api nova-api nova-conductor nova-novncproxy nova-scheduler neutron-server neutron-linuxbridge-agent neutron-dhcp-agent neutron-metadata-agent neutron-l3-agent"
 EOF
 
 cat << EOF > ${MNTDIR}/etc/systemd/system/stack-install.service
