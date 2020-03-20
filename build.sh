@@ -324,7 +324,7 @@ qemu-system-x86_64 -name stack-u-building -daemonize -machine q35,accel=kvm -cpu
 
 #qemu-system-x86_64 -name stack-c-building -machine q35,accel=kvm -cpu host -smp "$(nproc)" -m 4G -nographic -object rng-random,filename=/dev/urandom,id=rng0 -device virtio-rng-pci,rng=rng0 -boot c -drive file=$WORKDIR/c.raw,if=virtio,format=raw,media=disk -netdev user,id=n0,ipv6=off -device virtio-net,netdev=n0
 #qemu-system-x86_64 -name stack-u-building -machine q35,accel=kvm -cpu host -smp "$(nproc)" -m 4G -nographic -object rng-random,filename=/dev/urandom,id=rng0 -device virtio-rng-pci,rng=rng0 -boot c -drive file=$WORKDIR/u.raw,if=virtio,format=raw,media=disk -netdev user,id=n0,ipv6=off -device virtio-net,netdev=n0
-while pgrep -f "systemd-journald" >/dev/null || pgrep -f "systemd-udevd" >/dev/null
+while pgrep -f "stack-c-building" >/dev/null || pgrep -f "stack-u-building" >/dev/null
 do
 	echo Building ...
 	sleep 300
