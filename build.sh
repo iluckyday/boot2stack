@@ -32,16 +32,31 @@ tune2fs -O '^has_journal' ${loopux}p1
 mount ${loopux}p1 ${MNTUDIR}
 sleep 1
 
-cat << EOF >> {${MNTCDIR},${MNTUDIR}}/etc/fstab
+cat << EOF >> ${MNTCDIR}/etc/fstab
+tmpfs             /tmp     tmpfs mode=1777,size=90%            0 0
+EOF
+cat << EOF >> ${MNTUDIR}/etc/fstab
 tmpfs             /tmp     tmpfs mode=1777,size=90%            0 0
 EOF
 
-mkdir -p {${MNTCDIR},${MNTUDIR}}/root/.ssh
-echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDyuzRtZAyeU3VGDKsGk52rd7b/rJ/EnT8Ce2hwWOZWp" >> {${MNTCDIR},${MNTUDIR}}/root/.ssh/authorized_keys
-chmod 600 {${MNTCDIR},${MNTUDIR}}/root/.ssh/authorized_keys
+mkdir -p ${MNTCDIR}/root/.ssh
+echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDyuzRtZAyeU3VGDKsGk52rd7b/rJ/EnT8Ce2hwWOZWp" >> ${MNTCDIR}/root/.ssh/authorized_keys
+chmod 600 ${MNTCDIR}/root/.ssh/authorized_keys
+mkdir -p ${MNTUDIR}/root/.ssh
+echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDyuzRtZAyeU3VGDKsGk52rd7b/rJ/EnT8Ce2hwWOZWp" >> ${MNTUDIR}/root/.ssh/authorized_keys
+chmod 600 ${MNTUDIR}/root/.ssh/authorized_keys
 
-mkdir -p {${MNTCDIR},${MNTUDIR}}/etc/apt/apt.conf.d
-cat << EOF > {${MNTCDIR},${MNTUDIR}}/etc/apt/apt.conf.d/99-freedisk
+mkdir -p ${MNTCDIR}/etc/apt/apt.conf.d
+cat << EOF > ${MNTCDIR}/etc/apt/apt.conf.d/99-freedisk
+APT::Authentication "0";
+APT::Get::AllowUnauthenticated "1";
+Dir::Cache "/dev/shm";
+Dir::State::lists "/dev/shm";
+Dir::Log "/dev/shm";
+DPkg::Post-Invoke {"/bin/rm -f /dev/shm/archives/*.deb || true";};
+EOF
+mkdir -p ${MNTUDIR}/etc/apt/apt.conf.d
+cat << EOF > ${MNTUDIR}/etc/apt/apt.conf.d/99-freedisk
 APT::Authentication "0";
 APT::Get::AllowUnauthenticated "1";
 Dir::Cache "/dev/shm";
@@ -50,8 +65,19 @@ Dir::Log "/dev/shm";
 DPkg::Post-Invoke {"/bin/rm -f /dev/shm/archives/*.deb || true";};
 EOF
 
-mkdir -p {${MNTCDIR},${MNTUDIR}}/etc/dpkg/dpkg.cfg.d
-cat << EOF > {${MNTCDIR},${MNTUDIR}}/etc/dpkg/dpkg.cfg.d/99-nodoc
+mkdir -p ${MNTCDIR}/etc/dpkg/dpkg.cfg.d
+cat << EOF > ${MNTCDIR}/etc/dpkg/dpkg.cfg.d/99-nodoc
+path-exclude /usr/share/doc/*
+path-exclude /usr/share/man/*
+path-exclude /usr/share/groff/*
+path-exclude /usr/share/info/*
+path-exclude /usr/share/lintian/*
+path-exclude /usr/share/linda/*
+path-exclude /usr/share/locale/*
+path-include /usr/share/locale/en*
+EOF
+mkdir -p ${MNTUDIR}/etc/dpkg/dpkg.cfg.d
+cat << EOF > ${MNTUDIR}/etc/dpkg/dpkg.cfg.d/99-nodoc
 path-exclude /usr/share/doc/*
 path-exclude /usr/share/man/*
 path-exclude /usr/share/groff/*
@@ -62,32 +88,56 @@ path-exclude /usr/share/locale/*
 path-include /usr/share/locale/en*
 EOF
 
-mkdir -p {${MNTCDIR},${MNTUDIR}}/etc/systemd/journald.conf.d
-cat << EOF > {${MNTCDIR},${MNTUDIR}}/etc/systemd/journald.conf.d/storage.conf
+mkdir -p ${MNTCDIR}/etc/systemd/journald.conf.d
+cat << EOF > ${MNTCDIR}/etc/systemd/journald.conf.d/storage.conf
+[Journal]
+Storage=volatile
+EOF
+mkdir -p ${MNTUDIR}/etc/systemd/journald.conf.d
+cat << EOF > ${MNTUDIR}/etc/systemd/journald.conf.d/storage.conf
 [Journal]
 Storage=volatile
 EOF
 
-mkdir -p {${MNTCDIR},${MNTUDIR}}/etc/systemd/system-environment-generators
-cat << EOF > {${MNTCDIR},${MNTUDIR}}/etc/systemd/system-environment-generators/20-python
+mkdir -p ${MNTCDIR}/etc/systemd/system-environment-generators
+cat << EOF > ${MNTCDIR}/etc/systemd/system-environment-generators/20-python
 #!/bin/sh
 echo 'PYTHONDONTWRITEBYTECODE=1'
 echo 'PYTHONHISTFILE=/dev/null'
 EOF
-chmod +x {${MNTCDIR},${MNTUDIR}}/etc/systemd/system-environment-generators/20-python
+chmod +x ${MNTCDIR}/etc/systemd/system-environment-generators/20-python
+mkdir -p ${MNTUDIR}/etc/systemd/system-environment-generators
+cat << EOF > ${MNTUDIR}/etc/systemd/system-environment-generators/20-python
+#!/bin/sh
+echo 'PYTHONDONTWRITEBYTECODE=1'
+echo 'PYTHONHISTFILE=/dev/null'
+EOF
+chmod +x ${MNTUDIR}/etc/systemd/system-environment-generators/20-python
 
-cat << EOF > {${MNTCDIR},${MNTUDIR}}/etc/profile.d/python.sh
+cat << EOF > ${MNTCDIR}/etc/profile.d/python.sh
+#!/bin/sh
+export PYTHONDONTWRITEBYTECODE=1 PYTHONHISTFILE=/dev/null
+EOF
+cat << EOF > ${MNTUDIR}/etc/profile.d/python.sh
 #!/bin/sh
 export PYTHONDONTWRITEBYTECODE=1 PYTHONHISTFILE=/dev/null
 EOF
 
-cat << EOF > {${MNTCDIR},${MNTUDIR}}/etc/pip.conf
+cat << EOF > ${MNTCDIR}/etc/pip.conf
+[global]
+download-cache=/tmp
+cache-dir=/tmp
+EOF
+cat << EOF > ${MNTUDIR}/etc/pip.conf
 [global]
 download-cache=/tmp
 cache-dir=/tmp
 EOF
 
-cat << EOF > {${MNTCDIR},${MNTUDIR}}/root/.bashrc
+cat << EOF > ${MNTCDIR}/root/.bashrc
+export HISTSIZE=1000 LESSHISTFILE=/dev/null HISTFILE=/dev/null
+EOF
+cat << EOF > ${MNTUDIR}/root/.bashrc
 export HISTSIZE=1000 LESSHISTFILE=/dev/null HISTFILE=/dev/null
 EOF
 
@@ -131,6 +181,7 @@ find / ! -path /proc ! -path /sys -type d -name __pycache__ -exec rm -rf {} + ||
 find /usr/share/locale -mindepth 1 -maxdepth 1 ! -name 'en' -exec rm -rf {} + || true
 find /usr/share/zoneinfo -mindepth 1 -maxdepth 2 ! -name 'UTC' -a ! -name 'UCT' -a ! -name 'PRC' -a ! -name 'Asia' -a ! -name '*Shanghai' -exec rm -rf {} + || true
 EOF
+chmod +x ${MNTCDIR}/usr/sbin/stack-install.sh
 
 cat << "EOF" > ${MNTUDIR}/usr/sbin/stack-install.sh
 #!/bin/sh
@@ -153,9 +204,21 @@ find / ! -path /proc ! -path /sys -type d -name __pycache__ -exec rm -rf {} + ||
 find /usr/share/locale -mindepth 1 -maxdepth 1 ! -name 'en' -exec rm -rf {} + || true
 find /usr/share/zoneinfo -mindepth 1 -maxdepth 2 ! -name 'UTC' -a ! -name 'UCT' -a ! -name 'PRC' -a ! -name 'Asia' -a ! -name '*Shanghai' -exec rm -rf {} + || true
 EOF
-chmod +x {${MNTCDIR},${MNTUDIR}}/usr/sbin/stack-install.sh
+chmod +x ${MNTUDIR}/usr/sbin/stack-install.sh
 
-cat << "EOF" > {${MNTCDIR},${MNTUDIR}}/etc/systemd/system/stack-install.service
+cat << "EOF" > ${MNTCDIR}/etc/systemd/system/stack-install.service
+[Unit]
+Description=stack install script
+After=network.target
+SuccessAction=poweroff-force
+
+[Service]
+Type=oneshot
+StandardOutput=journal+console
+ExecStart=/usr/sbin/stack-install.sh
+ExecStartPost=/bin/rm -f /etc/systemd/system/stack-install.service /etc/systemd/system/multi-user.target.wants/stack-install.service /usr/sbin/stack-install.sh
+EOF
+cat << "EOF" > ${MNTUDIR}/etc/systemd/system/stack-install.service
 [Unit]
 Description=stack install script
 After=network.target
@@ -168,7 +231,17 @@ ExecStart=/usr/sbin/stack-install.sh
 ExecStartPost=/bin/rm -f /etc/systemd/system/stack-install.service /etc/systemd/system/multi-user.target.wants/stack-install.service /usr/sbin/stack-install.sh
 EOF
 
-cat << EOF > {${MNTCDIR},${MNTUDIR}}/etc/systemd/system/stack-init.service
+cat << EOF > ${MNTCDIR}/etc/systemd/system/stack-init.service
+[Unit]
+Description=stack init script
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/stack-init.sh
+RemainAfterExit=true
+EOF
+cat << EOF > ${MNTUDIR}/etc/systemd/system/stack-init.service
 [Unit]
 Description=stack init script
 After=network.target
@@ -179,7 +252,7 @@ ExecStart=/usr/sbin/stack-init.sh
 RemainAfterExit=true
 EOF
 
-cat << "EOF" > {${MNTCDIR},${MNTUDIR}}/usr/sbin/stack-init.sh
+cat << "EOF" > ${MNTCDIR}/usr/sbin/stack-init.sh
 #!/bin/sh
 
 dhcp_nic=$(basename /sys/class/net/en*20)
@@ -201,19 +274,47 @@ done
 
 [ -r /tmp/run.sh ] && source /tmp/run.sh && rm -f /tmp/run.sh || exit
 EOF
-chmod +x {${MNTCDIR},${MNTUDIR}}/usr/sbin/stack-init.sh
+chmod +x ${MNTCDIR}/usr/sbin/stack-init.sh
+cat << "EOF" > ${MNTUDIR}/usr/sbin/stack-init.sh
+#!/bin/sh
 
-echo 'deb http://deb.debian.org/debian sid main contrib non-free' > {${MNTCDIR},${MNTUDIR}}/etc/apt/sources.list
+dhcp_nic=$(basename /sys/class/net/en*20)
+if [ -z "$dhcp_nic" ]
+then
+	exit
+fi
+
+ii=0
+while [ $ii -lt 5 ]; do
+((ii++))
+udhcpc -n -q -f -i $dhcp_nic > /dev/null 2>&1 || continue
+curl -skLo /tmp/run.sh http://router/run.sh
+if [ $? -eq 0 ]; then
+	break
+fi
+sleep 1
+done
+
+[ -r /tmp/run.sh ] && source /tmp/run.sh && rm -f /tmp/run.sh || exit
+EOF
+chmod +x ${MNTUDIR}/usr/sbin/stack-init.sh
+
+echo 'deb http://deb.debian.org/debian sid main contrib non-free' > ${MNTCDIR}/etc/apt/sources.list
+echo 'deb http://deb.debian.org/debian sid main contrib non-free' > ${MNTUDIR}/etc/apt/sources.list
 
 for i in stack-install.service stack-init.service
 do
-	ln -sf /etc/systemd/system/$i {${MNTCDIR},${MNTUDIR}}/etc/systemd/system/multi-user.target.wants/$i
+	ln -sf /etc/systemd/system/$i ${MNTCDIR}/etc/systemd/system/multi-user.target.wants/$i
+	ln -sf /etc/systemd/system/$i ${MNTUDIR}/etc/systemd/system/multi-user.target.wants/$i
 done
 
-chroot {${MNTCDIR},${MNTUDIR}} ssh-keygen -A
-sync {${MNTCDIR},${MNTUDIR}}
+chroot ${MNTCDIR} ssh-keygen -A
+chroot ${MNTUDIR} ssh-keygen -A
+sync ${MNTCDIR}
+sync ${MNTUDIR}
 sleep 1
-umount {${MNTCDIR},${MNTUDIR}}
+umount ${MNTCDIR}
+umount ${MNTUDIR}
 sleep 1
 losetup -d {$loopcx,$loopux}
 
