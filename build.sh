@@ -153,9 +153,10 @@ apache2 libapache2-mod-wsgi \
 python3-openstackclient \
 keystone \
 glance \
-placement-api \
+#placement-api \
 nova-api nova-conductor nova-novncproxy nova-scheduler \
 neutron-server neutron-linuxbridge-agent neutron-dhcp-agent neutron-metadata-agent neutron-l3-agent"
+
 DISABLE_SERVICES="radvd.service \
 haproxy.service \
 mariadb.service \
@@ -191,7 +192,9 @@ set -e
 APPS="python3-openstackclient \
 nova-compute \
 neutron-linuxbridge-agent"
+
 DISABLE_SERVICES="nova-compute neutron-linuxbridge-agent"
+
 REMOVE_APPS="ifupdown gcc"
 
 DEBIAN_FRONTEND=noninteractive
