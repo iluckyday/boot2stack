@@ -215,7 +215,7 @@ SuccessAction=poweroff-force
 
 [Service]
 Type=oneshot
-#StandardOutput=journal+console
+StandardOutput=journal+console
 ExecStart=/usr/sbin/stack-install.sh
 ExecStartPost=/bin/rm -f /etc/systemd/system/stack-install.service /etc/systemd/system/multi-user.target.wants/stack-install.service /usr/sbin/stack-install.sh
 EOF
