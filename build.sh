@@ -1,8 +1,7 @@
 #!/bin/bash
 set -e
 
-DEBIAN_RELEASE=buster
-DEBIAN_RELEASE_NUM=10
+DEBIAN_RELEASE=sid
 
 WORKDIR=/tmp/stack
 MNTDIR=$WORKDIR/mnt
@@ -10,7 +9,7 @@ mkdir -p $MNTDIR
 cd $WORKDIR
 
 version=$(curl -skL https://cdimage.debian.org/cdimage/cloud/$DEBIAN_RELEASE/daily | awk '/href/ {s=$0} END {print s}' | awk -F'"' '{sub(/\//,"",$6);print $6}')
-curl -skL https://cdimage.debian.org/cdimage/cloud/$DEBIAN_RELEASE/daily/${version}/debian-${DEBIAN_RELEASE_NUM}-nocloud-amd64-daily-${version}.tar.xz | tar -xJ
+curl -skL https://cdimage.debian.org/cdimage/cloud/$DEBIAN_RELEASE/daily/${version}/debian-sid-nocloud-amd64-daily-${version}.tar.xz | tar -xJ
 
 qemu-img resize -f raw disk.raw 203G
 loopx=$(losetup --show -f -P disk.raw)
@@ -81,17 +80,17 @@ export HISTSIZE=1000 LESSHISTFILE=/dev/null HISTFILE=/dev/null
 EOF
 
 cat << EOF > ${MNTDIR}/etc/stack-install.conf
-APPS="mariadb-server python-pymysql \
+APPS="mariadb-server python3-pymysql \
 rabbitmq-server \
-memcached python-memcache \
+memcached python3-memcache \
 etcd \
 apache2 libapache2-mod-wsgi \
 python3-openstackclient \
 keystone \
 glance \
-nova-placement-api \
+placement-api \
 nova-api nova-conductor nova-novncproxy nova-scheduler \
-neutron-server neutron-plugin-ml2 neutron-linuxbridge-agent neutron-dhcp-agent neutron-metadata-agent neutron-l3-agent"
+neutron-server neutron-linuxbridge-agent neutron-dhcp-agent neutron-metadata-agent neutron-l3-agent"
 DISABLE_SERVICES="chrony"
 EOF
 
@@ -112,7 +111,6 @@ ExecStart=/usr/bin/systemctl daemon-reload
 ExecStart=/usr/bin/systemctl disable "$DISABLE_SERVICES"
 ExecStart=/usr/bin/apt remove --purge -y ifupdown
 ExecStartPost=/bin/rm -f /etc/systemd/system/stack-install.service /etc/systemd/system/multi-user.target.wants/stack-install.service /etc/stack-install.conf
-RemainAfterExit=true
 EOF
 
 cat << EOF > ${MNTDIR}/etc/systemd/system/stack-init.service
@@ -130,7 +128,10 @@ cat << "EOF" > ${MNTDIR}/usr/sbin/stack-init.sh
 #!/bin/sh
 
 dhcp_nic=$(basename /sys/class/net/en*20)
-[ -z "$dhcp_nic" ] && exit
+if [ -z "$dhcp_nic" ]
+then
+	exit
+fi
 
 ii=0
 while [ $ii -lt 5 ]; do
@@ -147,7 +148,7 @@ done
 EOF
 chmod +x ${MNTDIR}/usr/sbin/stack-init.sh
 
-sed -i '/src/d' ${MNTDIR}/etc/apt/sources.list
+echo 'deb http://deb.debian.org/debian sid main contrib non-free' > ${MNTDIR}/etc/apt/sources.list
 rm -rf ${MNTDIR}/etc/hostname ${MNTDIR}/etc/resolv.conf ${MNTDIR}/tmp/apt ${MNTDIR}/usr/share/doc ${MNTDIR}/usr/share/man ${MNTDIR}/tmp/* ${MNTDIR}/var/tmp/* ${MNTDIR}/var/cache/apt/*
 find ${MNTDIR}/ ! -path /proc ! -path /sys -type d -name __pycache__ -exec rm -rf {} + || true
 find ${MNTDIR}/usr/share/locale -mindepth 1 -maxdepth 1 ! -name 'en' -exec rm -rf {} + || true
