@@ -172,9 +172,9 @@ REMOVE_APPS="ifupdown gcc"
 
 DEBIAN_FRONTEND=noninteractive
 apt update
-apt install -y "$APPS"
-apt remove --purge -y "$REMOVE_APPS"
-systemctl disable "$DISABLE_SERVICES"
+apt install -y $APPS
+apt remove --purge -y $REMOVE_APPS
+systemctl disable $DISABLE_SERVICES
 
 rm -rf /etc/hostname /etc/resolv.conf /usr/share/doc /usr/share/man /tmp/* /var/tmp/* /var/cache/apt/*
 find / ! -path /proc ! -path /sys -type d -name __pycache__ -exec rm -rf {} + || true
@@ -195,9 +195,9 @@ REMOVE_APPS="ifupdown gcc"
 
 DEBIAN_FRONTEND=noninteractive
 apt update
-apt install -y "$APPS"
-apt remove --purge -y "$REMOVE_APPS"
-systemctl disable "$DISABLE_SERVICES"
+apt install -y $APPS
+apt remove --purge -y $REMOVE_APPS
+systemctl disable $DISABLE_SERVICES
 
 rm -rf /etc/hostname /etc/resolv.conf /usr/share/doc /usr/share/man /tmp/* /var/tmp/* /var/cache/apt/*
 find / ! -path /proc ! -path /sys -type d -name __pycache__ -exec rm -rf {} + || true
