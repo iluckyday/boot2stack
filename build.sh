@@ -89,7 +89,7 @@ apache2 libapache2-mod-wsgi \
 python3-openstackclient \
 keystone \
 glance \
-placement-api \
+nova-placement-api \
 nova-api nova-conductor nova-novncproxy nova-scheduler \
 neutron-server neutron-plugin-ml2 neutron-linuxbridge-agent neutron-dhcp-agent neutron-metadata-agent neutron-l3-agent"
 DISABLE_SERVICES="chrony"
