@@ -153,6 +153,7 @@ apache2 libapache2-mod-wsgi \
 python3-openstackclient \
 keystone \
 glance \
+placement-api \
 nova-api nova-conductor nova-novncproxy nova-scheduler \
 neutron-server neutron-linuxbridge-agent neutron-dhcp-agent neutron-metadata-agent neutron-l3-agent"
 
@@ -174,7 +175,7 @@ REMOVE_APPS="ifupdown gcc"
 DEBIAN_FRONTEND=noninteractive
 apt update
 apt install -y $APPS
-apt remove --purge -y $REMOVE_APPS
+#apt remove --purge -y $REMOVE_APPS
 systemctl disable $DISABLE_SERVICES
 
 rm -rf /etc/hostname /etc/resolv.conf /usr/share/doc /usr/share/man /tmp/* /var/tmp/* /var/cache/apt/*
