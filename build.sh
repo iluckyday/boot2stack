@@ -143,7 +143,7 @@ EOF
 
 cat << "EOF" > ${MNTCDIR}/usr/sbin/stack-install.sh
 #!/bin/sh
-set -e
+set -ex
 
 APPS="mariadb-server python3-pymysql \
 rabbitmq-server \
@@ -175,7 +175,7 @@ REMOVE_APPS="ifupdown gcc"
 DEBIAN_FRONTEND=noninteractive
 apt update
 apt install -y $APPS
-#apt remove --purge -y $REMOVE_APPS
+apt remove --purge -y $REMOVE_APPS
 systemctl disable $DISABLE_SERVICES
 
 rm -rf /etc/hostname /etc/resolv.conf /usr/share/doc /usr/share/man /tmp/* /var/tmp/* /var/cache/apt/*
