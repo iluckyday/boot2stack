@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -ex
 
 mkdir -p /tmp/stack && cd /tmp/stack
 version=$(curl -skL https://cloud.debian.org/images/cloud/sid/daily | awk '/href/ {s=$0} END {print s}' | awk -F'"' '{sub(/\//,"",$2);print $2}')

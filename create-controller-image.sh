@@ -6,7 +6,7 @@ MNTDIR=$WORKDIR/mntc
 mkdir -p ${MNTDIR}
 cd $WORKDIR
 
-cp disk.raw c.raw
+mv disk.raw c.raw
 qemu-img resize -f raw c.raw 203G
 loopx=$(losetup --show -f -P c.raw)
 sgdisk -d 1 $loopx
