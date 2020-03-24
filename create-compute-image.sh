@@ -101,14 +101,7 @@ e2scrub_fail@.service \
 e2scrub_reap.service \
 logrotate.service"
 
-REMOVE_APPS="chrony ifupdown vim unattended-upgrades \
-build-essential \
-gcc-9 \
-libgcc-9-dev \
-g++-9 \
-cpp \
-cpp-9 \
-iso-codes"
+REMOVE_APPS="chrony ifupdown vim unattended-upgrades"
 
 DELETE_MODULES="
 fs/udf
@@ -231,7 +224,7 @@ apt remove --purge -y $REMOVE_APPS
 systemctl disable $DISABLE_SERVICES
 systemctl mask $MASK_SERVICES
 
-rm -rf /etc/hostname /etc/resolv.conf /etc/network /usr/share/doc /usr/share/man /run/* /var/run/* /tmp/* /var/log/* /var/tmp/* /var/cache/apt/*
+rm -rf /etc/hostname /etc/resolv.conf /etc/network /usr/share/doc /usr/share/man /tmp/* /var/log/* /var/tmp/* /var/cache/apt/*
 find /usr -type d -name __pycache__ -prune -exec rm -rf {} + || true
 find /usr/*/locale -mindepth 1 -maxdepth 1 ! -name 'en' -prune -exec rm -rf {} + || true
 find /usr/share/zoneinfo -mindepth 1 -maxdepth 2 ! -name 'UTC' -a ! -name 'UCT' -a ! -name 'PRC' -a ! -name 'Asia' -a ! -name '*Shanghai' -prune -exec rm -rf {} + || true
@@ -298,7 +291,7 @@ umount ${MNTDIR}
 sleep 1
 losetup -d $loopx
 
-qemu-system-x86_64 -name stack-u-building -machine q35,accel=kvm -cpu host -smp "$(nproc)" -m 4G -nographic -object rng-random,filename=/dev/urandom,id=rng0 -device virtio-rng-pci,rng=rng0 -boot c -drive file=$WORKDIR/u.raw,if=virtio,format=raw,media=disk -netdev user,id=n0,ipv6=off -device virtio-net,netdev=n0
+qemu-system-x86_64 -name stack-u-building -machine q35,accel=kvm -cpu host -smp "$(nproc)" -m 8G -nographic -object rng-random,filename=/dev/urandom,id=rng0 -device virtio-rng-pci,rng=rng0 -boot c -drive file=$WORKDIR/u.raw,if=virtio,format=raw,media=disk -netdev user,id=n0,ipv6=off -device virtio-net,netdev=n0
 qemu-img convert -f raw -O qcow2 $WORKDIR/u.raw /dev/shm/stack-u.img
 
 ls -lh /dev/shm/stack-u.img
