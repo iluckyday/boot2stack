@@ -3,13 +3,21 @@ dist: bionic
 language: shell
 
 before_install:
-  - sudo rm -rf /etc/apt/sources.list.d
-  - sudo sed -i '/src/d' /etc/apt/sources.list
-  - sudo apt-get update
-  - sudo apt-get -qqy install qemu-system-x86 qemu-utils
+- sudo rm -rf /etc/apt/sources.list.d
+- sudo sed -i '/src/d' /etc/apt/sources.list
+- sudo apt-get update
+- sudo apt-get -qqy install qemu-system-x86 qemu-utils
+- sudo /bin/bash download-base-image.sh
 
-script:
-  - sudo /bin/bash build.sh
+jobs:
+  include:
+  - name: create-controller-image
+    script:
+    - sudo /bin/bash create-controller-image.sh
+
+  - name: create-compute-image
+    script:
+    - sudo /bin/bash create-compute-image.sh
 
 after_success:
-  - /bin/bash ffsend.sh
+- /bin/bash ffsend.sh
