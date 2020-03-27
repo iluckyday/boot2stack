@@ -2,17 +2,6 @@
 set -e
 
 include_apps="systemd,systemd-sysv,sudo,bash-completion,openssh-server,tzdata,iproute2"
-enable_services="ssh.service"
-disable_services="apparmor.service \
-e2scrub_reap.service \
-systemd-timesyncd.service \
-apt-daily.timer \
-apt-daily-upgrade.timer \
-logrotate.timer \
-e2scrub_all.timer"
-
-exclude_apps="grades"
-mask_services="apt-daily.timer apt-daily-upgrade.timer"
 
 export DEBIAN_FRONTEND=noninteractive
 apt-config dump | grep -we Recommends -e Suggests | sed 's/1/0/' | tee /etc/apt/apt.conf.d/99norecommends
@@ -122,7 +111,20 @@ placement-api \
 nova-api nova-conductor nova-novncproxy nova-scheduler \
 neutron-server neutron-linuxbridge-agent neutron-dhcp-agent neutron-metadata-agent neutron-l3-agent"
 
-DISABLE_SERVICES="systemd-timesyncd.service openvswitch-switch.service \
+DISABLE_SERVICES="e2scrub_all.timer \
+apt-daily-upgrade.timer \
+apt-daily.timer \
+logrotate.timer \
+man-db.timer \
+fstrim.timer \
+apparmor.service \
+e2scrub@.service \
+e2scrub_all.service \
+e2scrub_fail@.service \
+e2scrub_reap.service \
+logrotate.service \
+systemd-timesyncd.service \
+openvswitch-switch.service \
 mysql.service mariadb.service \
 keepalived.service haproxy.service \
 memcached.service \
@@ -135,19 +137,6 @@ nova-api-metadata.service nova-api.service nova-conductor.service nova-novncprox
 neutron-api.service neutron-dhcp-agent.service neutron-l3-agent.service neutron-linuxbridge-agent.service neutron-metadata-agent.service neutron-rpc-server.service \
 placement-api.service"
 
-MASK_SERVICES="e2scrub_all.timer \
-apt-daily-upgrade.timer \
-apt-daily.timer \
-logrotate.timer \
-man-db.timer \
-fstrim.timer \
-apparmor.service \
-e2scrub@.service \
-e2scrub_all.service \
-e2scrub_fail@.service \
-e2scrub_reap.service \
-logrotate.service"
-
 REMOVE_APPS="ifupdown \
 build-essential \
 gcc-9 \
@@ -156,10 +145,6 @@ g++-9 \
 cpp \
 cpp-9 \
 iso-codes"
-
-DELETE_MODULES="
-sound
-"
 
 mkdir -p /run/systemd/network
 cat << EOFF > /run/systemd/network/20-dhcp.network
@@ -171,21 +156,18 @@ DHCP=ipv4
 EOFF
 
 systemctl start systemd-networkd systemd-resolved
+sleep 2
 apt update
 DEBIAN_FRONTEND=noninteractive apt install -y $APPS
 apt remove --purge -y $REMOVE_APPS
 systemctl disable $DISABLE_SERVICES
-systemctl mask $MASK_SERVICES
 
 systemctl stop mysql etcd
 rm -rf /var/lib/mysql/ib_logfile* /var/lib/etcd/default/member/wal/*
-rm -rf /etc/hostname /etc/network /usr/share/doc /usr/share/man /var/tmp/* /var/cache/apt/*
+rm -rf /etc/hostname /etc/resolv.conf /etc/networks /usr/share/doc /usr/share/man /var/tmp/* /var/cache/apt/*
 find /usr -type d -name __pycache__ -prune -exec rm -rf {} +
 find /usr/*/locale -mindepth 1 -maxdepth 1 ! -name 'en' -prune -exec rm -rf {} +
 find /usr/share/zoneinfo -mindepth 1 -maxdepth 2 ! -name 'UTC' -a ! -name 'UCT' -a ! -name 'PRC' -a ! -name 'Asia' -a ! -name '*Shanghai' -prune -exec rm -rf {} +
-for m in $DELETE_MODULES; do
-	rm -rf /lib/modules/*/kernel/$m
-done
 EOF
 chmod +x ${MNTDIR}/usr/sbin/stack-install.sh
 
@@ -257,9 +239,6 @@ apt update
 apt install -y -o APT::Install-Recommends=0 -o APT::Install-Suggests=0 linux-image-cloud-amd64 extlinux initramfs-tools
 dd if=/usr/lib/EXTLINUX/mbr.bin of=$loopx
 extlinux -i /boot/syslinux
-
-#systemctl enable $enable_services
-systemctl disable $disable_services
 
 sed -i '/src/d' /etc/apt/sources.list
 rm -rf /etc/hostname /tmp/apt /usr/share/doc /usr/share/man /tmp/* /var/tmp/* /var/log/* /var/cache/apt/* /var/lib/apt/lists/*
