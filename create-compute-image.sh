@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-include_apps="systemd,systemd-sysv,sudo,bash-completion,openssh-server,tzdata,iproute2"
+include_apps="systemd,systemd-sysv,sudo,bash-completion,openssh-server,tzdata"
 
 export DEBIAN_FRONTEND=noninteractive
 apt-config dump | grep -we Recommends -e Suggests | sed 's/1/0/' | tee /etc/apt/apt.conf.d/99norecommends
@@ -17,8 +17,7 @@ mkfs.ext4 -F -L debian-root -b 1024 -I 128 -O "^has_journal" $loopx
 mount $loopx ${MNTDIR}
 
 sed -i 's/ls -A/ls --ignore=lost+found -A/' /usr/sbin/debootstrap
-#/usr/sbin/debootstrap --no-check-gpg --no-check-certificate --cache-dir /tmp --components=main,contrib,non-free --include="$include_apps" --exclude="
-/usr/sbin/debootstrap --no-check-gpg --no-check-certificate --components=main,contrib,non-free --include="$include_apps" sid ${MNTDIR} https://mirrors.aliyun.com/debian
+/usr/sbin/debootstrap --no-check-gpg --no-check-certificate --components=main,contrib,non-free --include="$include_apps" sid ${MNTDIR}
 
 mount -t proc none ${MNTDIR}/proc
 mount -o bind /sys ${MNTDIR}/sys
@@ -99,17 +98,7 @@ cat << "EOF" > ${MNTDIR}/usr/sbin/stack-install.sh
 #!/bin/bash
 set -ex
 
-APPS="mariadb-server python3-pymysql \
-rabbitmq-server \
-memcached python3-memcache \
-etcd \
-apache2 libapache2-mod-wsgi \
-python3-openstackclient \
-keystone \
-glance \
-placement-api \
-nova-api nova-conductor nova-novncproxy nova-scheduler \
-neutron-server neutron-linuxbridge-agent neutron-dhcp-agent neutron-metadata-agent neutron-l3-agent"
+APPS="nova-compute neutron-linuxbridge-agent"
 
 DISABLE_SERVICES="e2scrub_all.timer \
 apt-daily-upgrade.timer \
@@ -124,18 +113,7 @@ e2scrub_fail@.service \
 e2scrub_reap.service \
 logrotate.service \
 systemd-timesyncd.service \
-openvswitch-switch.service \
-mysql.service mariadb.service \
-keepalived.service haproxy.service \
-memcached.service \
-rabbitmq-server.service \
-etcd.service \
-apache2.service \
-keystone.service \
-glance-api.service \
-nova-api-metadata.service nova-api.service nova-conductor.service nova-novncproxy.service nova-scheduler.service nova-serialproxy.service nova-spicehtml5proxy.service nova-xenvncproxy.service \
-neutron-api.service neutron-dhcp-agent.service neutron-l3-agent.service neutron-linuxbridge-agent.service neutron-metadata-agent.service neutron-rpc-server.service \
-placement-api.service"
+nova-compute neutron-linuxbridge-agent"
 
 REMOVE_APPS="ifupdown \
 build-essential \
@@ -162,8 +140,6 @@ DEBIAN_FRONTEND=noninteractive apt install -y $APPS
 apt remove --purge -y $REMOVE_APPS
 systemctl disable $DISABLE_SERVICES
 
-systemctl stop mysql etcd
-rm -rf /var/lib/mysql/ib_logfile* /var/lib/etcd/default/member/wal/*
 rm -rf /etc/hostname /etc/resolv.conf /etc/networks /usr/share/doc /usr/share/man /var/tmp/* /var/cache/apt/*
 find /usr -type d -name __pycache__ -prune -exec rm -rf {} +
 find /usr/*/locale -mindepth 1 -maxdepth 1 ! -name 'en' -prune -exec rm -rf {} +
@@ -242,8 +218,6 @@ extlinux -i /boot/syslinux
 
 sed -i '/src/d' /etc/apt/sources.list
 rm -rf /etc/hostname /tmp/apt /usr/share/doc /usr/share/man /tmp/* /var/tmp/* /var/log/* /var/cache/apt/* /var/lib/apt/lists/*
-find /usr/share/locale -mindepth 1 -maxdepth 1 ! -name 'en' -exec rm -rf {} +
-find /usr/share/zoneinfo -mindepth 1 -maxdepth 2 ! -name 'UTC' -a ! -name 'UCT' -a ! -name 'PRC' -a ! -name 'Asia' -a ! -name '*Shanghai' -exec rm -rf {} +
 "
 
 sync ${MNTDIR}
@@ -255,7 +229,7 @@ losetup -d $loopx
 
 qemu-system-x86_64 -name stack-c-building -machine q35,accel=kvm -cpu host -smp "$(nproc)" -m 4G -nographic -object rng-random,filename=/dev/urandom,id=rng0 -device virtio-rng-pci,rng=rng0 -boot c -drive file=/tmp/sid.raw,if=virtio,format=raw,media=disk -netdev user,id=n0,ipv6=off -device virtio-net,netdev=n0
 
-qemu-img convert -c -f raw -O qcow2 /tmp/sid.raw /dev/shm/stack-c.img
-ls -lh /dev/shm/stack-c.img
+qemu-img convert -c -f raw -O qcow2 /tmp/sid.raw /dev/shm/stack-u.img
+ls -lh /dev/shm/stack-u.img
 
-exit 0
+exit 1

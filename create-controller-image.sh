@@ -17,8 +17,7 @@ mkfs.ext4 -F -L debian-root -b 1024 -I 128 -O "^has_journal" $loopx
 mount $loopx ${MNTDIR}
 
 sed -i 's/ls -A/ls --ignore=lost+found -A/' /usr/sbin/debootstrap
-#/usr/sbin/debootstrap --no-check-gpg --no-check-certificate --cache-dir /tmp --components=main,contrib,non-free --include="$include_apps" --exclude="
-/usr/sbin/debootstrap --no-check-gpg --no-check-certificate --components=main,contrib,non-free --include="$include_apps" sid ${MNTDIR} https://mirrors.aliyun.com/debian
+/usr/sbin/debootstrap --no-check-gpg --no-check-certificate --components=main,contrib,non-free --include="$include_apps" sid ${MNTDIR}
 
 mount -t proc none ${MNTDIR}/proc
 mount -o bind /sys ${MNTDIR}/sys
@@ -242,8 +241,6 @@ extlinux -i /boot/syslinux
 
 sed -i '/src/d' /etc/apt/sources.list
 rm -rf /etc/hostname /tmp/apt /usr/share/doc /usr/share/man /tmp/* /var/tmp/* /var/log/* /var/cache/apt/* /var/lib/apt/lists/*
-find /usr/share/locale -mindepth 1 -maxdepth 1 ! -name 'en' -exec rm -rf {} +
-find /usr/share/zoneinfo -mindepth 1 -maxdepth 2 ! -name 'UTC' -a ! -name 'UCT' -a ! -name 'PRC' -a ! -name 'Asia' -a ! -name '*Shanghai' -exec rm -rf {} +
 "
 
 sync ${MNTDIR}
