@@ -148,8 +148,7 @@ e2scrub_fail@.service \
 e2scrub_reap.service \
 logrotate.service"
 
-REMOVE_APPS="chrony ifupdown vim unattended-upgrades \
-build-essential \
+REMOVE_APPS="build-essential \
 gcc-9 \
 libgcc-9-dev \
 g++-9 \
@@ -274,7 +273,7 @@ losetup -d $loopx
 
 qemu-system-x86_64 -name stack-c-building -machine q35,accel=kvm -cpu host -smp "$(nproc)" -m 4G -nographic -object rng-random,filename=/dev/urandom,id=rng0 -device virtio-rng-pci,rng=rng0 -boot c -drive file=/tmp/sid.raw,if=virtio,format=raw,media=disk -netdev user,id=n0,ipv6=off -device virtio-net,netdev=n0
 
-qemu-img convert -f raw -O qcow2 /tmp/sid.raw /dev/shm/stack-c.img
+qemu-img convert -c -f raw -O qcow2 /tmp/sid.raw /dev/shm/stack-c.img
 ls -lh /dev/shm/stack-c.img
 
 exit 1
