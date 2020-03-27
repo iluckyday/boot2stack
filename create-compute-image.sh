@@ -113,6 +113,7 @@ e2scrub_fail@.service \
 e2scrub_reap.service \
 logrotate.service \
 systemd-timesyncd.service \
+libvirtd.service libvirt-guests.service \
 nova-compute neutron-linuxbridge-agent"
 
 REMOVE_APPS="ifupdown \
