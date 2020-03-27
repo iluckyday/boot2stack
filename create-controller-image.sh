@@ -177,7 +177,7 @@ apt remove --purge -y $REMOVE_APPS
 systemctl disable $DISABLE_SERVICES
 systemctl mask $MASK_SERVICES
 
-rm -rf /etc/hostname /etc/network /usr/share/doc /usr/share/man /var/run/* /var/tmp/* /var/cache/apt/*
+rm -rf /etc/hostname /etc/network /usr/share/doc /usr/share/man /var/tmp/* /var/cache/apt/*
 find /usr -type d -name __pycache__ -prune -exec rm -rf {} +
 find /usr/*/locale -mindepth 1 -maxdepth 1 ! -name 'en' -prune -exec rm -rf {} +
 find /usr/share/zoneinfo -mindepth 1 -maxdepth 2 ! -name 'UTC' -a ! -name 'UCT' -a ! -name 'PRC' -a ! -name 'Asia' -a ! -name '*Shanghai' -prune -exec rm -rf {} +
