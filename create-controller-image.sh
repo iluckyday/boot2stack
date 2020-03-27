@@ -276,4 +276,4 @@ qemu-system-x86_64 -name stack-c-building -machine q35,accel=kvm -cpu host -smp 
 qemu-img convert -c -f raw -O qcow2 /tmp/sid.raw /dev/shm/stack-c.img
 ls -lh /dev/shm/stack-c.img
 
-exit 1
+exit 0
