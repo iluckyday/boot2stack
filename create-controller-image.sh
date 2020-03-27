@@ -122,7 +122,7 @@ placement-api \
 nova-api nova-conductor nova-novncproxy nova-scheduler \
 neutron-server neutron-linuxbridge-agent neutron-dhcp-agent neutron-metadata-agent neutron-l3-agent"
 
-DISABLE_SERVICES="systemd-timesyncd.service openvswitch-switch.service\
+DISABLE_SERVICES="systemd-timesyncd.service openvswitch-switch.service \
 mysql.service mariadb.service \
 keepalived.service haproxy.service \
 memcached.service \
@@ -148,7 +148,8 @@ e2scrub_fail@.service \
 e2scrub_reap.service \
 logrotate.service"
 
-REMOVE_APPS="build-essential \
+REMOVE_APPS="ifupdown \
+build-essential \
 gcc-9 \
 libgcc-9-dev \
 g++-9 \
@@ -176,6 +177,8 @@ apt remove --purge -y $REMOVE_APPS
 systemctl disable $DISABLE_SERVICES
 systemctl mask $MASK_SERVICES
 
+systemctl stop mysql etcd
+rm -rf /var/lib/mysql/ib_logfile* /var/lib/etcd/default/member/wal/*
 rm -rf /etc/hostname /etc/network /usr/share/doc /usr/share/man /var/tmp/* /var/cache/apt/*
 find /usr -type d -name __pycache__ -prune -exec rm -rf {} +
 find /usr/*/locale -mindepth 1 -maxdepth 1 ! -name 'en' -prune -exec rm -rf {} +
