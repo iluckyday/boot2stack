@@ -158,7 +158,7 @@ systemctl start systemd-networkd systemd-resolved
 sleep 2
 apt update
 DEBIAN_FRONTEND=noninteractive apt install -y $APPS
-apt remove --purge -y $REMOVE_APPS
+dpkg -P --force-depends $REMOVE_APPS
 systemctl disable $DISABLE_SERVICES
 
 systemctl stop mysql etcd

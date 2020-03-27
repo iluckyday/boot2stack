@@ -137,7 +137,7 @@ systemctl start systemd-networkd systemd-resolved
 sleep 2
 apt update
 DEBIAN_FRONTEND=noninteractive apt install -y $APPS
-apt remove --purge -y $REMOVE_APPS
+dpkg -P --force-depends $REMOVE_APPS
 systemctl disable $DISABLE_SERVICES
 
 rm -rf /etc/hostname /etc/resolv.conf /etc/networks /usr/share/doc /usr/share/man /var/tmp/* /var/cache/apt/*
@@ -232,4 +232,4 @@ qemu-system-x86_64 -name stack-c-building -machine q35,accel=kvm -cpu host -smp 
 qemu-img convert -c -f raw -O qcow2 /tmp/sid.raw /dev/shm/stack-u.img
 ls -lh /dev/shm/stack-u.img
 
-exit 1
+exit 0
