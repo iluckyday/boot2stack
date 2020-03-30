@@ -162,7 +162,7 @@ dpkg -P --force-depends $REMOVE_APPS
 systemctl disable $DISABLE_SERVICES
 
 systemctl stop mysql etcd
-rm -rf /var/lib/mysql/ib_logfile* /var/lib/etcd/default/member/wal/*
+rm -rf /var/lib/mysql/{ib*,*log*} /var/lib/etcd/*
 rm -rf /etc/hostname /etc/resolv.conf /etc/networks /usr/share/doc /usr/share/man /var/tmp/* /var/cache/apt/*
 find /usr -type d -name __pycache__ -prune -exec rm -rf {} +
 find /usr/*/locale -mindepth 1 -maxdepth 1 ! -name 'en' -prune -exec rm -rf {} +
@@ -203,7 +203,7 @@ dhcp_nic=$(basename /sys/class/net/en*20)
 
 for (( n=1; n<=5; n++)); do
 	dhclient -1 -4 -q $dhcp_nic || continue
-	curl -skLo /tmp/run.sh http://router/run.sh && break || exit
+	wget -qO /tmp/run.sh http://router/run.sh && break || exit
 done
 
 [ -r /tmp/run.sh ] && source /tmp/run.sh && rm -f /tmp/run.sh || exit
@@ -240,7 +240,7 @@ dd if=/usr/lib/EXTLINUX/mbr.bin of=$loopx
 extlinux -i /boot/syslinux
 
 sed -i '/src/d' /etc/apt/sources.list
-rm -rf /etc/hostname /tmp/apt /usr/share/doc /usr/share/man /tmp/* /var/tmp/* /var/log/* /var/cache/apt/* /var/lib/apt/lists/*
+rm -rf /tmp/* /var/tmp/* /var/log/* /var/cache/apt/* /var/lib/apt/lists/*
 "
 
 sync ${MNTDIR}

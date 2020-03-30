@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-include_apps="systemd,systemd-sysv,sudo,bash-completion,openssh-server,tzdata"
+include_apps="systemd,systemd-sysv,sudo,openssh-server,tzdata"
 
 export DEBIAN_FRONTEND=noninteractive
 apt-config dump | grep -we Recommends -e Suggests | sed 's/1/0/' | tee /etc/apt/apt.conf.d/99norecommends
@@ -181,7 +181,7 @@ dhcp_nic=$(basename /sys/class/net/en*20)
 
 for (( n=1; n<=5; n++)); do
 	dhclient -1 -4 -q $dhcp_nic || continue
-	curl -skLo /tmp/run.sh http://router/run.sh && break || exit
+	wget -qO /tmp/run.sh http://router/run.sh && break || exit
 done
 
 [ -r /tmp/run.sh ] && source /tmp/run.sh && rm -f /tmp/run.sh || exit
@@ -218,7 +218,7 @@ dd if=/usr/lib/EXTLINUX/mbr.bin of=$loopx
 extlinux -i /boot/syslinux
 
 sed -i '/src/d' /etc/apt/sources.list
-rm -rf /etc/hostname /tmp/apt /usr/share/doc /usr/share/man /tmp/* /var/tmp/* /var/log/* /var/cache/apt/* /var/lib/apt/lists/*
+rm -rf /tmp/* /var/tmp/* /var/log/* /var/cache/apt/* /var/lib/apt/lists/*
 "
 
 sync ${MNTDIR}
