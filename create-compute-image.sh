@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-include_apps="systemd,systemd-sysv,sudo,openssh-server,tzdata"
+include_apps="systemd,systemd-sysv,sudo,openssh-server,tzdata,tcpdump"
 
 export DEBIAN_FRONTEND=noninteractive
 apt-config dump | grep -we Recommends -e Suggests | sed 's/1/0/' | tee /etc/apt/apt.conf.d/99norecommends
@@ -28,10 +28,6 @@ LABEL=debian-root /          ext4    defaults,noatime              0 0
 tmpfs             /tmp       tmpfs   mode=1777,size=90%            0 0
 tmpfs             /var/log   tmpfs   defaults,noatime              0 0
 EOF
-
-mkdir -p ${MNTDIR}/root/.ssh
-echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDyuzRtZAyeU3VGDKsGk52rd7b/rJ/EnT8Ce2hwWOZWp" > ${MNTDIR}/root/.ssh/authorized_keys
-chmod 600 ${MNTDIR}/root/.ssh/authorized_keys
 
 cat << EOF > ${MNTDIR}/etc/apt/apt.conf.d/99freedisk
 APT::Authentication "0";
@@ -88,10 +84,6 @@ mkdir -p ${MNTDIR}/etc/initramfs-tools/conf.d
 cat << EOF > ${MNTDIR}/etc/initramfs-tools/conf.d/custom
 COMPRESS=xz
 RUNSIZE=50%
-EOF
-
-cat << EOF >> ${MNTDIR}/root/.bashrc
-export HISTSIZE=1000 LESSHISTFILE=/dev/null HISTFILE=/dev/null
 EOF
 
 cat << "EOF" > ${MNTDIR}/usr/sbin/stack-install.sh
@@ -176,8 +168,8 @@ cat << "EOF" > ${MNTDIR}/usr/sbin/stack-init.sh
 #!/bin/bash
 set -ex
 
-dhcp_nic=$(basename /sys/class/net/en*20)
-[ "$dhcp_nic" = "en*20" ] && exit
+dhcp_nic=$(basename /sys/class/net/en*10)
+[ "$dhcp_nic" = "en*10" ] && exit
 
 for (( n=1; n<=5; n++)); do
 	dhclient -1 -4 -q $dhcp_nic || continue
