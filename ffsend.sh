@@ -5,7 +5,10 @@ ffsend_ver="$(curl -skL https://api.github.com/repos/timvisee/ffsend/releases/la
 curl -skL -o /tmp/ffsend https://github.com/timvisee/ffsend/releases/download/"$ffsend_ver"/ffsend-"$ffsend_ver"-linux-x64-static
 chmod +x /tmp/ffsend
 
-FFSEND_URL=$(/tmp/ffsend -Ifyq upload /dev/shm/stack*.img)
-echo $FFSEND_URL
-data="boot2stack-image-"${FFSEND_URL/\#/%23}
-curl -skLo /dev/null "http://wxpusher.zjiecode.com/api/send/message/?appToken=$WXPUSHER_APPTOKEN&uid=$WXPUSHER_UID&content=$data"
+for f in /dev/shm/stack-*.img; do
+        SIZE="$(du -h $f | awk '{print $1}')"
+        FFSEND_URL=$(/tmp/ffsend -Ifyq upload $f)
+        FILE=$(basename $f)
+        data="$FILE-$SIZE-${FFSEND_URL/\#/%23}"
+        curl -skLo /dev/null "http://wxpusher.zjiecode.com/api/send/message/?appToken=${WXPUSHER_APPTOKEN}&uid=${WXPUSHER_UID}&content=${data}"
+done
