@@ -7,6 +7,5 @@ chmod +x /tmp/ffsend
 
 FFSEND_URL=$(/tmp/ffsend -Ifyq upload /dev/shm/stack*.img)
 echo $FFSEND_URL
-#echo $data
-#data+=${data/\#/%23}
-#curl -skL "http://wxpusher.zjiecode.com/api/send/message/?appToken=$WXPUSHER_APPTOKEN&uid=$WXPUSHER_UID&content=$data" >/dev/null &2>1
+data="boot2stack-image-"${FFSEND_URL/\#/%23}
+curl -skLo /dev/null "http://wxpusher.zjiecode.com/api/send/message/?appToken=$WXPUSHER_APPTOKEN&uid=$WXPUSHER_UID&content=$data"

@@ -16,5 +16,9 @@ jobs:
     script:
     - sudo /bin/bash create-compute-image.sh
 
+  - name: create-storage-image
+    script:
+    - sudo /bin/bash create-storage-image.sh
+
 after_success:
 - /bin/bash ffsend.sh
