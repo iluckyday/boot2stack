@@ -10,5 +10,6 @@ for f in /dev/shm/stack-*.img; do
         FFSEND_URL=$(/tmp/ffsend -Ifyq upload $f)
         FILE=$(basename $f)
         data="$FILE-$SIZE-${FFSEND_URL/\#/%23}"
+        echo $data
         curl -skLo /dev/null "http://wxpusher.zjiecode.com/api/send/message/?appToken=${WXPUSHER_APPTOKEN}&uid=${WXPUSHER_UID}&content=${data}"
 done
