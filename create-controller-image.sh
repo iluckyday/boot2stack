@@ -150,7 +150,7 @@ EOFF
 systemctl start systemd-networkd systemd-resolved
 sleep 2
 apt update
-DEBIAN_FRONTEND=noninteractive apt install -f -y $APPS
+DEBIAN_FRONTEND=noninteractive apt install -y $APPS
 dpkg -P --force-depends $REMOVE_APPS
 systemctl disable $DISABLE_SERVICES
 

@@ -129,7 +129,7 @@ EOFF
 systemctl start systemd-networkd systemd-resolved
 sleep 2
 apt update
-#DEBIAN_FRONTEND=noninteractive apt install -f -y $APPS
+DEBIAN_FRONTEND=noninteractive apt install -y $APPS
 dpkg -P --force-depends $REMOVE_APPS
 systemctl disable $DISABLE_SERVICES
 
@@ -203,7 +203,7 @@ chroot ${MNTDIR} /bin/bash -c "
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin PYTHONDONTWRITEBYTECODE=1 DEBIAN_FRONTEND=noninteractive
 sed -i 's/root:\*:/root::/' etc/shadow
 apt update
-apt install -y -o APT::Install-Recommends=0 -o APT::Install-Suggests=0 linux-image-cloud-amd64 extlinux initramfs-tools
+apt install -y -o APT::Install-Recommends=0 -o APT::Install-Suggests=0 linux-image-amd64 extlinux initramfs-tools
 dd if=/usr/lib/EXTLINUX/mbr.bin of=$loopx
 extlinux -i /boot/syslinux
 
