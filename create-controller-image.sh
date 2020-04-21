@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-include_apps="systemd,systemd-sysv,sudo,bash-completion,openssh-server,tzdata,tcpdump"
+include_apps="systemd,systemd-sysv,sudo,bash-completion,openssh-server,tcpdump"
 
 export DEBIAN_FRONTEND=noninteractive
 apt-config dump | grep -we Recommends -e Suggests | sed 's/1/0/' | tee /etc/apt/apt.conf.d/99norecommends
@@ -150,7 +150,7 @@ EOFF
 systemctl start systemd-networkd systemd-resolved
 sleep 2
 apt update
-DEBIAN_FRONTEND=noninteractive apt install -y $APPS
+DEBIAN_FRONTEND=noninteractive apt install -f -y $APPS
 dpkg -P --force-depends $REMOVE_APPS
 systemctl disable $DISABLE_SERVICES
 
@@ -159,7 +159,6 @@ rm -rf /var/lib/mysql/{ib*,*log*} /var/lib/etcd/*
 rm -rf /etc/hostname /etc/resolv.conf /etc/networks /usr/share/doc /usr/share/man /var/tmp/* /var/cache/apt/*
 find /usr -type d -name __pycache__ -prune -exec rm -rf {} +
 find /usr/*/locale -mindepth 1 -maxdepth 1 ! -name 'en' -prune -exec rm -rf {} +
-find /usr/share/zoneinfo -mindepth 1 -maxdepth 2 ! -name 'UTC' -a ! -name 'UCT' -a ! -name 'PRC' -a ! -name 'Asia' -a ! -name '*Shanghai' -prune -exec rm -rf {} +
 EOF
 chmod +x ${MNTDIR}/usr/sbin/stack-install.sh
 
@@ -205,7 +204,6 @@ chmod +x ${MNTDIR}/usr/sbin/stack-init.sh
 
 sed -i '/src/d' ${MNTDIR}/etc/apt/sources.list
 ( umask 226 && echo 'Defaults env_keep+="PYTHONDONTWRITEBYTECODE PYTHONHISTFILE"' > ${MNTDIR}/etc/sudoers.d/env_keep )
-ln -sf /usr/share/zoneinfo/Asia/Shanghai ${MNTDIR}/etc/localtime
 
 for i in stack-install.service stack-init.service
 do
