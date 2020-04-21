@@ -100,8 +100,8 @@ keystone \
 glance \
 placement-api \
 nova-api nova-conductor nova-novncproxy nova-scheduler \
-neutron-server neutron-linuxbridge-agent neutron-dhcp-agent neutron-metadata-agent neutron-l3-agent \
-cinder-api cinder-scheduler"
+neutron-server neutron-linuxbridge-agent neutron-dhcp-agent neutron-metadata-agent neutron-l3-agent"
+#cinder-api cinder-scheduler"
 
 DISABLE_SERVICES="e2scrub_all.timer \
 apt-daily-upgrade.timer \

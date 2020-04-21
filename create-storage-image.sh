@@ -1,6 +1,13 @@
 #!/bin/bash
 set -e
 
+#########################
+exit 0
+# target_core_mod: use normal kernel
+#########################
+
+
+
 include_apps="systemd,systemd-sysv,sudo,openssh-server"
 
 export DEBIAN_FRONTEND=noninteractive
