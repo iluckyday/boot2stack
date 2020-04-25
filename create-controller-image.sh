@@ -17,7 +17,8 @@ mkfs.ext4 -F -L debian-root -b 1024 -I 128 -O "^has_journal" $loopx
 mount $loopx ${MNTDIR}
 
 sed -i 's/ls -A/ls --ignore=lost+found -A/' /usr/sbin/debootstrap
-/usr/sbin/debootstrap --no-check-gpg --no-check-certificate --components=main,contrib,non-free --include="$include_apps" sid ${MNTDIR}
+/usr/sbin/debootstrap --no-check-gpg --no-check-certificate --components=main,contrib,non-free --include="$include_apps" --variant minbase sid ${MNTDIR}
+sleep 2
 
 mount -t proc none ${MNTDIR}/proc
 mount -o bind /sys ${MNTDIR}/sys
@@ -25,6 +26,7 @@ mount -o bind /dev ${MNTDIR}/dev
 
 cat << EOF > ${MNTDIR}/etc/fstab
 LABEL=debian-root /          ext4    defaults,noatime              0 0
+tmpfs             /run       tmpfs   defaults                      0 0
 tmpfs             /tmp       tmpfs   mode=1777,size=90%            0 0
 tmpfs             /var/log   tmpfs   defaults,noatime              0 0
 EOF
@@ -39,11 +41,11 @@ DPkg::Post-Invoke {"/bin/rm -f /dev/shm/archives/*.deb || true";};
 EOF
 
 cat << EOF > ${MNTDIR}/etc/apt/apt.conf.d/99norecommend
-APT::Install-Recommends "1";
+APT::Install-Recommends "0";
 APT::Install-Suggests "0";
 EOF
 
-cat << EOF > ${MNTDIR}/etc/dpkg/dpkg.cfg.d/99-nodoc
+cat << EOF > ${MNTDIR}/etc/dpkg/dpkg.cfg.d/99nodoc
 path-exclude /usr/share/doc/*
 path-exclude /usr/share/man/*
 path-exclude /usr/share/groff/*
@@ -55,22 +57,16 @@ path-exclude /usr/lib/locale/*
 path-include /usr/share/locale/en*
 EOF
 
-mkdir -p ${MNTDIR}/etc/systemd/journald.conf.d
-cat << EOF > ${MNTDIR}/etc/systemd/journald.conf.d/storage.conf
-[Journal]
-Storage=volatile
-EOF
-
 mkdir -p ${MNTDIR}/etc/systemd/system-environment-generators
 cat << EOF > ${MNTDIR}/etc/systemd/system-environment-generators/20-python
-#!/bin/bash
+#!/bin/sh
 echo 'PYTHONDONTWRITEBYTECODE=1'
 echo 'PYTHONHISTFILE=/dev/null'
 EOF
 chmod +x ${MNTDIR}/etc/systemd/system-environment-generators/20-python
 
 cat << EOF > ${MNTDIR}/etc/profile.d/python.sh
-#!/bin/bash
+#!/bin/sh
 export PYTHONDONTWRITEBYTECODE=1 PYTHONHISTFILE=/dev/null
 EOF
 
@@ -82,8 +78,8 @@ EOF
 
 mkdir -p ${MNTDIR}/etc/initramfs-tools/conf.d
 cat << EOF > ${MNTDIR}/etc/initramfs-tools/conf.d/custom
+MODULES=dep
 COMPRESS=xz
-RUNSIZE=50%
 EOF
 
 cat << "EOF" > ${MNTDIR}/usr/sbin/stack-install.sh
@@ -156,7 +152,7 @@ systemctl disable $DISABLE_SERVICES
 
 systemctl stop mysql etcd
 rm -rf /var/lib/mysql/{ib*,*log*} /var/lib/etcd/*
-rm -rf /etc/hostname /etc/resolv.conf /etc/networks /usr/share/doc /usr/share/man /var/tmp/* /var/cache/apt/*
+rm -rf /etc/hostname /etc/resolv.conf /etc/networks /usr/share/doc /usr/share/man /var/tmp/* /var/log/* /var/cache/apt/*
 find /usr -type d -name __pycache__ -prune -exec rm -rf {} +
 find /usr/*/locale -mindepth 1 -maxdepth 1 ! -name 'en' -prune -exec rm -rf {} +
 EOF
@@ -224,7 +220,7 @@ EOF
 
 chroot ${MNTDIR} /bin/bash -c "
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin PYTHONDONTWRITEBYTECODE=1 DEBIAN_FRONTEND=noninteractive
-sed -i 's/root:\*:/root::/' etc/shadow
+sed -i 's/root:\*:/root::/' /etc/shadow
 apt update
 apt install -y -o APT::Install-Recommends=0 -o APT::Install-Suggests=0 linux-image-cloud-amd64 extlinux initramfs-tools
 dd if=/usr/lib/EXTLINUX/mbr.bin of=$loopx
@@ -242,6 +238,8 @@ sleep 1
 losetup -d $loopx
 
 qemu-system-x86_64 -name stack-c-building -machine q35,accel=kvm -cpu host -smp "$(nproc)" -m 4G -nographic -object rng-random,filename=/dev/urandom,id=rng0 -device virtio-rng-pci,rng=rng0 -boot c -drive file=/tmp/sid.raw,if=virtio,format=raw,media=disk -netdev user,id=n0,ipv6=off -device virtio-net,netdev=n0
+
+sleep 2
 
 qemu-img convert -c -f raw -O qcow2 /tmp/sid.raw /dev/shm/stack-c.img
 ls -lh /dev/shm/stack-c.img
