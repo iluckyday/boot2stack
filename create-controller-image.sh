@@ -78,7 +78,7 @@ EOF
 
 mkdir -p ${MNTDIR}/etc/initramfs-tools/conf.d
 cat << EOF > ${MNTDIR}/etc/initramfs-tools/conf.d/custom
-MODULES=dep
+#MODULES=dep
 COMPRESS=xz
 EOF
 
