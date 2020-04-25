@@ -26,7 +26,7 @@ mount -o bind /dev ${MNTDIR}/dev
 
 cat << EOF > ${MNTDIR}/etc/fstab
 LABEL=debian-root /          ext4    defaults,noatime              0 0
-tmpfs             /run       tmpfs   defaults                      0 0
+tmpfs             /run       tmpfs   defaults,size=50%             0 0
 tmpfs             /tmp       tmpfs   mode=1777,size=90%            0 0
 tmpfs             /var/log   tmpfs   defaults,noatime              0 0
 EOF
@@ -152,7 +152,7 @@ systemctl disable $DISABLE_SERVICES
 
 systemctl stop mysql etcd
 rm -rf /var/lib/mysql/{ib*,*log*} /var/lib/etcd/*
-rm -rf /etc/hostname /etc/resolv.conf /etc/networks /usr/share/doc /usr/share/man /var/tmp/* /var/log/* /var/cache/apt/*
+rm -rf /etc/hostname /etc/resolv.conf /etc/networks /usr/share/doc /usr/share/man
 find /usr -type d -name __pycache__ -prune -exec rm -rf {} +
 find /usr/*/locale -mindepth 1 -maxdepth 1 ! -name 'en' -prune -exec rm -rf {} +
 EOF
@@ -242,6 +242,5 @@ qemu-system-x86_64 -name stack-c-building -machine q35,accel=kvm -cpu host -smp 
 sleep 2
 
 qemu-img convert -c -f raw -O qcow2 /tmp/sid.raw /dev/shm/stack-c.img
-ls -lh /dev/shm/stack-c.img
 
 exit 0

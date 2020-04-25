@@ -17,7 +17,7 @@ mkfs.ext4 -F -L debian-root -b 1024 -I 128 -O "^has_journal" $loopx
 mount $loopx ${MNTDIR}
 
 sed -i 's/ls -A/ls --ignore=lost+found -A/' /usr/sbin/debootstrap
-/usr/sbin/debootstrap --no-check-gpg --no-check-certificate --components=main,contrib,non-free --include="$include_apps" sid ${MNTDIR}
+/usr/sbin/debootstrap --no-check-gpg --no-check-certificate --components=main,contrib,non-free --include="$include_apps" --variant minbase sid ${MNTDIR}
 
 mount -t proc none ${MNTDIR}/proc
 mount -o bind /sys ${MNTDIR}/sys
@@ -39,11 +39,11 @@ DPkg::Post-Invoke {"/bin/rm -f /dev/shm/archives/*.deb || true";};
 EOF
 
 cat << EOF > ${MNTDIR}/etc/apt/apt.conf.d/99norecommend
-APT::Install-Recommends "1";
+APT::Install-Recommends "0";
 APT::Install-Suggests "0";
 EOF
 
-cat << EOF > ${MNTDIR}/etc/dpkg/dpkg.cfg.d/99-nodoc
+cat << EOF > ${MNTDIR}/etc/dpkg/dpkg.cfg.d/99nodoc
 path-exclude /usr/share/doc/*
 path-exclude /usr/share/man/*
 path-exclude /usr/share/groff/*
@@ -53,12 +53,6 @@ path-exclude /usr/share/linda/*
 path-exclude /usr/share/locale/*
 path-exclude /usr/lib/locale/*
 path-include /usr/share/locale/en*
-EOF
-
-mkdir -p ${MNTDIR}/etc/systemd/journald.conf.d
-cat << EOF > ${MNTDIR}/etc/systemd/journald.conf.d/storage.conf
-[Journal]
-Storage=volatile
 EOF
 
 mkdir -p ${MNTDIR}/etc/systemd/system-environment-generators
@@ -83,7 +77,6 @@ EOF
 mkdir -p ${MNTDIR}/etc/initramfs-tools/conf.d
 cat << EOF > ${MNTDIR}/etc/initramfs-tools/conf.d/custom
 COMPRESS=xz
-RUNSIZE=50%
 EOF
 
 cat << "EOF" > ${MNTDIR}/usr/sbin/stack-install.sh
@@ -201,7 +194,7 @@ EOF
 
 chroot ${MNTDIR} /bin/bash -c "
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin PYTHONDONTWRITEBYTECODE=1 DEBIAN_FRONTEND=noninteractive
-sed -i 's/root:\*:/root::/' etc/shadow
+sed -i 's/root:\*:/root::/' /etc/shadow
 apt update
 apt install -y -o APT::Install-Recommends=0 -o APT::Install-Suggests=0 linux-image-cloud-amd64 extlinux initramfs-tools
 dd if=/usr/lib/EXTLINUX/mbr.bin of=$loopx
@@ -220,7 +213,8 @@ losetup -d $loopx
 
 qemu-system-x86_64 -name stack-c-building -machine q35,accel=kvm -cpu host -smp "$(nproc)" -m 4G -nographic -object rng-random,filename=/dev/urandom,id=rng0 -device virtio-rng-pci,rng=rng0 -boot c -drive file=/tmp/sid.raw,if=virtio,format=raw,media=disk -netdev user,id=n0,ipv6=off -device virtio-net,netdev=n0
 
+sleep 2
+
 qemu-img convert -c -f raw -O qcow2 /tmp/sid.raw /dev/shm/stack-u.img
-ls -lh /dev/shm/stack-u.img
 
 exit 0
