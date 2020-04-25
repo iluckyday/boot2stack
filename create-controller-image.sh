@@ -90,7 +90,7 @@ APPS="mariadb-server python3-pymysql \
 rabbitmq-server \
 memcached python3-memcache \
 etcd \
-apache2 libapache2-mod-wsgi \
+#apache2 libapache2-mod-wsgi \
 python3-openstackclient \
 keystone \
 glance \
