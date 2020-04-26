@@ -101,7 +101,7 @@ systemd-timesyncd.service \
 libvirtd.service libvirt-guests.service \
 nova-compute neutron-linuxbridge-agent"
 
-REMOVE_APPS=""
+REMOVE_APPS="tzdata"
 
 mkdir -p /run/systemd/network
 cat << EOFF > /run/systemd/network/20-dhcp.network
@@ -116,7 +116,7 @@ systemctl start systemd-networkd systemd-resolved
 sleep 2
 apt update
 DEBIAN_FRONTEND=noninteractive apt install -y $APPS
-#dpkg -P --force-depends $REMOVE_APPS
+dpkg -P --force-depends $REMOVE_APPS
 systemctl disable $DISABLE_SERVICES
 
 rm -rf /etc/hostname /etc/resolv.conf /etc/networks /usr/share/doc /usr/share/man /var/tmp/* /var/cache/apt/*
