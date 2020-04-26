@@ -124,14 +124,7 @@ nova-api-metadata.service nova-api.service nova-conductor.service nova-novncprox
 neutron-api.service neutron-dhcp-agent.service neutron-l3-agent.service neutron-linuxbridge-agent.service neutron-metadata-agent.service neutron-rpc-server.service \
 placement-api.service"
 
-REMOVE_APPS="ifupdown \
-build-essential \
-gcc-9 \
-libgcc-9-dev \
-g++-9 \
-cpp \
-cpp-9 \
-iso-codes"
+REMOVE_APPS=""
 
 mkdir -p /run/systemd/network
 cat << EOFF > /run/systemd/network/20-dhcp.network
@@ -146,7 +139,7 @@ systemctl start systemd-networkd systemd-resolved
 sleep 2
 apt update
 DEBIAN_FRONTEND=noninteractive apt install -y $APPS
-dpkg -P --force-depends $REMOVE_APPS
+#dpkg -P --force-depends $REMOVE_APPS
 systemctl disable $DISABLE_SERVICES
 
 systemctl stop mysql etcd
