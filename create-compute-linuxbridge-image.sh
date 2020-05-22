@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-include_apps="systemd,systemd-sysv,sudo,bash-completion,openssh-server,tcpdump,isc-dhcp-client"
+include_apps="systemd,systemd-sysv,sudo,openssh-server,tcpdump,isc-dhcp-client,genisoimage"
 
 export DEBIAN_FRONTEND=noninteractive
 apt-config dump | grep -we Recommends -e Suggests | sed 's/1/0/' | tee /etc/apt/apt.conf.d/99norecommends
@@ -18,7 +18,6 @@ mount $loopx ${MNTDIR}
 
 sed -i 's/ls -A/ls --ignore=lost+found -A/' /usr/sbin/debootstrap
 /usr/sbin/debootstrap --no-check-gpg --no-check-certificate --components=main,contrib,non-free --include="$include_apps" --variant minbase sid ${MNTDIR}
-sleep 2
 
 mount -t proc none ${MNTDIR}/proc
 mount -o bind /sys ${MNTDIR}/sys
@@ -26,7 +25,6 @@ mount -o bind /dev ${MNTDIR}/dev
 
 cat << EOF > ${MNTDIR}/etc/fstab
 LABEL=debian-root /          ext4    defaults,noatime              0 0
-tmpfs             /run       tmpfs   defaults,size=50%             0 0
 tmpfs             /tmp       tmpfs   mode=1777,size=90%            0 0
 tmpfs             /var/log   tmpfs   defaults,noatime              0 0
 EOF
@@ -59,14 +57,14 @@ EOF
 
 mkdir -p ${MNTDIR}/etc/systemd/system-environment-generators
 cat << EOF > ${MNTDIR}/etc/systemd/system-environment-generators/20-python
-#!/bin/sh
+#!/bin/bash
 echo 'PYTHONDONTWRITEBYTECODE=1'
 echo 'PYTHONHISTFILE=/dev/null'
 EOF
 chmod +x ${MNTDIR}/etc/systemd/system-environment-generators/20-python
 
 cat << EOF > ${MNTDIR}/etc/profile.d/python.sh
-#!/bin/sh
+#!/bin/bash
 export PYTHONDONTWRITEBYTECODE=1 PYTHONHISTFILE=/dev/null
 EOF
 
@@ -78,7 +76,6 @@ EOF
 
 mkdir -p ${MNTDIR}/etc/initramfs-tools/conf.d
 cat << EOF > ${MNTDIR}/etc/initramfs-tools/conf.d/custom
-#MODULES=dep
 COMPRESS=xz
 EOF
 
@@ -86,17 +83,7 @@ cat << "EOF" > ${MNTDIR}/usr/sbin/stack-install.sh
 #!/bin/bash
 set -ex
 
-APPS="mariadb-server python3-pymysql \
-rabbitmq-server \
-memcached python3-memcache \
-etcd \
-python3-openstackclient \
-keystone \
-glance \
-placement-api \
-nova-api nova-conductor nova-novncproxy nova-scheduler \
-neutron-server neutron-linuxbridge-agent neutron-dhcp-agent neutron-metadata-agent neutron-l3-agent"
-#cinder-api cinder-scheduler"
+APPS="nova-compute neutron-linuxbridge-agent"
 
 DISABLE_SERVICES="e2scrub_all.timer \
 apt-daily-upgrade.timer \
@@ -111,18 +98,8 @@ e2scrub_fail@.service \
 e2scrub_reap.service \
 logrotate.service \
 systemd-timesyncd.service \
-openvswitch-switch.service \
-mysql.service mariadb.service \
-keepalived.service haproxy.service \
-memcached.service \
-rabbitmq-server.service \
-etcd.service \
-apache2.service \
-keystone.service \
-glance-api.service \
-nova-api-metadata.service nova-api.service nova-conductor.service nova-novncproxy.service nova-scheduler.service nova-serialproxy.service nova-spicehtml5proxy.service nova-xenvncproxy.service \
-neutron-api.service neutron-dhcp-agent.service neutron-l3-agent.service neutron-linuxbridge-agent.service neutron-metadata-agent.service neutron-rpc-server.service \
-placement-api.service"
+libvirtd.service libvirt-guests.service \
+nova-compute neutron-linuxbridge-agent"
 
 REMOVE_APPS="tzdata"
 
@@ -142,9 +119,7 @@ DEBIAN_FRONTEND=noninteractive apt install -y $APPS
 dpkg -P --force-depends $REMOVE_APPS
 systemctl disable $DISABLE_SERVICES
 
-systemctl stop mysql etcd
-rm -rf /var/lib/mysql/{ib*,*log*} /var/lib/etcd/*
-rm -rf /etc/hostname /etc/resolv.conf /etc/networks /usr/share/doc /usr/share/man
+rm -rf /etc/hostname /etc/resolv.conf /etc/networks /usr/share/doc /usr/share/man /var/tmp/* /var/cache/apt/*
 find /usr -type d -name __pycache__ -prune -exec rm -rf {} +
 find /usr/*/locale -mindepth 1 -maxdepth 1 ! -name 'en' -prune -exec rm -rf {} +
 EOF
@@ -233,6 +208,6 @@ qemu-system-x86_64 -name stack-c-building -machine q35,accel=kvm -cpu host -smp 
 
 sleep 2
 
-qemu-img convert -c -f raw -O qcow2 /tmp/sid.raw /dev/shm/stack-c.img
+qemu-img convert -c -f raw -O qcow2 /tmp/sid.raw /dev/shm/stack-br-u.img
 
 exit 0
