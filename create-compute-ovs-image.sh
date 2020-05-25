@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-include_apps="systemd,systemd-sysv,sudo,openssh-server,tcpdump,isc-dhcp-client,genisoimage"
+include_apps="systemd,systemd-sysv,sudo,openssh-server,tcpdump,isc-dhcp-client,busybox,genisoimage"
 
 export DEBIAN_FRONTEND=noninteractive
 apt-config dump | grep -we Recommends -e Suggests | sed 's/1/0/' | tee /etc/apt/apt.conf.d/99norecommends
@@ -98,6 +98,7 @@ e2scrub_fail@.service \
 e2scrub_reap.service \
 logrotate.service \
 systemd-timesyncd.service \
+openvswitch-switch.service \
 libvirtd.service libvirt-guests.service \
 nova-compute neutron-openvswitch-agent"
 
