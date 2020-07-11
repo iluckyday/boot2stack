@@ -2,7 +2,7 @@
 set -e
 
 #########################
-exit 0
+# exit 0
 # target_core_mod: use normal kernel
 #########################
 
