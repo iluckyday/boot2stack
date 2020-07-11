@@ -95,8 +95,8 @@ keystone \
 glance \
 placement-api \
 nova-api nova-conductor nova-novncproxy nova-scheduler \
-neutron-server neutron-openvswitch-agent neutron-dhcp-agent neutron-metadata-agent neutron-l3-agent"
-#cinder-api cinder-scheduler"
+neutron-server neutron-openvswitch-agent neutron-dhcp-agent neutron-metadata-agent neutron-l3-agent \
+cinder-api cinder-scheduler"
 
 DISABLE_SERVICES="e2scrub_all.timer \
 apt-daily-upgrade.timer \
@@ -122,6 +122,7 @@ keystone.service \
 glance-api.service \
 nova-api-metadata.service nova-api.service nova-conductor.service nova-novncproxy.service nova-scheduler.service nova-serialproxy.service nova-spicehtml5proxy.service nova-xenvncproxy.service \
 neutron-api.service neutron-dhcp-agent.service neutron-l3-agent.service neutron-openvswitch-agent.service neutron-metadata-agent.service neutron-rpc-server.service \
+cinder-api.service cinder-scheduler.service \
 placement-api.service"
 
 REMOVE_APPS="tzdata"
@@ -146,6 +147,7 @@ systemctl stop mysql etcd
 rm -rf /var/lib/mysql/{ib*,*log*} /var/lib/etcd/*
 rm -rf /etc/hostname /etc/resolv.conf /etc/networks /usr/share/doc /usr/share/man
 find /usr -type d -name __pycache__ -prune -exec rm -rf {} +
+find /usr -type d -name tests -prune -exec rm -rf {} +
 find /usr/*/locale -mindepth 1 -maxdepth 1 ! -name 'en' -prune -exec rm -rf {} +
 EOF
 chmod +x ${MNTDIR}/usr/sbin/stack-install.sh

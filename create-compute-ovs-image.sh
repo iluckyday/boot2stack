@@ -122,6 +122,7 @@ systemctl disable $DISABLE_SERVICES
 
 rm -rf /etc/hostname /etc/resolv.conf /etc/networks /usr/share/doc /usr/share/man /var/tmp/* /var/cache/apt/*
 find /usr -type d -name __pycache__ -prune -exec rm -rf {} +
+find /usr -type d -name tests -prune -exec rm -rf {} +
 find /usr/*/locale -mindepth 1 -maxdepth 1 ! -name 'en' -prune -exec rm -rf {} +
 EOF
 chmod +x ${MNTDIR}/usr/sbin/stack-install.sh

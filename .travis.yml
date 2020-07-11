@@ -8,17 +8,17 @@ before_install:
 
 jobs:
   include:
-  - name: create-controller-linuxbridge-image
-    script:
-    - sudo /bin/bash create-controller-linuxbridge-image.sh
+# - name: create-controller-linuxbridge-image
+#   script:
+#   - sudo /bin/bash create-controller-linuxbridge-image.sh
 
   - name: create-controller-ovs-image
     script:
     - sudo /bin/bash create-controller-ovs-image.sh
 
-  - name: create-compute-linuxbridge-image
-    script:
-    - sudo /bin/bash create-compute-linuxbridge-image.sh
+# - name: create-compute-linuxbridge-image
+#   script:
+#   - sudo /bin/bash create-compute-linuxbridge-image.sh
 
   - name: create-compute-ovs-image
     script:
