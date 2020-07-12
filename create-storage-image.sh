@@ -60,6 +60,85 @@ path-exclude /usr/lib/locale/*
 path-include /usr/share/locale/en*
 EOF
 
+cat << EOF > ${MNTDIR}/etc/dpkg/dpkg.cfg.d/99-nopython
+path-exclude *__pycache__
+path-exclude *.py[co]
+EOF
+
+cat << EOF > ${MNTDIR}/etc/dpkg/dpkg.cfg.d/99-noopenstack
+path-exclude /usr/lib/python*/dist-packages/*/tests
+EOF
+
+cat << EOF > ${MNTDIR}/etc/dpkg/dpkg.cfg.d/99-nomodules
+path-exclude /lib/modules/*/kernel
+path-exclude /lib/modules/*/drivers/atm
+path-exclude /lib/modules/*/drivers/bluetooth
+path-exclude /lib/modules/*/drivers/char/tpm
+path-exclude /lib/modules/*/drivers/edac
+path-exclude /lib/modules/*/drivers/firewire
+path-exclude /lib/modules/*/drivers/gnss
+path-exclude /lib/modules/*/drivers/gpu
+path-exclude /lib/modules/*/drivers/hid
+path-exclude /lib/modules/*/drivers/hwmon
+path-exclude /lib/modules/*/drivers/hwtracing
+path-exclude /lib/modules/*/drivers/i2c
+path-exclude /lib/modules/*/drivers/iio
+path-exclude /lib/modules/*/drivers/input/joystick
+path-exclude /lib/modules/*/drivers/input/mouse
+path-exclude /lib/modules/*/drivers/input/tablet
+path-exclude /lib/modules/*/drivers/input/touchscreen
+path-exclude /lib/modules/*/drivers/isdn
+path-exclude /lib/modules/*/drivers/leds
+path-exclude /lib/modules/*/drivers/media
+path-exclude /lib/modules/*/drivers/memstick
+path-exclude /lib/modules/*/drivers/message
+path-exclude /lib/modules/*/drivers/mfd
+path-exclude /lib/modules/*/drivers/misc/mic
+path-exclude /lib/modules/*/drivers/net/ethernet
+path-exclude /lib/modules/*/drivers/net/hamradio
+path-exclude /lib/modules/*/drivers/net/hippi
+path-exclude /lib/modules/*/drivers/net/hyperv
+path-exclude /lib/modules/*/drivers/net/ieee802154
+path-exclude /lib/modules/*/drivers/net/phy
+path-exclude /lib/modules/*/drivers/net/ppp
+path-exclude /lib/modules/*/drivers/net/team
+path-exclude /lib/modules/*/drivers/net/usb
+path-exclude /lib/modules/*/drivers/net/wan
+path-exclude /lib/modules/*/drivers/net/wimax
+path-exclude /lib/modules/*/drivers/net/wireless
+path-exclude /lib/modules/*/drivers/nfc
+path-exclude /lib/modules/*/drivers/nvme
+path-exclude /lib/modules/*/drivers/parport
+path-exclude /lib/modules/*/drivers/pcmcia
+path-exclude /lib/modules/*/drivers/platform
+path-exclude /lib/modules/*/drivers/power
+path-exclude /lib/modules/*/drivers/pps
+path-exclude /lib/modules/*/drivers/thermal
+path-exclude /lib/modules/*/drivers/thunderbolt
+path-exclude /lib/modules/*/drivers/uio
+path-exclude /lib/modules/*/drivers/usb
+path-exclude /lib/modules/*/drivers/video
+path-exclude /lib/modules/*/drivers/virt/vboxguest
+path-exclude /lib/modules/*/drivers/w1
+path-exclude /lib/modules/*/drivers/watchdog
+path-exclude /lib/modules/*/drivers/xen
+path-exclude /lib/modules/*/fs/nls
+path-exclude /lib/modules/*/fs/ocfs2
+path-exclude /lib/modules/*/net/6lowpan
+path-exclude /lib/modules/*/net/nfc
+path-exclude /lib/modules/*/net/wireless
+path-exclude /lib/modules/*/sound
+path-exclude /lib/modules/*/fs/nls
+path-exclude /lib/modules/*/fs/ocfs2
+path-exclude /lib/modules/*/net/6lowpan
+path-exclude /lib/modules/*/fs/nls
+path-exclude /lib/modules/*/fs/ocfs2
+path-exclude /lib/modules/*/net/6lowpan
+path-exclude /lib/modules/*/fs/nls
+path-exclude /lib/modules/*/fs/ocfs2
+path-exclude /lib/modules/*/net/6lowpan
+EOF
+
 mkdir -p ${MNTDIR}/etc/systemd/journald.conf.d
 cat << EOF > ${MNTDIR}/etc/systemd/journald.conf.d/storage.conf
 [Journal]
