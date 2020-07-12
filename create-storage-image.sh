@@ -66,7 +66,7 @@ path-exclude *.py[co]
 EOF
 
 cat << EOF > ${MNTDIR}/etc/dpkg/dpkg.cfg.d/99-noopenstack
-path-exclude /usr/lib/python*/dist-packages/*/tests*
+#path-exclude /usr/lib/python*/dist-packages/*/tests*
 EOF
 
 cat << EOF > ${MNTDIR}/etc/dpkg/dpkg.cfg.d/99-nomodules
