@@ -39,7 +39,7 @@ DPkg::Post-Invoke {"/bin/rm -f /dev/shm/archives/*.deb || true";};
 EOF
 
 cat << EOF > ${MNTDIR}/etc/apt/apt.conf.d/99norecommend
-APT::Install-Recommends "0";
+APT::Install-Recommends "1";
 APT::Install-Suggests "0";
 EOF
 

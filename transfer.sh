@@ -1,5 +1,5 @@
 #!/bin/bash
-set -ex
+set -e
 
 for f in /dev/shm/stack-*.img; do
         SIZE="$(du -h $f | awk '{print $1}')"
