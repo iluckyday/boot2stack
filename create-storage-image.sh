@@ -139,13 +139,21 @@ mkdir -p ${MNTDIR}/etc/systemd/system-environment-generators
 cat << EOF > ${MNTDIR}/etc/systemd/system-environment-generators/20-python
 #!/bin/bash
 echo 'PYTHONDONTWRITEBYTECODE=1'
-echo 'PYTHONHISTFILE=/dev/null'
+echo 'PYTHONSTARTUP=/usr/lib/pythonstartup'
 EOF
 chmod +x ${MNTDIR}/etc/systemd/system-environment-generators/20-python
 
 cat << EOF > ${MNTDIR}/etc/profile.d/python.sh
 #!/bin/bash
-export PYTHONDONTWRITEBYTECODE=1 PYTHONHISTFILE=/dev/null
+export PYTHONDONTWRITEBYTECODE=1 PYTHONSTARTUP=/usr/lib/pythonstartup
+EOF
+
+cat << EOF > ${MNTDIR}/usr/lib/pythonstartup
+import readline
+import time
+
+readline.add_history("# " + time.asctime())
+readline.set_history_length(-1)
 EOF
 
 cat << EOF > ${MNTDIR}/etc/pip.conf

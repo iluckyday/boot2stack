@@ -61,13 +61,13 @@ mkdir -p ${MNTDIR}/etc/systemd/system-environment-generators
 cat << EOF > ${MNTDIR}/etc/systemd/system-environment-generators/20-python
 #!/bin/sh
 echo 'PYTHONDONTWRITEBYTECODE=1'
-echo 'PYTHONHISTFILE=/dev/null'
+echo 'PYTHONSTARTUP=/usr/lib/pythonstartup'
 EOF
 chmod +x ${MNTDIR}/etc/systemd/system-environment-generators/20-python
 
 cat << EOF > ${MNTDIR}/etc/profile.d/python.sh
 #!/bin/sh
-export PYTHONDONTWRITEBYTECODE=1 PYTHONHISTFILE=/dev/null
+export PYTHONDONTWRITEBYTECODE=1 PYTHONSTARTUP=/usr/lib/pythonstartup
 EOF
 
 cat << EOF > ${MNTDIR}/etc/pip.conf

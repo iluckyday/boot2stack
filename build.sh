@@ -103,24 +103,24 @@ mkdir -p ${MNTCDIR}/etc/systemd/system-environment-generators
 cat << EOF > ${MNTCDIR}/etc/systemd/system-environment-generators/20-python
 #!/bin/sh
 echo 'PYTHONDONTWRITEBYTECODE=1'
-echo 'PYTHONHISTFILE=/dev/null'
+echo 'PYTHONSTARTUP=/usr/lib/pythonstartup'
 EOF
 chmod +x ${MNTCDIR}/etc/systemd/system-environment-generators/20-python
 mkdir -p ${MNTUDIR}/etc/systemd/system-environment-generators
 cat << EOF > ${MNTUDIR}/etc/systemd/system-environment-generators/20-python
 #!/bin/sh
 echo 'PYTHONDONTWRITEBYTECODE=1'
-echo 'PYTHONHISTFILE=/dev/null'
+echo 'PYTHONSTARTUP=/usr/lib/pythonstartup'
 EOF
 chmod +x ${MNTUDIR}/etc/systemd/system-environment-generators/20-python
 
 cat << EOF > ${MNTCDIR}/etc/profile.d/python.sh
 #!/bin/sh
-export PYTHONDONTWRITEBYTECODE=1 PYTHONHISTFILE=/dev/null
+export PYTHONDONTWRITEBYTECODE=1 PYTHONSTARTUP=/usr/lib/pythonstartup
 EOF
 cat << EOF > ${MNTUDIR}/etc/profile.d/python.sh
 #!/bin/sh
-export PYTHONDONTWRITEBYTECODE=1 PYTHONHISTFILE=/dev/null
+export PYTHONDONTWRITEBYTECODE=1 PYTHONSTARTUP=/usr/lib/pythonstartup
 EOF
 
 cat << EOF > ${MNTCDIR}/etc/pip.conf
