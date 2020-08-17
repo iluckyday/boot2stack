@@ -2,6 +2,9 @@ os: linux
 dist: focal
 language: shell
 
+services:
+  - docker
+
 before_install:
 - sudo rm -rf /etc/apt/sources.list.d
 - sudo sed -i '/src/d' /etc/apt/sources.list
@@ -30,4 +33,5 @@ jobs:
 
 after_success:
 #- /bin/bash ffsend.sh
-- /bin/bash transfer.sh
+#- /bin/bash transfer.sh
+- /bin/bash acr.sh
