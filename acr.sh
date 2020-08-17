@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-region=cn-chengdu
+region=us-west-1
 namespace=iimage
 tag=$(date '+%Y%m%d')
 
