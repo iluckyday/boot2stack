@@ -18,7 +18,6 @@ mount $loopx ${MNTDIR}
 
 sed -i 's/ls -A/ls --ignore=lost+found -A/' /usr/sbin/debootstrap
 /usr/sbin/debootstrap --no-check-gpg --no-check-certificate --components=main,contrib,non-free --include="$include_apps" --variant minbase sid ${MNTDIR}
-sleep 2
 
 mount -t proc none ${MNTDIR}/proc
 mount -o bind /sys ${MNTDIR}/sys
