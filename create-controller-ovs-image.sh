@@ -96,7 +96,12 @@ path-exclude *bin/aria_dump_log
 path-exclude *bin/mysqlimport
 path-exclude *bin/pdata_tools
 path-exclude /boot/System.map*
+path-exclude /lib/modules/*/fs/ocfs2*
+path-exclude /lib/modules/*/fs/nls*
 path-exclude /lib/modules/*/fs/ceph*
+path-exclude /lib/modules/*/fs/jffs2*
+path-exclude /lib/modules/*/fs/orangefs*
+path-exclude /lib/modules/*/fs/ufs*
 path-exclude /lib/modules/*/net/wireless*
 path-exclude /lib/modules/*/net/mpls*
 path-exclude /lib/modules/*/net/wimax*

@@ -100,36 +100,9 @@ path-exclude *bin/aria_dump_log
 path-exclude *bin/mysqlimport
 path-exclude *bin/pdata_tools
 path-exclude /boot/System.map*
-path-exclude /lib/modules/*/fs/udf*
-path-exclude /lib/modules/*/fs/adfs*
-path-exclude /lib/modules/*/fs/affs*
 path-exclude /lib/modules/*/fs/ocfs2*
-path-exclude /lib/modules/*/fs/jfs*
-path-exclude /lib/modules/*/fs/ubifs*
-path-exclude /lib/modules/*/fs/gfs2*
-path-exclude /lib/modules/*/fs/cifs*
-path-exclude /lib/modules/*/fs/befs*
-path-exclude /lib/modules/*/fs/erofs*
-path-exclude /lib/modules/*/fs/hpfs*
-path-exclude /lib/modules/*/fs/f2fs*
-path-exclude /lib/modules/*/fs/xfs*
-path-exclude /lib/modules/*/fs/freevxfs*
-path-exclude /lib/modules/*/fs/hfsplus*
-path-exclude /lib/modules/*/fs/minix*
-path-exclude /lib/modules/*/fs/coda*
-path-exclude /lib/modules/*/fs/dlm*
-path-exclude /lib/modules/*/fs/afs*
-path-exclude /lib/modules/*/fs/omfs*
-path-exclude /lib/modules/*/fs/9p*
-path-exclude /lib/modules/*/fs/reiserfs*
-path-exclude /lib/modules/*/fs/bfs*
-path-exclude /lib/modules/*/fs/qnx6*
-path-exclude /lib/modules/*/fs/nilfs2*
-path-exclude /lib/modules/*/fs/btrfs*
-path-exclude /lib/modules/*/fs/jbd2*
-path-exclude /lib/modules/*/fs/efs*
+path-exclude /lib/modules/*/fs/nls*
 path-exclude /lib/modules/*/fs/ceph*
-path-exclude /lib/modules/*/fs/hfs*
 path-exclude /lib/modules/*/fs/jffs2*
 path-exclude /lib/modules/*/fs/orangefs*
 path-exclude /lib/modules/*/fs/ufs*
@@ -167,7 +140,6 @@ path-exclude /lib/modules/*/drivers/thunderbolt*
 path-exclude /lib/modules/*/drivers/firmware*
 path-exclude /lib/modules/*/drivers/xen*
 path-exclude /lib/modules/*/drivers/spi*
-path-exclude /lib/modules/*/drivers/i2c*
 path-exclude /lib/modules/*/drivers/uio*
 path-exclude /lib/modules/*/drivers/hv*
 path-exclude /lib/modules/*/drivers/ptp*
@@ -384,7 +356,7 @@ umount ${MNTDIR}
 sleep 1
 losetup -d $loopx
 
-#qemu-system-x86_64 -name stack-s-building -machine q35,accel=kvm -cpu host -smp "$(nproc)" -m 4G -nographic -object rng-random,filename=/dev/urandom,id=rng0 -device virtio-rng-pci,rng=rng0 -boot c -drive file=/tmp/sid.raw,if=virtio,format=raw,media=disk -netdev user,id=n0,ipv6=off -device virtio-net,netdev=n0
+qemu-system-x86_64 -name stack-s-building -machine q35,accel=kvm -cpu host -smp "$(nproc)" -m 4G -nographic -object rng-random,filename=/dev/urandom,id=rng0 -device virtio-rng-pci,rng=rng0 -boot c -drive file=/tmp/sid.raw,if=virtio,format=raw,media=disk -netdev user,id=n0,ipv6=off -device virtio-net,netdev=n0
 
 qemu-img convert -c -f raw -O qcow2 /tmp/sid.raw /dev/shm/stack-s.img
 ls -lh /dev/shm/stack-s.img
