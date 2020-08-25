@@ -343,6 +343,6 @@ qemu-system-x86_64 -name stack-c-building -machine q35,accel=kvm -cpu kvm64 -smp
 
 sleep 2
 
-qemu-img convert -c -f raw -O qcow2 /tmp/sid.raw /dev/shm/stack-ovs-u.img
+qemu-img convert -c -f raw -O qcow2 /tmp/sid.raw /dev/shm/stack-u.img
 
 exit 0

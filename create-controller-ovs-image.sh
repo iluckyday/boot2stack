@@ -69,7 +69,6 @@ path-exclude *bin/mysqlbinlog
 path-exclude *bin/aria_read_log
 path-exclude *bin/x86_64-linux-gnu-dwp
 path-exclude *bin/mysql_embedded
-path-exclude *bin/myisamchk
 path-exclude *bin/mysqlshow
 path-exclude *bin/mysql_upgrade
 path-exclude *bin/myisampack
@@ -77,9 +76,7 @@ path-exclude *bin/systemd-analyze
 path-exclude *bin/myisam_ftdump
 path-exclude *bin/mysql_waitpid
 path-exclude *bin/mysql_plugin
-path-exclude *bin/my_print_defaults
 path-exclude *bin/aria_ftdump
-path-exclude *bin/mysqld_safe_helper
 path-exclude *bin/resolveip
 path-exclude *bin/resolve_stack_dump
 path-exclude *bin/mysql_tzinfo_to_sql
@@ -368,6 +365,6 @@ qemu-system-x86_64 -name stack-c-building -machine q35,accel=kvm -cpu kvm64 -smp
 
 sleep 2
 
-qemu-img convert -c -f raw -O qcow2 /tmp/sid.raw /dev/shm/stack-ovs-c.img
+qemu-img convert -c -f raw -O qcow2 /tmp/sid.raw /dev/shm/stack-c.img
 
 exit 0
