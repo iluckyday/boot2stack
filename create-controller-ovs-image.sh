@@ -45,7 +45,7 @@ APT::Install-Suggests "0";
 EOF
 
 cat << EOF > ${MNTDIR}/etc/dpkg/dpkg.cfg.d/99nofiles
-path-exclude *__pycache__
+path-exclude *__pycache__*
 path-exclude *.py[co]
 path-exclude /usr/share/doc/*
 path-exclude /usr/share/man/*

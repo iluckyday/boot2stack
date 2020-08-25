@@ -148,7 +148,6 @@ path-exclude /lib/modules/*/drivers/isdn*
 path-exclude /lib/modules/*/drivers/atm*
 path-exclude /lib/modules/*/drivers/w1*
 path-exclude /lib/modules/*/drivers/hwmon*
-path-exclude /lib/modules/*/drivers/virt*
 path-exclude /lib/modules/*/drivers/dax*
 path-exclude /lib/modules/*/drivers/parport*
 path-exclude /lib/modules/*/drivers/ssb*
