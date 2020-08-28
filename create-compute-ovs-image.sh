@@ -135,7 +135,6 @@ path-exclude /lib/modules/*/drivers/net/slip*
 path-exclude /lib/modules/*/drivers/net/usb*
 path-exclude /lib/modules/*/drivers/net/team*
 path-exclude /lib/modules/*/drivers/net/ppp*
-path-exclude /lib/modules/*/drivers/net/bonding*
 path-exclude /lib/modules/*/drivers/net/can*
 path-exclude /lib/modules/*/drivers/net/phy*
 path-exclude /lib/modules/*/drivers/net/vmxnet3*
