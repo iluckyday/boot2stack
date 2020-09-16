@@ -186,7 +186,7 @@ cat << "EOF" > ${MNTDIR}/usr/sbin/stack-install.sh
 #!/bin/bash
 set -ex
 
-APPS="nova-compute neutron-openvswitch-agent"
+APPS="nova-compute neutron-openvswitch-agent neutron-l3-agent"
 
 DISABLE_SERVICES="e2scrub_all.timer \
 apt-daily-upgrade.timer \
@@ -203,7 +203,7 @@ logrotate.service \
 systemd-timesyncd.service \
 openvswitch-switch.service \
 libvirtd.service libvirt-guests.service \
-nova-compute neutron-openvswitch-agent"
+nova-compute neutron-openvswitch-agent neutron-l3-agent"
 
 REMOVE_APPS="tzdata"
 
