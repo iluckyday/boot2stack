@@ -32,4 +32,4 @@ jobs:
     - sudo /bin/bash create-storage-image.sh
 
 after_success:
-- /bin/bash dockerhub.sh
+- /bin/bash transfer.sh
