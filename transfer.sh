@@ -8,7 +8,6 @@ for f in /dev/shm/stack-*.img; do
 FILENAME=$(basename $f)
 SIZE="$(du -h $f | awk '{print $1}')"
 cow_data=$(/tmp/transfer cow --silent $f)
-cow_url=$(echo $cow_data | cut -d' ' -f2)
-data="$FILENAME-$SIZE-${cow_url}"
+data="$FILENAME-$SIZE-${cow_data}"
 curl -skLo /dev/null "https://wxpusher.zjiecode.com/api/send/message/?appToken=${WXPUSHER_APPTOKEN}&uid=${WXPUSHER_UID}&content=${data}"
 done
