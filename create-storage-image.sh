@@ -91,7 +91,6 @@ path-exclude /lib/modules/*/net/netrom*
 path-exclude /lib/modules/*/net/lapb*
 path-exclude /lib/modules/*/net/mac80211*
 path-exclude /lib/modules/*/net/6lowpan*
-path-exclude /lib/modules/*/net/sunrpc*
 path-exclude /lib/modules/*/net/rxrpc*
 path-exclude /lib/modules/*/net/atm*
 path-exclude /lib/modules/*/net/psample*
