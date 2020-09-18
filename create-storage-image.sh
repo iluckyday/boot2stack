@@ -330,6 +330,5 @@ losetup -d $loopx
 qemu-system-x86_64 -name stack-s-building -machine q35,accel=kvm -cpu host -smp "$(nproc)" -m 4G -nographic -object rng-random,filename=/dev/urandom,id=rng0 -device virtio-rng-pci,rng=rng0 -boot c -drive file=/tmp/sid.raw,if=virtio,format=raw,media=disk -netdev user,id=n0,ipv6=off -device virtio-net,netdev=n0
 
 qemu-img convert -c -f raw -O qcow2 /tmp/sid.raw /dev/shm/stack-s.img
-ls -lh /dev/shm/stack-s.img
 
 exit 0
