@@ -218,7 +218,7 @@ placement-api \
 nova-api nova-conductor nova-novncproxy nova-scheduler \
 neutron-server neutron-openvswitch-agent neutron-dhcp-agent neutron-metadata-agent neutron-l3-agent \
 cinder-api cinder-scheduler \
-manila-api manila-scheduler python-manilaclient"
+manila-api manila-scheduler python3-manilaclient"
 
 DISABLE_SERVICES="e2scrub_all.timer \
 apt-daily-upgrade.timer \

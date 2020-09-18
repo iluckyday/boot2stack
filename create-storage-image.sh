@@ -198,7 +198,7 @@ cat << "EOF" > ${MNTDIR}/usr/sbin/stack-install.sh
 #!/bin/bash
 set -ex
 
-APPS="cinder-volume tgt manila-share python-pymysql nfs-kernel-server"
+APPS="cinder-volume tgt manila-share nfs-kernel-server"
 
 DISABLE_SERVICES="e2scrub_all.timer \
 apt-daily-upgrade.timer \
