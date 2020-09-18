@@ -65,6 +65,13 @@ path-exclude /usr/lib/x86_64-linux-gnu/perl/5.30.3/auto/Encode/TW*
 path-exclude *bin/x86_64-linux-gnu-dwp
 path-exclude *bin/systemd-analyze
 path-exclude *bin/etcdctl
+path-exclude *bin/aria_ftdump
+path-exclude *bin/aria_read_log
+path-exclude *bin/myisam_ftdump
+path-exclude /usr/lib/x86_64-linux-gnu/ceph*
+path-exclude /usr/lib/x86_64-linux-gnu/libicudata.a
+path-exclude /lib/modules/*/kernel/drivers/net/ethernet*
+path-exclude /usr/share/python-babel-localedata/locale-data*
 path-exclude /boot/System.map*
 path-exclude /lib/modules/*/fs/ocfs2*
 path-exclude /lib/modules/*/fs/nls*
@@ -223,7 +230,7 @@ DEBIAN_FRONTEND=noninteractive apt install -y $APPS
 dpkg -P --force-depends $REMOVE_APPS
 systemctl disable $DISABLE_SERVICES
 
-rm -rf /etc/hostname /etc/resolv.conf /etc/networks /usr/share/doc /usr/share/man /var/tmp/* /var/cache/apt/*
+rm -rf /etc/hostname /etc/resolv.conf /etc/networks /usr/share/doc /usr/share/man /var/tmp/* /var/cache/apt/* /usr/lib/python3/dist-packages/*/tests /var/lib/*/*.sqlite
 find /usr -type d -name __pycache__ -prune -exec rm -rf {} +
 find /usr/*/locale -mindepth 1 -maxdepth 1 ! -name 'en' -prune -exec rm -rf {} +
 EOF

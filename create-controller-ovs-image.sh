@@ -217,7 +217,8 @@ glance \
 placement-api \
 nova-api nova-conductor nova-novncproxy nova-scheduler \
 neutron-server neutron-openvswitch-agent neutron-dhcp-agent neutron-metadata-agent neutron-l3-agent \
-cinder-api cinder-scheduler"
+cinder-api cinder-scheduler \
+manila-api manila-scheduler python-manilaclient"
 
 DISABLE_SERVICES="e2scrub_all.timer \
 apt-daily-upgrade.timer \
@@ -241,10 +242,11 @@ etcd.service \
 apache2.service \
 keystone.service \
 glance-api.service \
+placement-api.service \
 nova-api-metadata.service nova-api.service nova-conductor.service nova-novncproxy.service nova-scheduler.service nova-serialproxy.service nova-spicehtml5proxy.service nova-xenvncproxy.service \
 neutron-api.service neutron-dhcp-agent.service neutron-l3-agent.service neutron-openvswitch-agent.service neutron-metadata-agent.service neutron-rpc-server.service \
 cinder-api.service cinder-scheduler.service \
-placement-api.service"
+manila-api.service manila-scheduler.service"
 
 REMOVE_APPS="tzdata"
 
@@ -266,7 +268,7 @@ systemctl disable $DISABLE_SERVICES
 
 systemctl stop mysql etcd
 rm -rf /var/lib/mysql/{ib*,*log*} /var/lib/etcd/*
-rm -rf /etc/hostname /etc/resolv.conf /etc/networks /usr/share/doc /usr/share/man /usr/lib/python3/dist-packages/*/tests
+rm -rf /etc/hostname /etc/resolv.conf /etc/networks /usr/share/doc /usr/share/man /usr/lib/python3/dist-packages/*/tests /var/lib/*/*.sqlite
 find /usr -type d -name __pycache__ -prune -exec rm -rf {} +
 find /usr/*/locale -mindepth 1 -maxdepth 1 ! -name 'en' -prune -exec rm -rf {} +
 EOF
