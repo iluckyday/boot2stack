@@ -272,14 +272,14 @@ cat << "EOF" > ${MNTDIR}/usr/sbin/stack-init.sh
 set -ex
 
 dhcp_nic=$(basename /sys/class/net/en*10)
-[ "$dhcp_nic" = "en*10" ] && exit
+[ "$dhcp_nic" = "en*10" ] && exit 1
 
 for (( n=1; n<=5; n++)); do
 	dhclient -1 -4 -q $dhcp_nic || continue
-	wget -qO /tmp/run.sh http://router/run.sh && break || exit
+	wget -qO /tmp/run.sh http://router/run.sh && break || exit 1
 done
 
-[ -r /tmp/run.sh ] && source /tmp/run.sh && rm -f /tmp/run.sh || exit
+[ -r /tmp/run.sh ] && source /tmp/run.sh && rm -f /tmp/run.sh || exit 1
 EOF
 chmod +x ${MNTDIR}/usr/sbin/stack-init.sh
 
