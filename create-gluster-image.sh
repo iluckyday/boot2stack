@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-include_apps="systemd,systemd-sysv,sudo,bash-completion,openssh-server,tcpdump,isc-dhcp-client,busybox"
+include_apps="systemd,systemd-sysv,sudo,openssh-server"
 
 export DEBIAN_FRONTEND=noninteractive
 apt-config dump | grep -we Recommends -e Suggests | sed 's/1/0/' | tee /etc/apt/apt.conf.d/99norecommends
@@ -17,7 +17,7 @@ mkfs.ext4 -F -L debian-root -b 1024 -I 128 -O "^has_journal" $loopx
 mount $loopx ${MNTDIR}
 
 sed -i 's/ls -A/ls --ignore=lost+found -A/' /usr/sbin/debootstrap
-/usr/sbin/debootstrap --no-check-gpg --no-check-certificate --components=main,contrib,non-free --include="$include_apps" --variant minbase sid ${MNTDIR}
+/usr/sbin/debootstrap --no-check-gpg --no-check-certificate --components=main,contrib,non-free --include="$include_apps" sid ${MNTDIR}
 
 mount -t proc none ${MNTDIR}/proc
 mount -o bind /sys ${MNTDIR}/sys
@@ -25,7 +25,6 @@ mount -o bind /dev ${MNTDIR}/dev
 
 cat << EOF > ${MNTDIR}/etc/fstab
 LABEL=debian-root /          ext4    defaults,noatime              0 0
-tmpfs             /run       tmpfs   defaults,size=50%             0 0
 tmpfs             /tmp       tmpfs   mode=1777,size=90%            0 0
 tmpfs             /var/log   tmpfs   defaults,noatime              0 0
 EOF
@@ -62,24 +61,9 @@ path-exclude /usr/lib/x86_64-linux-gnu/perl/5.30.3/auto/Encode/CN*
 path-exclude /usr/lib/x86_64-linux-gnu/perl/5.30.3/auto/Encode/JP*
 path-exclude /usr/lib/x86_64-linux-gnu/perl/5.30.3/auto/Encode/KR*
 path-exclude /usr/lib/x86_64-linux-gnu/perl/5.30.3/auto/Encode/TW*
-path-exclude *bin/perror
-path-exclude *bin/mysqlslap
-path-exclude *bin/mysqlbinlog
 path-exclude *bin/x86_64-linux-gnu-dwp
-path-exclude *bin/mysql_embedded
 path-exclude *bin/systemd-analyze
-path-exclude *bin/resolve_stack_dump
-path-exclude *bin/mysql_tzinfo_to_sql
-path-exclude *bin/sqldiff
 path-exclude *bin/etcdctl
-path-exclude *bin/myisamlog
-path-exclude *bin/mysqldump
-path-exclude *bin/aria_dump_log
-path-exclude *bin/mysqlimport
-path-exclude *bin/pdata_tools
-path-exclude *bin/aria_ftdump
-path-exclude *bin/aria_read_log
-path-exclude *bin/myisam_ftdump
 path-exclude /usr/lib/x86_64-linux-gnu/ceph*
 path-exclude /usr/lib/x86_64-linux-gnu/libicudata.a
 path-exclude /lib/modules/*/kernel/drivers/net/ethernet*
@@ -88,9 +72,6 @@ path-exclude /boot/System.map*
 path-exclude /lib/modules/*/fs/ocfs2*
 path-exclude /lib/modules/*/fs/nls*
 path-exclude /lib/modules/*/fs/ceph*
-path-exclude /lib/modules/*/fs/jffs2*
-path-exclude /lib/modules/*/fs/orangefs*
-path-exclude /lib/modules/*/fs/ufs*
 path-exclude /lib/modules/*/net/wireless*
 path-exclude /lib/modules/*/net/mpls*
 path-exclude /lib/modules/*/net/wimax*
@@ -168,16 +149,22 @@ path-exclude /lib/modules/*/drivers/net/hamradio*
 path-exclude /lib/modules/*/sound*
 EOF
 
+mkdir -p ${MNTDIR}/etc/systemd/journald.conf.d
+cat << EOF > ${MNTDIR}/etc/systemd/journald.conf.d/storage.conf
+[Journal]
+Storage=volatile
+EOF
+
 mkdir -p ${MNTDIR}/etc/systemd/system-environment-generators
 cat << EOF > ${MNTDIR}/etc/systemd/system-environment-generators/20-python
-#!/bin/sh
+#!/bin/bash
 echo 'PYTHONDONTWRITEBYTECODE=1'
 echo 'PYTHONSTARTUP=/usr/lib/pythonstartup'
 EOF
 chmod +x ${MNTDIR}/etc/systemd/system-environment-generators/20-python
 
 cat << EOF > ${MNTDIR}/etc/profile.d/python.sh
-#!/bin/sh
+#!/bin/bash
 export PYTHONDONTWRITEBYTECODE=1 PYTHONSTARTUP=/usr/lib/pythonstartup
 EOF
 
@@ -197,7 +184,6 @@ EOF
 
 mkdir -p ${MNTDIR}/etc/initramfs-tools/conf.d
 cat << EOF > ${MNTDIR}/etc/initramfs-tools/conf.d/custom
-#MODULES=dep
 COMPRESS=xz
 EOF
 
@@ -205,18 +191,7 @@ cat << "EOF" > ${MNTDIR}/usr/sbin/stack-install.sh
 #!/bin/bash
 set -ex
 
-APPS="mariadb-server python3-pymysql \
-rabbitmq-server \
-memcached python3-memcache \
-etcd \
-python3-openstackclient \
-keystone \
-glance \
-placement-api \
-nova-api nova-conductor nova-novncproxy nova-scheduler \
-neutron-server neutron-openvswitch-agent neutron-dhcp-agent neutron-metadata-agent neutron-l3-agent \
-cinder-api cinder-scheduler \
-manila-api manila-scheduler python3-manilaclient"
+APPS="glusterfs-server"
 
 DISABLE_SERVICES="e2scrub_all.timer \
 apt-daily-upgrade.timer \
@@ -231,22 +206,16 @@ e2scrub_fail@.service \
 e2scrub_reap.service \
 logrotate.service \
 systemd-timesyncd.service \
-openvswitch-switch.service \
-mysql.service mariadb.service \
-keepalived.service haproxy.service \
-memcached.service \
-rabbitmq-server.service \
-etcd.service \
-apache2.service \
-keystone.service \
-glance-api.service \
-placement-api.service \
-nova-api-metadata.service nova-api.service nova-conductor.service nova-novncproxy.service nova-scheduler.service nova-serialproxy.service nova-spicehtml5proxy.service nova-xenvncproxy.service \
-neutron-api.service neutron-dhcp-agent.service neutron-l3-agent.service neutron-openvswitch-agent.service neutron-metadata-agent.service neutron-rpc-server.service \
-cinder-api.service cinder-scheduler.service \
-manila-api.service manila-scheduler.service"
+"
 
-REMOVE_APPS="tzdata"
+REMOVE_APPS="ifupdown \
+build-essential \
+gcc-9 \
+libgcc-9-dev \
+g++-9 \
+cpp \
+cpp-9 \
+iso-codes"
 
 mkdir -p /run/systemd/network
 cat << EOFF > /run/systemd/network/20-dhcp.network
@@ -264,15 +233,10 @@ rm -f /var/lib/dpkg/info/libc-bin.postinst /var/lib/dpkg/info/man-db.postinst /v
 
 apt update
 DEBIAN_FRONTEND=noninteractive apt install -y $APPS
-
 dpkg -P --force-depends $REMOVE_APPS
 systemctl disable $DISABLE_SERVICES
 
-pip install websocket-client
-
-systemctl stop mysql etcd
-rm -rf /var/lib/mysql/{ib*,*log*} /var/lib/etcd/*
-rm -rf /etc/hostname /etc/resolv.conf /etc/networks /usr/share/doc /usr/share/man /usr/lib/python3/dist-packages/*/tests /var/lib/*/*.sqlite
+rm -rf /etc/hostname /etc/resolv.conf /etc/networks /usr/share/doc /usr/share/man /var/tmp/* /var/cache/apt/* /usr/lib/python3/dist-packages/*/tests /var/lib/*/*.sqlite
 find /usr -type d -name __pycache__ -prune -exec rm -rf {} +
 find /usr/*/locale -mindepth 1 -maxdepth 1 ! -name 'en' -prune -exec rm -rf {} +
 EOF
@@ -341,10 +305,9 @@ EOF
 
 chroot ${MNTDIR} /bin/bash -c "
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin PYTHONDONTWRITEBYTECODE=1 DEBIAN_FRONTEND=noninteractive
-sed -i 's/root:\*:/root::/' /etc/shadow
+sed -i 's/root:\*:/root::/' etc/shadow
 apt update
 apt install -y -o APT::Install-Recommends=0 -o APT::Install-Suggests=0 linux-image-cloud-amd64 extlinux initramfs-tools
-#apt install -y -o APT::Install-Recommends=0 -o APT::Install-Suggests=0 linux-image-amd64 extlinux initramfs-tools
 dd if=/usr/lib/EXTLINUX/mbr.bin of=$loopx
 extlinux -i /boot/syslinux
 
@@ -359,11 +322,8 @@ umount ${MNTDIR}
 sleep 1
 losetup -d $loopx
 
-#qemu-system-x86_64 -name stack-c-building -machine q35,accel=kvm -cpu host -smp "$(nproc)" -m 4G -nographic -object rng-random,filename=/dev/urandom,id=rng0 -device virtio-rng-pci,rng=rng0 -boot c -drive file=/tmp/sid.raw,if=virtio,format=raw,media=disk -netdev user,id=n0,ipv6=off -device virtio-net,netdev=n0
-qemu-system-x86_64 -name stack-c-building -machine q35,accel=kvm -cpu kvm64 -smp "$(nproc)" -m 4G -nographic -object rng-random,filename=/dev/urandom,id=rng0 -device virtio-rng-pci,rng=rng0 -boot c -drive file=/tmp/sid.raw,if=virtio,format=raw,media=disk -netdev user,id=n0,ipv6=off -device virtio-net,netdev=n0
+qemu-system-x86_64 -name stack-g-building -machine q35,accel=kvm -cpu host -smp "$(nproc)" -m 4G -nographic -object rng-random,filename=/dev/urandom,id=rng0 -device virtio-rng-pci,rng=rng0 -boot c -drive file=/tmp/sid.raw,if=virtio,format=raw,media=disk -netdev user,id=n0,ipv6=off -device virtio-net,netdev=n0
 
-sleep 2
-
-qemu-img convert -c -f raw -O qcow2 /tmp/sid.raw /dev/shm/stack-c.img
+qemu-img convert -c -f raw -O qcow2 /tmp/sid.raw /dev/shm/stack-g.img
 
 exit 0

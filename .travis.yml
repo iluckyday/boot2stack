@@ -31,5 +31,9 @@ jobs:
     script:
     - sudo /bin/bash create-storage-image.sh
 
+  - name: create-gluster-image
+    script:
+    - sudo /bin/bash create-gluster-image.sh
+
 after_success:
 - /bin/bash transfer.sh

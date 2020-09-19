@@ -235,6 +235,9 @@ EOFF
 
 systemctl start systemd-networkd systemd-resolved
 sleep 2
+
+rm -f /var/lib/dpkg/info/libc-bin.postinst /var/lib/dpkg/info/man-db.postinst /var/lib/dpkg/info/dbus.postinst /var/lib/dpkg/info/initramfs-tools.postinst
+
 apt update
 DEBIAN_FRONTEND=noninteractive apt install -y $APPS
 dpkg -P --force-depends $REMOVE_APPS
