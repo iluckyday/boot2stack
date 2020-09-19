@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-include_apps="systemd,systemd-sysv,sudo,openssh-server"
+include_apps="systemd,systemd-sysv,sudo,openssh-server,wget"
 
 export DEBIAN_FRONTEND=noninteractive
 apt-config dump | grep -we Recommends -e Suggests | sed 's/1/0/' | tee /etc/apt/apt.conf.d/99norecommends
@@ -193,13 +193,15 @@ set -ex
 
 APPS="glusterfs-server"
 
-DISABLE_SERVICES="e2scrub_all.timer \
+MASK_SERVICES="e2scrub_all.timer \
 apt-daily-upgrade.timer \
 apt-daily.timer \
 logrotate.timer \
 man-db.timer \
 fstrim.timer \
 apparmor.service \
+cron.service \
+rsyslog.service \
 e2scrub@.service \
 e2scrub_all.service \
 e2scrub_fail@.service \
@@ -234,7 +236,7 @@ rm -f /var/lib/dpkg/info/libc-bin.postinst /var/lib/dpkg/info/man-db.postinst /v
 apt update
 DEBIAN_FRONTEND=noninteractive apt install -y $APPS
 dpkg -P --force-depends $REMOVE_APPS
-systemctl disable $DISABLE_SERVICES
+systemctl mask $MASK_SERVICES
 
 rm -rf /etc/hostname /etc/resolv.conf /etc/networks /usr/share/doc /usr/share/man /var/tmp/* /var/cache/apt/* /usr/lib/python3/dist-packages/*/tests /var/lib/*/*.sqlite
 find /usr -type d -name __pycache__ -prune -exec rm -rf {} +
