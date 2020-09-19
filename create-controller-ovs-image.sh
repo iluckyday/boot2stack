@@ -259,10 +259,18 @@ EOFF
 
 systemctl start systemd-networkd systemd-resolved
 sleep 2
+
+systemctl -f mask $DISABLE_SERVICES
+
 apt update
 DEBIAN_FRONTEND=noninteractive apt install -y $APPS
+
+systemctl -f unmask $DISABLE_SERVICES
+
 dpkg -P --force-depends $REMOVE_APPS
 systemctl disable $DISABLE_SERVICES
+
+pip install websocket-client
 
 systemctl stop mysql etcd
 rm -rf /var/lib/mysql/{ib*,*log*} /var/lib/etcd/*
@@ -293,6 +301,7 @@ After=network.target
 [Service]
 Type=oneshot
 ExecStart=/usr/sbin/stack-init.sh
+ExecStartPost=/bin/rm -f /etc/systemd/system/stack-init.service /etc/systemd/system/multi-user.target.wants/stack-init.service /usr/sbin/stack-init.sh
 RemainAfterExit=true
 EOF
 
