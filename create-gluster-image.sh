@@ -193,7 +193,7 @@ set -ex
 
 APPS="glusterfs-server"
 
-MASK_SERVICES="e2scrub_all.timer \
+DISABLE_SERVICES="e2scrub_all.timer \
 apt-daily-upgrade.timer \
 apt-daily.timer \
 logrotate.timer \
@@ -236,7 +236,7 @@ rm -f /var/lib/dpkg/info/libc-bin.postinst /var/lib/dpkg/info/man-db.postinst /v
 apt update
 DEBIAN_FRONTEND=noninteractive apt install -y $APPS
 dpkg -P --force-depends $REMOVE_APPS
-systemctl mask $MASK_SERVICES
+systemctl disable $DISABLE_SERVICES
 
 rm -rf /etc/hostname /etc/resolv.conf /etc/networks /usr/share/doc /usr/share/man /var/tmp/* /var/cache/apt/* /usr/lib/python3/dist-packages/*/tests /var/lib/*/*.sqlite
 find /usr -type d -name __pycache__ -prune -exec rm -rf {} +
