@@ -270,9 +270,11 @@ systemctl disable $DISABLE_SERVICES
 
 pip install websocket-client
 
-systemctl stop mysql etcd
-rm -rf /var/lib/mysql/{ib*,*log*} /var/lib/etcd/*
+systemctl stop mysql etcd rabbitmq-server
+sleep 5
+rm -rf /var/lib/mysql/{ib*,*log*} /var/lib/etcd/* /var/lib/rabbitmq/*
 rm -rf /etc/hostname /etc/resolv.conf /etc/networks /usr/share/doc /usr/share/man /usr/lib/python3/dist-packages/*/tests /var/lib/*/*.sqlite
+rm -rf /usr/bin/systemd-analyze /usr/bin/perl5.30.3 /usr/bin/sqlite3 /usr/share/misc/pci.ids /usr/share/mysql /usr/share/ieee-data /usr/share/sphinx /usr/share/python-wheels /usr/share/fonts/truetype /usr/lib/udev/hwdb.d /usr/lib/udev/hwdb.bin
 find /usr -type d -name __pycache__ -prune -exec rm -rf {} +
 find /usr/*/locale -mindepth 1 -maxdepth 1 ! -name 'en' -prune -exec rm -rf {} +
 EOF
