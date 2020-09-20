@@ -197,6 +197,8 @@ logrotate.timer \
 man-db.timer \
 fstrim.timer \
 apparmor.service \
+cron.service \
+rsyslog.service \
 e2scrub@.service \
 e2scrub_all.service \
 e2scrub_fail@.service \
