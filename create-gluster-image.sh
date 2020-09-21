@@ -62,7 +62,6 @@ path-exclude /usr/lib/x86_64-linux-gnu/perl/*/auto/Encode/JP*
 path-exclude /usr/lib/x86_64-linux-gnu/perl/*/auto/Encode/KR*
 path-exclude /usr/lib/x86_64-linux-gnu/perl/*/auto/Encode/TW*
 path-exclude *bin/x86_64-linux-gnu-dwp
-path-exclude *bin/systemd-analyze
 path-exclude /usr/lib/x86_64-linux-gnu/ceph*
 path-exclude /usr/lib/x86_64-linux-gnu/libicudata.a
 path-exclude /lib/modules/*/kernel/drivers/net/ethernet*
