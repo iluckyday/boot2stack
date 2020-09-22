@@ -136,6 +136,7 @@ glance \
 placement-api \
 nova-api nova-conductor nova-novncproxy nova-scheduler \
 neutron-server neutron-openvswitch-agent neutron-dhcp-agent neutron-metadata-agent neutron-l3-agent \
+swift swift-proxy \
 cinder-api cinder-scheduler \
 manila-api manila-scheduler python3-manilaclient"
 
@@ -166,6 +167,7 @@ glance-api.service \
 placement-api.service \
 nova-api-metadata.service nova-api.service nova-conductor.service nova-novncproxy.service nova-scheduler.service nova-serialproxy.service nova-spicehtml5proxy.service nova-xenvncproxy.service \
 neutron-api.service neutron-dhcp-agent.service neutron-l3-agent.service neutron-openvswitch-agent.service neutron-metadata-agent.service neutron-rpc-server.service \
+swift-proxy.service \
 cinder-api.service cinder-scheduler.service \
 manila-api.service manila-scheduler.service"
 

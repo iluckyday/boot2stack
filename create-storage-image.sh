@@ -118,7 +118,7 @@ cat << "EOF" > ${MNTDIR}/usr/sbin/stack-install.sh
 #!/bin/bash
 set -ex
 
-APPS="cinder-volume tgt manila-share nfs-kernel-server"
+APPS="xfsprogs rsync swift swift-account swift-container swift-object cinder-volume tgt manila-share nfs-kernel-server"
 
 DISABLE_SERVICES="e2scrub_all.timer \
 apt-daily-upgrade.timer \
@@ -136,6 +136,7 @@ e2scrub_reap.service \
 logrotate.service \
 systemd-timesyncd.service \
 tgt.service \
+
 cinder-volume.service \
 manila-share.service"
 
