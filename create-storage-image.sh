@@ -136,6 +136,7 @@ e2scrub_reap.service \
 logrotate.service \
 systemd-timesyncd.service \
 tgt.service \
+rsync.service \
 swift-object-auditor.service swift-object-reconstructor.service swift-object-replicator.service swift-object-updater.service swift-object.service swift-account-auditor.service swift-account-reaper.service swift-account-replicator.service swift-account.service swift-container-auditor.service swift-container-reconciler.service swift-container-replicator.service swift-container-sharder.service swift-container-sync.service swift-container-updater.service swift-container.service \
 cinder-volume.service \
 manila-share.service"

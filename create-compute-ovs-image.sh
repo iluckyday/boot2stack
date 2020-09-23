@@ -205,6 +205,7 @@ e2scrub_fail@.service \
 e2scrub_reap.service \
 logrotate.service \
 systemd-timesyncd.service \
+rsync.service \
 openvswitch-switch.service \
 libvirtd.service libvirt-guests.service \
 nova-compute neutron-openvswitch-agent neutron-dhcp-agent neutron-l3-agent neutron-metadata-agent"
