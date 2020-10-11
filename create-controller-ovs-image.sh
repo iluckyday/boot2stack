@@ -138,7 +138,10 @@ nova-api nova-conductor nova-novncproxy nova-scheduler \
 neutron-server neutron-openvswitch-agent neutron-dhcp-agent neutron-metadata-agent neutron-l3-agent \
 swift swift-proxy \
 cinder-api cinder-scheduler \
-manila-api manila-scheduler python3-manilaclient"
+manila-api manila-scheduler python3-manilaclient \
+barbican-api \
+senlin-api senlin-engine python3-senlinclient \
+designate bind9 bind9utils designate-worker designate-producer designate-mdns"
 
 DISABLE_SERVICES="e2scrub_all.timer \
 apt-daily-upgrade.timer \
@@ -170,7 +173,10 @@ neutron-api.service neutron-dhcp-agent.service neutron-l3-agent.service neutron-
 rsync.service \
 swift-proxy.service \
 cinder-api.service cinder-scheduler.service \
-manila-api.service manila-scheduler.service"
+manila-api.service manila-scheduler.service \
+barbican-api.service \
+senlin-api.service senlin-engine.service \
+designate-central.service designate-api.service bind9.service designate-worker.service designate-producer.service designate-mdns.service"
 
 REMOVE_APPS="tzdata"
 
