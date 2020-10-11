@@ -176,7 +176,7 @@ cinder-api.service cinder-scheduler.service \
 manila-api.service manila-scheduler.service \
 barbican-api.service barbican-keystone-listener.service barbican-worker.service \
 senlin-api.service senlin-engine.service \
-designate-central.service designate-api.service bind9.service designate-worker.service designate-producer.service designate-mdns.service"
+designate-central.service designate-api.service designate-worker.service designate-producer.service designate-mdns.service"
 
 REMOVE_APPS="tzdata"
 
@@ -205,7 +205,7 @@ pip install websocket-client
 systemctl stop mysql etcd rabbitmq-server
 sleep 5
 rm -rf /var/lib/mysql/{ib*,*log*} /var/lib/etcd/* /var/lib/rabbitmq/*
-rm -rf /etc/hostname /etc/resolv.conf /etc/networks /usr/share/doc /usr/share/man /var/lib/*/*.sqlite
+rm -rf /etc/hostname /etc/resolv.conf /etc/networks /usr/share/doc /usr/share/man /var/lib/*/*.sqlite /var/lib/openvswitch/conf.db
 rm -rf /usr/bin/systemd-analyze /usr/bin/perl*.* /usr/bin/sqlite3 /usr/share/misc/pci.ids /usr/share/mysql /usr/share/ieee-data /usr/share/sphinx /usr/share/python-wheels /usr/share/fonts/truetype /usr/lib/udev/hwdb.d /usr/lib/udev/hwdb.bin
 find /usr -type d -name __pycache__ -prune -exec rm -rf {} +
 find /usr -type d -name tests -prune -exec rm -rf {} +
