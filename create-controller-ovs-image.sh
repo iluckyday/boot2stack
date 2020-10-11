@@ -139,7 +139,7 @@ neutron-server neutron-openvswitch-agent neutron-dhcp-agent neutron-metadata-age
 swift swift-proxy \
 cinder-api cinder-scheduler \
 manila-api manila-scheduler python3-manilaclient \
-barbican-api \
+barbican-api barbican-keystone-listener barbican-worker \
 senlin-api senlin-engine python3-senlinclient \
 designate bind9 bind9utils designate-worker designate-producer designate-mdns"
 
@@ -174,7 +174,7 @@ rsync.service \
 swift-proxy.service \
 cinder-api.service cinder-scheduler.service \
 manila-api.service manila-scheduler.service \
-barbican-api.service \
+barbican-api.service barbican-keystone-listener.service barbican-worker.service \
 senlin-api.service senlin-engine.service \
 designate-central.service designate-api.service bind9.service designate-worker.service designate-producer.service designate-mdns.service"
 
