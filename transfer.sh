@@ -1,7 +1,11 @@
 #!/bin/bash
 set -ex
 
-ver="$(curl -skL https://api.github.com/repos/Mikubill/transfer/releases/latest | grep -oP '"tag_name": "\K(.*)(?=")')"
+for (( n=1; n<=3; n++)); do
+  ver="$(curl -skL https://api.github.com/repos/Mikubill/transfer/releases/latest | grep -oP '"tag_name": "\K(.*)(?=")')"
+  [ ! "$ver" ] || break
+done
+
 curl -skL https://github.com/Mikubill/transfer/releases/download/"$ver"/transfer_"${ver/v/}"_linux_amd64.tar.gz | tar -xz -C /tmp
 
 for f in /dev/shm/stack-*.img; do

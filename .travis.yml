@@ -37,4 +37,5 @@ jobs:
     - sudo /bin/bash create-baremetal-image.sh
 
 after_success:
-- /bin/bash transfer.sh
+#- /bin/bash transfer.sh
+- /bin/bash dockerhub.sh
