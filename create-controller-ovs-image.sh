@@ -89,6 +89,12 @@ path-exclude /lib/modules/*/fs/ceph*
 path-exclude /lib/modules/*/sound*
 EOF
 
+mkdir -p ${MNTDIR}/etc/systemd/system.conf.d
+cat << EOF > ${MNTDIR}/etc/systemd/system.conf.d/timeout.conf
+[Manager]
+DefaultTimeoutStartSec=600
+EOF
+
 mkdir -p ${MNTDIR}/etc/systemd/system-environment-generators
 cat << EOF > ${MNTDIR}/etc/systemd/system-environment-generators/20-python
 #!/bin/sh
@@ -134,15 +140,15 @@ python3-openstackclient \
 keystone \
 glance \
 placement-api \
-nova-api nova-conductor nova-novncproxy nova-scheduler \
-neutron-server neutron-openvswitch-agent neutron-dhcp-agent neutron-metadata-agent neutron-l3-agent \
-swift swift-proxy \
-cinder-api cinder-scheduler \
-barbican-api barbican-keystone-listener barbican-worker \
-senlin-api senlin-engine python3-senlinclient \
-designate bind9 bind9utils designate-worker designate-producer designate-mdns"
-#manila-api manila-scheduler python3-manilaclient \
+nova-api nova-conductor nova-novncproxy nova-scheduler"
+#neutron-server neutron-openvswitch-agent neutron-dhcp-agent neutron-metadata-agent neutron-l3-agent \
+#swift swift-proxy \
+#cinder-api cinder-scheduler \
 #ironic-api ironic-conductor python3-ironicclient syslinux-common pxelinux ipxe \
+#manila-api manila-scheduler python3-manilaclient \
+#barbican-api barbican-keystone-listener barbican-worker \
+#senlin-api senlin-engine python3-senlinclient \
+#designate bind9 bind9utils designate-worker designate-producer designate-mdns"
 
 DISABLE_SERVICES="e2scrub_all.timer \
 apt-daily-upgrade.timer \
