@@ -32,5 +32,9 @@ jobs:
     script:
     - sudo /bin/bash create-gluster-image.sh
 
+  - name: create-baremetal-image
+    script:
+    - sudo /bin/bash create-baremetal-image.sh
+
 after_success:
 - /bin/bash transfer.sh

@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-include_apps="systemd,systemd-sysv,sudo,bash-completion,openssh-server,tcpdump,isc-dhcp-client,busybox"
+include_apps="systemd,systemd-sysv,sudo,openssh-server,isc-dhcp-client,busybox"
 
 export DEBIAN_FRONTEND=noninteractive
 apt-config dump | grep -we Recommends -e Suggests | sed 's/1/0/' | tee /etc/apt/apt.conf.d/99norecommends
@@ -62,24 +62,9 @@ path-exclude /usr/lib/x86_64-linux-gnu/perl/*/auto/Encode/CN*
 path-exclude /usr/lib/x86_64-linux-gnu/perl/*/auto/Encode/JP*
 path-exclude /usr/lib/x86_64-linux-gnu/perl/*/auto/Encode/KR*
 path-exclude /usr/lib/x86_64-linux-gnu/perl/*/auto/Encode/TW*
-path-exclude *bin/perror
-path-exclude *bin/mysqlslap
-path-exclude *bin/mysqlbinlog
 path-exclude *bin/x86_64-linux-gnu-dwp
-path-exclude *bin/mysql_embedded
 path-exclude *bin/systemd-analyze
 path-exclude *bin/resolve_stack_dump
-path-exclude *bin/mysql_tzinfo_to_sql
-path-exclude *bin/sqldiff
-path-exclude *bin/etcdctl
-path-exclude *bin/myisamlog
-path-exclude *bin/mysqldump
-path-exclude *bin/aria_dump_log
-path-exclude *bin/mysqlimport
-path-exclude *bin/pdata_tools
-path-exclude *bin/aria_ftdump
-path-exclude *bin/aria_read_log
-path-exclude *bin/myisam_ftdump
 path-exclude /usr/lib/x86_64-linux-gnu/ceph*
 path-exclude /usr/lib/x86_64-linux-gnu/libicudata.a
 path-exclude /lib/modules/*/kernel/drivers/net/ethernet*
@@ -126,23 +111,7 @@ cat << "EOF" > ${MNTDIR}/usr/sbin/stack-install.sh
 #!/bin/bash
 set -ex
 
-APPS="mariadb-server python3-pymysql \
-rabbitmq-server \
-memcached python3-memcache \
-etcd \
-python3-openstackclient \
-keystone \
-glance \
-placement-api \
-nova-api nova-conductor nova-novncproxy nova-scheduler \
-neutron-server neutron-openvswitch-agent neutron-dhcp-agent neutron-metadata-agent neutron-l3-agent \
-swift swift-proxy \
-cinder-api cinder-scheduler \
-#ironic-api ironic-conductor python3-ironicclient \
-manila-api manila-scheduler python3-manilaclient \
-barbican-api barbican-keystone-listener barbican-worker \
-senlin-api senlin-engine python3-senlinclient \
-designate bind9 bind9utils designate-worker designate-producer designate-mdns"
+APPS="ironic-api ironic-conductor python3-ironicclient"
 
 DISABLE_SERVICES="e2scrub_all.timer \
 apt-daily-upgrade.timer \
@@ -159,26 +128,7 @@ e2scrub_fail@.service \
 e2scrub_reap.service \
 logrotate.service \
 systemd-timesyncd.service \
-openvswitch-switch.service \
-mysql.service mariadb.service \
-keepalived.service haproxy.service \
-memcached.service \
-rabbitmq-server.service \
-etcd.service \
-apache2.service \
-keystone.service \
-glance-api.service \
-placement-api.service \
-nova-api-metadata.service nova-api.service nova-conductor.service nova-novncproxy.service nova-scheduler.service nova-serialproxy.service nova-spicehtml5proxy.service nova-xenvncproxy.service \
-neutron-api.service neutron-dhcp-agent.service neutron-l3-agent.service neutron-openvswitch-agent.service neutron-metadata-agent.service neutron-rpc-server.service \
-rsync.service \
-swift-proxy.service \
-cinder-api.service cinder-scheduler.service \
-#ironic-api.service ironic-conductor.service \
-manila-api.service manila-scheduler.service \
-barbican-api.service barbican-keystone-listener.service barbican-worker.service \
-senlin-api.service senlin-engine.service \
-designate-central.service designate-api.service designate-worker.service designate-producer.service designate-mdns.service"
+ironic-api.service ironic-conductor.service"
 
 REMOVE_APPS="tzdata"
 
@@ -204,11 +154,9 @@ systemctl disable $DISABLE_SERVICES
 
 pip install websocket-client
 
-systemctl stop mysql etcd rabbitmq-server
 sleep 5
-rm -rf /var/lib/mysql/{ib*,*log*} /var/lib/etcd/* /var/lib/rabbitmq/*
-rm -rf /etc/hostname /etc/resolv.conf /etc/networks /usr/share/doc /usr/share/man /var/lib/*/*.sqlite /var/lib/openvswitch/conf.db
-rm -rf /usr/bin/systemd-analyze /usr/bin/perl*.* /usr/bin/sqlite3 /usr/share/misc/pci.ids /usr/share/mysql /usr/share/ieee-data /usr/share/sphinx /usr/share/python-wheels /usr/share/fonts/truetype /usr/lib/udev/hwdb.d /usr/lib/udev/hwdb.bin
+rm -rf /etc/hostname /etc/resolv.conf /etc/networks /usr/share/doc /usr/share/man /var/lib/*/*.sqlite
+rm -rf /usr/bin/systemd-analyze /usr/bin/perl*.* /usr/bin/sqlite3 /usr/share/misc/pci.ids /usr/share/ieee-data /usr/share/sphinx /usr/share/python-wheels /usr/share/fonts/truetype /usr/lib/udev/hwdb.d /usr/lib/udev/hwdb.bin
 find /usr -type d -name __pycache__ -prune -exec rm -rf {} +
 find /usr -type d -name tests -prune -exec rm -rf {} +
 find /usr/*/locale -mindepth 1 -maxdepth 1 ! -name 'en' -prune -exec rm -rf {} +
@@ -296,11 +244,10 @@ umount ${MNTDIR}
 sleep 1
 losetup -d $loopx
 
-#qemu-system-x86_64 -name stack-c-building -machine q35,accel=kvm -cpu host -smp "$(nproc)" -m 4G -nographic -object rng-random,filename=/dev/urandom,id=rng0 -device virtio-rng-pci,rng=rng0 -boot c -drive file=/tmp/sid.raw,if=virtio,format=raw,media=disk -netdev user,id=n0,ipv6=off -device virtio-net,netdev=n0
-qemu-system-x86_64 -name stack-c-building -machine q35,accel=kvm -cpu kvm64 -smp "$(nproc)" -m 6G -nographic -object rng-random,filename=/dev/urandom,id=rng0 -device virtio-rng-pci,rng=rng0 -boot c -drive file=/tmp/sid.raw,if=virtio,format=raw,media=disk -netdev user,id=n0,ipv6=off -device virtio-net,netdev=n0
+qemu-system-x86_64 -name stack-b-building -machine q35,accel=kvm -cpu kvm64 -smp "$(nproc)" -m 6G -nographic -object rng-random,filename=/dev/urandom,id=rng0 -device virtio-rng-pci,rng=rng0 -boot c -drive file=/tmp/sid.raw,if=virtio,format=raw,media=disk -netdev user,id=n0,ipv6=off -device virtio-net,netdev=n0
 
 sleep 2
 
-qemu-img convert -c -f raw -O qcow2 /tmp/sid.raw /dev/shm/stack-c.img
+qemu-img convert -c -f raw -O qcow2 /tmp/sid.raw /dev/shm/stack-b.img
 
 exit 0
