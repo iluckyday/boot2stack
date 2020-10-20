@@ -210,7 +210,7 @@ cat /var/log/nova/*
 dpkg -P --force-depends $REMOVE_APPS
 systemctl disable $DISABLE_SERVICES
 
-pip install websocket-client
+#pip install websocket-client
 
 systemctl stop mysql etcd rabbitmq-server
 sleep 5
