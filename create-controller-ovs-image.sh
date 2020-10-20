@@ -138,7 +138,7 @@ nova-api nova-conductor nova-novncproxy nova-scheduler \
 neutron-server neutron-openvswitch-agent neutron-dhcp-agent neutron-metadata-agent neutron-l3-agent \
 swift swift-proxy \
 cinder-api cinder-scheduler \
-#ironic-api ironic-conductor python3-ironicclient \
+ironic-api ironic-conductor python3-ironicclient syslinux-common pxelinux ipxe \
 manila-api manila-scheduler python3-manilaclient \
 barbican-api barbican-keystone-listener barbican-worker \
 senlin-api senlin-engine python3-senlinclient \
@@ -174,7 +174,7 @@ neutron-api.service neutron-dhcp-agent.service neutron-l3-agent.service neutron-
 rsync.service \
 swift-proxy.service \
 cinder-api.service cinder-scheduler.service \
-#ironic-api.service ironic-conductor.service \
+ironic-api.service ironic-conductor.service \
 manila-api.service manila-scheduler.service \
 barbican-api.service barbican-keystone-listener.service barbican-worker.service \
 senlin-api.service senlin-engine.service \
