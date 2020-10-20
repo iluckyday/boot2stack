@@ -89,11 +89,11 @@ path-exclude /lib/modules/*/fs/ceph*
 path-exclude /lib/modules/*/sound*
 EOF
 
-mkdir -p ${MNTDIR}/etc/systemd/system.conf.d
-cat << EOF > ${MNTDIR}/etc/systemd/system.conf.d/timeout.conf
-[Manager]
-DefaultTimeoutStartSec=600
-EOF
+#mkdir -p ${MNTDIR}/run/systemd/system.conf.d
+#cat << EOF > ${MNTDIR}/run/systemd/system.conf.d/timeout.conf
+#[Manager]
+#DefaultTimeoutStartSec=600
+#EOF
 
 mkdir -p ${MNTDIR}/etc/systemd/system-environment-generators
 cat << EOF > ${MNTDIR}/etc/systemd/system-environment-generators/20-python
@@ -205,8 +205,7 @@ rm -f /var/lib/dpkg/info/libc-bin.postinst /var/lib/dpkg/info/man-db.postinst /v
 apt update
 DEBIAN_FRONTEND=noninteractive apt install -y $APPS
 
-journalctl -u nova-conductor.service
-journalctl -u nova-scheduler.service
+cat /var/log/nova/*
 
 dpkg -P --force-depends $REMOVE_APPS
 systemctl disable $DISABLE_SERVICES
