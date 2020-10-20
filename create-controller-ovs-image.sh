@@ -138,10 +138,10 @@ nova-api nova-conductor nova-novncproxy nova-scheduler \
 neutron-server neutron-openvswitch-agent neutron-dhcp-agent neutron-metadata-agent neutron-l3-agent \
 swift swift-proxy \
 cinder-api cinder-scheduler \
-manila-api manila-scheduler python3-manilaclient \
 barbican-api barbican-keystone-listener barbican-worker \
 senlin-api senlin-engine python3-senlinclient \
 designate bind9 bind9utils designate-worker designate-producer designate-mdns"
+#manila-api manila-scheduler python3-manilaclient \
 #ironic-api ironic-conductor python3-ironicclient syslinux-common pxelinux ipxe \
 
 DISABLE_SERVICES="e2scrub_all.timer \
