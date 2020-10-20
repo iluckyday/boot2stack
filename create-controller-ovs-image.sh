@@ -89,9 +89,6 @@ path-exclude /lib/modules/*/fs/ceph*
 path-exclude /lib/modules/*/sound*
 EOF
 
-mkdir -p /usr/share/manila-common
-touch /usr/share/manila-common/policy.json
-
 mkdir -p ${MNTDIR}/etc/systemd/system-environment-generators
 cat << EOF > ${MNTDIR}/etc/systemd/system-environment-generators/20-python
 #!/bin/sh
@@ -138,7 +135,7 @@ keystone \
 glance \
 placement-api \
 nova-api nova-conductor nova-novncproxy nova-scheduler \
-neutron-server neutron-openvswitch-agent neutron-dhcp-agent neutron-metadata-agent neutron-l3-agent \
+neutron-server neutron-openvswitch-agent neutron-dhcp-agent neutron-metadata-agent neutron-l3-agent ironic_neutron_agent \
 swift swift-proxy \
 cinder-api cinder-scheduler \
 ironic-api ironic-conductor python3-ironicclient syslinux-common pxelinux ipxe \
@@ -173,7 +170,7 @@ keystone.service \
 glance-api.service \
 placement-api.service \
 nova-api-metadata.service nova-api.service nova-conductor.service nova-novncproxy.service nova-scheduler.service nova-serialproxy.service nova-spicehtml5proxy.service nova-xenvncproxy.service \
-neutron-api.service neutron-dhcp-agent.service neutron-l3-agent.service neutron-openvswitch-agent.service neutron-metadata-agent.service neutron-rpc-server.service \
+neutron-api.service neutron-dhcp-agent.service neutron-l3-agent.service neutron-openvswitch-agent.service neutron-metadata-agent.service neutron-rpc-server.service ironic_neutron_agent.service \
 rsync.service \
 swift-proxy.service \
 cinder-api.service cinder-scheduler.service \
