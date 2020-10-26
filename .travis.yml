@@ -3,5 +3,4 @@ dist: focal
 language: shell
 
 before_install:
-- echo $MEGA_PASS | tee -a /tmp/test
-- cat /tmp/test
+- /bin/bash mega.sh
