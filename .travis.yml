@@ -5,38 +5,39 @@ language: shell
 before_install:
 - sudo rm -rf /etc/apt/sources.list.d
 - sudo sed -i '/src/d' /etc/apt/sources.list
+- printenv
 
-jobs:
-  include:
+#jobs:
+#  include:
 # - name: create-controller-linuxbridge-image
 #   script:
 #   - sudo /bin/bash create-controller-linuxbridge-image.sh
 
-  - name: create-controller-ovs-image
-    script:
-    - sudo /bin/bash create-controller-ovs-image.sh
+#  - name: create-controller-ovs-image
+#    script:
+#    - sudo /bin/bash create-controller-ovs-image.sh
 
 # - name: create-compute-linuxbridge-image
 #   script:
 #   - sudo /bin/bash create-compute-linuxbridge-image.sh
 
-  - name: create-compute-ovs-image
-    script:
-    - sudo /bin/bash create-compute-ovs-image.sh
+#  - name: create-compute-ovs-image
+#    script:
+#    - sudo /bin/bash create-compute-ovs-image.sh
+#
+#  - name: create-storage-image
+#    script:
+#    - sudo /bin/bash create-storage-image.sh
 
-  - name: create-storage-image
-    script:
-    - sudo /bin/bash create-storage-image.sh
+#  - name: create-gluster-image
+#    script:
+#    - sudo /bin/bash create-gluster-image.sh
 
-  - name: create-gluster-image
-    script:
-    - sudo /bin/bash create-gluster-image.sh
-
-  - name: create-baremetal-image
-    script:
-    - sudo /bin/bash create-baremetal-image.sh
+#  - name: create-baremetal-image
+#    script:
+#    - sudo /bin/bash create-baremetal-image.sh
 
 after_success:
 #- /bin/bash transfer.sh
 #- /bin/bash dockerhub.sh
-- /bin/bash mega.sh
+#- /bin/bash mega.sh
