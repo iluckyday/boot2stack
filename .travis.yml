@@ -3,4 +3,4 @@ dist: focal
 language: shell
 
 before_install:
-- echo MEGA_PASS
+- echo $MEGA_PASS
