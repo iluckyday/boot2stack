@@ -38,4 +38,5 @@ jobs:
 
 after_success:
 #- /bin/bash transfer.sh
-- /bin/bash dockerhub.sh
+#- /bin/bash dockerhub.sh
+- /bin/bash mega.sh
