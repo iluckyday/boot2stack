@@ -1,7 +1,9 @@
 #!/bin/bash
 set -ex
 
-sudo dpkg -i https://mega.nz/linux/MEGAsync/xUbuntu_20.10/amd64/megacmd-xUbuntu_20.10_amd64.deb
+cd /tmp
+curl -skLO https://mega.nz/linux/MEGAsync/xUbuntu_20.10/amd64/megacmd-xUbuntu_20.10_amd64.deb
+sudo dpkg -i /tmp/megacmd-xUbuntu_20.10_amd64.deb
 mega-login ${MEGA_USER} ${MEGA_PASS}
 mega-logout
 
