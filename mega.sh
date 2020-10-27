@@ -16,9 +16,10 @@ mega-login "${MEGA_USER}" "${MEGA_PASS}"
 
 for f in /dev/shm/stack-*.img; do
 FILENAME=$(basename $f)
+DATE=$(date "+%Y%m%d%H%M%S")
 SIZE=$(du -h $f | awk '{print $1}')
 data="$FILENAME-$SIZE-mega"
-mega-put $f /boot2stack
+mega-put -c $f /boot2stack/$DATE
 curl -skLo /dev/null "https://wxpusher.zjiecode.com/api/send/message/?appToken=${WXPUSHER_APPTOKEN}&uid=${WXPUSHER_UID}&content=${data}"
 done
 
