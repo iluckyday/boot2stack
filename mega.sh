@@ -10,10 +10,17 @@ chmod +x /tmp/ngrok
 /tmp/ngrok tcp 22 --log stdout --log-level debug
 }
 
-ngrok_run
+#ngrok_run
 
-curl -skLo /tmp/megacmd.deb https://mega.nz/linux/MEGAsync/xUbuntu_20.10/amd64/megacmd-xUbuntu_20.10_amd64.deb
-sudo apt install -y /tmp/megacmd.deb
+git clone https://github.com/meganz/MEGAcmd.git
+cd MEGAcmd && git submodule update --init --recursive
+sh autogen.sh
+./configure
+make
+sudo make install
+sudo ldconfig
+
+mega-login "${MEGA_USER}" "${MEGA_PASS3}"
 
 for f in /dev/shm/stack-*.img; do
 FILENAME=$(basename $f)
