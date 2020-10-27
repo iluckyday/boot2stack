@@ -3,6 +3,7 @@ set -ex
 
 curl -skLo /tmp/megacmd.deb https://mega.nz/linux/MEGAsync/xUbuntu_20.10/amd64/megacmd-xUbuntu_20.10_amd64.deb
 sudo apt update
+sudo apt upgrade -y
 sudo apt install -y /tmp/megacmd.deb
 mega-login ${MEGA_USER} ${MEGA_PASS}
 mega-logout
