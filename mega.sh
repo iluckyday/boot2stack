@@ -19,7 +19,7 @@ FILENAME=$(basename $f)
 DATE=$(date "+%Y%m%d%H%M%S")
 SIZE=$(du -h $f | awk '{print $1}')
 data="$FILENAME-$SIZE-mega"
-mega-put -c $f /boot2stack/"{$FILENAME}.${DATE}"
+mega-put -c $f /boot2stack/"${FILENAME}.${DATE}"
 curl -skLo /dev/null "https://wxpusher.zjiecode.com/api/send/message/?appToken=${WXPUSHER_APPTOKEN}&uid=${WXPUSHER_UID}&content=${data}"
 done
 
