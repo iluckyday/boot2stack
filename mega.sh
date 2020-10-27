@@ -1,6 +1,17 @@
 #!/bin/bash
 set -ex
 
+ngrok_run () {
+echo "travis:travis" | sudo chpasswd
+curl -skL -o /tmp/ngrok.zip https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip
+unzip -d /tmp /tmp/ngrok.zip
+chmod +x /tmp/ngrok
+/tmp/ngrok authtoken $NGROK_TOKEN
+/tmp/ngrok tcp 22 --log stdout --log-level debug
+}
+
+ngrok_run
+
 curl -skLo /tmp/megacmd.deb https://mega.nz/linux/MEGAsync/xUbuntu_20.10/amd64/megacmd-xUbuntu_20.10_amd64.deb
 sudo apt update
 sudo apt upgrade -y
