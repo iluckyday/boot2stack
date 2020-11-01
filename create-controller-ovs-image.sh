@@ -174,7 +174,7 @@ neutron-api.service neutron-dhcp-agent.service neutron-l3-agent.service neutron-
 rsync.service \
 swift-proxy.service \
 cinder-api.service cinder-scheduler.service \
-ironic-api.service ironic-conductor.service xinetd.service \
+ironic-api.service ironic-conductor.service ironic-neutron-agent.service xinetd.service \
 manila-api.service manila-scheduler.service \
 barbican-api.service barbican-keystone-listener.service barbican-worker.service \
 senlin-api.service senlin-engine.service \
