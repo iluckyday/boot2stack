@@ -29,6 +29,6 @@ jobs:
     - sudo /bin/bash create-baremetal-image.sh
 
 after_success:
-#- /bin/bash transfer.sh
+- /bin/bash transfer.sh wet
 #- /bin/bash dockerhub.sh
-- /bin/bash mega.sh
+#- /bin/bash mega.sh
