@@ -188,7 +188,7 @@ cat << "EOF" > ${MNTDIR}/usr/sbin/stack-install.sh
 #!/bin/bash
 set -ex
 
-APPS="nova-compute neutron-openvswitch-agent neutron-dhcp-agent neutron-l3-agent neutron-metadata-agent"
+APPS="python3-systemd nova-compute neutron-openvswitch-agent neutron-dhcp-agent neutron-l3-agent neutron-metadata-agent"
 
 DISABLE_SERVICES="e2scrub_all.timer \
 apt-daily-upgrade.timer \

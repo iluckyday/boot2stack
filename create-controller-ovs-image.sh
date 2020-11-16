@@ -126,7 +126,8 @@ cat << "EOF" > ${MNTDIR}/usr/sbin/stack-install.sh
 #!/bin/bash
 set -ex
 
-APPS="mariadb-server python3-pymysql \
+APPS="python3-systemd \
+mariadb-server python3-pymysql \
 rabbitmq-server \
 memcached python3-memcache \
 etcd \

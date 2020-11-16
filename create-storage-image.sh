@@ -118,7 +118,7 @@ cat << "EOF" > ${MNTDIR}/usr/sbin/stack-install.sh
 #!/bin/bash
 set -ex
 
-APPS="xfsprogs rsync swift swift-account swift-container swift-object cinder-volume tgt manila-share nfs-kernel-server"
+APPS="python3-systemd xfsprogs rsync swift swift-account swift-container swift-object cinder-volume tgt manila-share nfs-kernel-server"
 
 DISABLE_SERVICES="e2scrub_all.timer \
 apt-daily-upgrade.timer \
