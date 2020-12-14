@@ -173,15 +173,15 @@ keystone.service \
 glance-api.service \
 placement-api.service \
 nova-api-metadata.service nova-api.service nova-conductor.service nova-novncproxy.service nova-scheduler.service nova-serialproxy.service nova-spicehtml5proxy.service nova-xenvncproxy.service \
-neutron-api.service neutron-dhcp-agent.service neutron-l3-agent.service neutron-openvswitch-agent.service neutron-metadata-agent.service neutron-rpc-server.service ironic_neutron_agent.service \
-rsync.service \
-swift-proxy.service \
-cinder-api.service cinder-scheduler.service \
-ironic-api.service ironic-conductor.service ironic-neutron-agent.service xinetd.service \
-manila-api.service manila-scheduler.service \
-barbican-api.service barbican-keystone-listener.service barbican-worker.service \
-senlin-api.service senlin-engine.service \
-designate-central.service designate-api.service designate-worker.service designate-producer.service designate-mdns.service"
+neutron-api.service neutron-dhcp-agent.service neutron-l3-agent.service neutron-openvswitch-agent.service neutron-metadata-agent.service neutron-rpc-server.service ironic_neutron_agent.service"
+#rsync.service \
+#swift-proxy.service \
+#cinder-api.service cinder-scheduler.service \
+#ironic-api.service ironic-conductor.service ironic-neutron-agent.service xinetd.service \
+#manila-api.service manila-scheduler.service \
+#barbican-api.service barbican-keystone-listener.service barbican-worker.service \
+#senlin-api.service senlin-engine.service \
+#designate-central.service designate-api.service designate-worker.service designate-producer.service designate-mdns.service"
 
 REMOVE_APPS="tzdata"
 
@@ -302,7 +302,7 @@ sleep 1
 losetup -d $loopx
 
 #qemu-system-x86_64 -name stack-c-building -machine q35,accel=kvm -cpu host -smp "$(nproc)" -m 4G -nographic -object rng-random,filename=/dev/urandom,id=rng0 -device virtio-rng-pci,rng=rng0 -boot c -drive file=/tmp/sid.raw,if=virtio,format=raw,media=disk -netdev user,id=n0,ipv6=off -device virtio-net,netdev=n0
-qemu-system-x86_64 -name stack-c-building -machine q35,accel=kvm:xen:hax:hvf:whpx:tcg -smp "$(nproc)" -m 5.5G -nographic -object rng-random,filename=/dev/urandom,id=rng0 -device virtio-rng-pci,rng=rng0 -boot c -drive file=/tmp/sid.raw,if=virtio,format=raw,media=disk -netdev user,id=n0,ipv6=off -device virtio-net,netdev=n0
+qemu-system-x86_64 -name stack-c-building -machine q35,accel=kvm:xen:hax:hvf:whpx:tcg -smp "$(nproc)" -m 5G -nographic -object rng-random,filename=/dev/urandom,id=rng0 -device virtio-rng-pci,rng=rng0 -boot c -drive file=/tmp/sid.raw,if=virtio,format=raw,media=disk -netdev user,id=n0,ipv6=off -device virtio-net,netdev=n0
 
 sleep 2
 
