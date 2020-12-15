@@ -130,22 +130,22 @@ set -ex
 
 APPS="python3-systemd \
 mariadb-server python3-pymysql \
-rabbitmq-server"
-#memcached python3-memcache \
-#etcd \
-#python3-openstackclient \
-#keystone \
-#glance \
-#placement-api \
-#nova-api nova-conductor nova-novncproxy nova-scheduler \
-#neutron-server neutron-openvswitch-agent neutron-dhcp-agent neutron-metadata-agent neutron-l3-agent ironic-neutron-agent"
-#swift swift-proxy \
-#cinder-api cinder-scheduler \
-#ironic-api ironic-conductor python3-ironicclient syslinux-common pxelinux ipxe \
-#manila-api manila-scheduler python3-manilaclient \
-#barbican-api barbican-keystone-listener barbican-worker \
-#senlin-api senlin-engine python3-senlinclient \
-#designate bind9 bind9utils designate-worker designate-producer designate-mdns"
+rabbitmq-server \
+memcached python3-memcache \
+etcd \
+python3-openstackclient \
+keystone \
+glance \
+placement-api \
+nova-api nova-conductor nova-novncproxy nova-scheduler \
+neutron-server neutron-openvswitch-agent neutron-dhcp-agent neutron-metadata-agent neutron-l3-agent ironic-neutron-agent \
+swift swift-proxy \
+cinder-api cinder-scheduler \
+ironic-api ironic-conductor python3-ironicclient syslinux-common pxelinux ipxe \
+manila-api manila-scheduler python3-manilaclient \
+barbican-api barbican-keystone-listener barbican-worker \
+senlin-api senlin-engine python3-senlinclient \
+designate bind9 bind9utils designate-worker designate-producer designate-mdns"
 
 DISABLE_SERVICES="e2scrub_all.timer \
 apt-daily-upgrade.timer \
@@ -201,9 +201,6 @@ rm -f /var/lib/dpkg/info/libc-bin.postinst /var/lib/dpkg/info/man-db.postinst /v
 
 apt update
 DEBIAN_FRONTEND=noninteractive apt install -y $APPS
-
-cat /var/log/nova/*
-
 dpkg -P --force-depends $REMOVE_APPS
 systemctl disable $DISABLE_SERVICES
 
@@ -279,6 +276,14 @@ LABEL debian
         LINUX /vmlinuz
         INITRD /initrd.img
         APPEND root=LABEL=debian-root console=ttyS0 quiet
+EOF
+
+cat << EOF > ${MNTDIR}/etc/hostname
+localhost
+EOF
+
+cat << EOF > ${MNTDIR}/etc/hosts
+127.0.0.1 localhost
 EOF
 
 chroot ${MNTDIR} /bin/bash -c "
