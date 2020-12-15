@@ -138,14 +138,14 @@ keystone \
 glance \
 placement-api \
 nova-api nova-conductor nova-novncproxy nova-scheduler \
-neutron-server neutron-openvswitch-agent neutron-dhcp-agent neutron-metadata-agent neutron-l3-agent ironic-neutron-agent \
-swift swift-proxy \
-cinder-api cinder-scheduler \
-ironic-api ironic-conductor python3-ironicclient syslinux-common pxelinux ipxe \
-manila-api manila-scheduler python3-manilaclient \
-barbican-api barbican-keystone-listener barbican-worker \
-senlin-api senlin-engine python3-senlinclient \
-designate bind9 bind9utils designate-worker designate-producer designate-mdns"
+neutron-server neutron-openvswitch-agent neutron-dhcp-agent neutron-metadata-agent neutron-l3-agent ironic-neutron-agent"
+#swift swift-proxy \
+#cinder-api cinder-scheduler \
+#ironic-api ironic-conductor python3-ironicclient syslinux-common pxelinux ipxe \
+#manila-api manila-scheduler python3-manilaclient \
+#barbican-api barbican-keystone-listener barbican-worker \
+#senlin-api senlin-engine python3-senlinclient \
+#designate bind9 bind9utils designate-worker designate-producer designate-mdns"
 
 DISABLE_SERVICES="e2scrub_all.timer \
 apt-daily-upgrade.timer \
@@ -173,15 +173,15 @@ keystone.service \
 glance-api.service \
 placement-api.service \
 nova-api-metadata.service nova-api.service nova-conductor.service nova-novncproxy.service nova-scheduler.service nova-serialproxy.service nova-spicehtml5proxy.service nova-xenvncproxy.service \
-neutron-api.service neutron-dhcp-agent.service neutron-l3-agent.service neutron-openvswitch-agent.service neutron-metadata-agent.service neutron-rpc-server.service ironic_neutron_agent.service"
-#rsync.service \
-#swift-proxy.service \
-#cinder-api.service cinder-scheduler.service \
-#ironic-api.service ironic-conductor.service ironic-neutron-agent.service xinetd.service \
-#manila-api.service manila-scheduler.service \
-#barbican-api.service barbican-keystone-listener.service barbican-worker.service \
-#senlin-api.service senlin-engine.service \
-#designate-central.service designate-api.service designate-worker.service designate-producer.service designate-mdns.service"
+neutron-api.service neutron-dhcp-agent.service neutron-l3-agent.service neutron-openvswitch-agent.service neutron-metadata-agent.service neutron-rpc-server.service ironic_neutron_agent.service \
+rsync.service \
+swift-proxy.service \
+cinder-api.service cinder-scheduler.service \
+ironic-api.service ironic-conductor.service ironic-neutron-agent.service xinetd.service \
+manila-api.service manila-scheduler.service \
+barbican-api.service barbican-keystone-listener.service barbican-worker.service \
+senlin-api.service senlin-engine.service \
+designate-central.service designate-api.service designate-worker.service designate-producer.service designate-mdns.service"
 
 REMOVE_APPS="tzdata"
 
