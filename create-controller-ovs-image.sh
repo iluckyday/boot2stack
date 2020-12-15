@@ -130,15 +130,15 @@ set -ex
 
 APPS="python3-systemd \
 mariadb-server python3-pymysql \
-rabbitmq-server \
-memcached python3-memcache \
-etcd \
-python3-openstackclient \
-keystone \
-glance \
-placement-api \
-nova-api nova-conductor nova-novncproxy nova-scheduler \
-neutron-server neutron-openvswitch-agent neutron-dhcp-agent neutron-metadata-agent neutron-l3-agent ironic-neutron-agent"
+rabbitmq-server"
+#memcached python3-memcache \
+#etcd \
+#python3-openstackclient \
+#keystone \
+#glance \
+#placement-api \
+#nova-api nova-conductor nova-novncproxy nova-scheduler \
+#neutron-server neutron-openvswitch-agent neutron-dhcp-agent neutron-metadata-agent neutron-l3-agent ironic-neutron-agent"
 #swift swift-proxy \
 #cinder-api cinder-scheduler \
 #ironic-api ironic-conductor python3-ironicclient syslinux-common pxelinux ipxe \
