@@ -1,4 +1,4 @@
-name: Boot2Stack CI
+name: Boot2Stack Creator
 
 on:
   schedule:

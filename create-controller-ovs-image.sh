@@ -138,14 +138,14 @@ keystone \
 glance \
 placement-api \
 nova-api nova-conductor nova-novncproxy nova-scheduler \
-neutron-server neutron-openvswitch-agent neutron-dhcp-agent neutron-metadata-agent neutron-l3-agent ironic-neutron-agent \
-swift swift-proxy \
-cinder-api cinder-scheduler \
-ironic-api ironic-conductor python3-ironicclient syslinux-common pxelinux ipxe \
-manila-api manila-scheduler python3-manilaclient \
-barbican-api barbican-keystone-listener barbican-worker \
-senlin-api senlin-engine python3-senlinclient \
-designate bind9 bind9utils designate-worker designate-producer designate-mdns"
+neutron-server neutron-openvswitch-agent neutron-dhcp-agent neutron-metadata-agent neutron-l3-agent ironic-neutron-agent"
+#swift swift-proxy \
+#cinder-api cinder-scheduler \
+#ironic-api ironic-conductor python3-ironicclient syslinux-common pxelinux ipxe \
+#manila-api manila-scheduler python3-manilaclient \
+#barbican-api barbican-keystone-listener barbican-worker \
+#senlin-api senlin-engine python3-senlinclient \
+#designate bind9 bind9utils designate-worker designate-producer designate-mdns"
 
 DISABLE_SERVICES="e2scrub_all.timer \
 apt-daily-upgrade.timer \
