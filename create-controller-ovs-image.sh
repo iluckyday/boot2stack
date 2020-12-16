@@ -199,7 +199,7 @@ sleep 2
 
 rm -f /var/lib/dpkg/info/libc-bin.postinst /var/lib/dpkg/info/man-db.postinst /var/lib/dpkg/info/dbus.postinst /var/lib/dpkg/info/initramfs-tools.postinst
 
-systemctl --runtime --dry-run mask $DISABLE_SERVICES
+#systemctl --runtime --dry-run mask $DISABLE_SERVICES
 
 apt update
 DEBIAN_FRONTEND=noninteractive apt install -y $APPS
