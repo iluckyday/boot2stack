@@ -20,7 +20,7 @@ jobs:
       - name: build
         run: sudo /bin/bash create-controller-ovs-image.sh
 
-      - name: push to wetransfer
+      - name: push to transfer
         run: /bin/bash transfer.sh wet
   compute:
     runs-on: ubuntu-20.04
@@ -30,7 +30,7 @@ jobs:
       - name: build
         run: sudo /bin/bash create-compute-ovs-image.sh
 
-      - name: push to wetransfer
+      - name: push to transfer
         run: /bin/bash transfer.sh wet
   storage:
     runs-on: ubuntu-20.04
@@ -40,7 +40,7 @@ jobs:
       - name: build
         run: sudo /bin/bash create-storage-image.sh
 
-      - name: push to wetransfer
+      - name: push to transfer
         run: /bin/bash transfer.sh wet
   gluster:
     runs-on: ubuntu-20.04
@@ -50,7 +50,7 @@ jobs:
       - name: build
         run: sudo /bin/bash create-gluster-image.sh
 
-      - name: push to wetransfer
+      - name: push to transfer
         run: /bin/bash transfer.sh wet
   baremetal:
     runs-on: ubuntu-20.04
@@ -60,5 +60,5 @@ jobs:
       - name: build
         run: sudo /bin/bash create-baremetal-image.sh
 
-      - name: push to wetransfer
+      - name: push to transfer
         run: /bin/bash transfer.sh wet
