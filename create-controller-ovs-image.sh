@@ -196,6 +196,15 @@ Name=en*
 DHCP=ipv4
 EOFF
 
+mkdir -p /run/systemd/system.conf.d
+cat << EEOOFF > /run/systemd/system.conf.d/timeout.conf
+[Manager]
+DefaultTimeoutStartSec=20min
+DefaultTimeoutStopSec=20min
+DefaultRestartSec=20min
+EEOOFF
+
+systemctl daemon-reload
 systemctl start systemd-networkd systemd-resolved
 sleep 2
 

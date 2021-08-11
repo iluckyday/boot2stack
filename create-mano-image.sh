@@ -152,7 +152,7 @@ DEBIAN_FRONTEND=noninteractive apt install -y $APPS
 
 echo Install Tacker
 cd /tmp
-git clone --depth=1 https://opendev.org/openstack/tacker
+git clone --depth=1 https://github.com/openstack/tacker
 cd /tmp/tacker
 pip3 install -r requirements.txt
 python3 setup.py install
