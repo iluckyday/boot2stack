@@ -13,7 +13,7 @@ env:
 
 jobs:
   controller:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
 
@@ -23,7 +23,7 @@ jobs:
       - name: push to transfer
         run: /bin/bash transfer.sh wet
   compute:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
 
@@ -33,7 +33,7 @@ jobs:
       - name: push to transfer
         run: /bin/bash transfer.sh wet
   storage:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
 
@@ -43,7 +43,7 @@ jobs:
       - name: push to transfer
         run: /bin/bash transfer.sh wet
   gluster:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
 
@@ -53,12 +53,22 @@ jobs:
       - name: push to transfer
         run: /bin/bash transfer.sh wet
   baremetal:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
 
       - name: build
         run: sudo /bin/bash create-baremetal-image.sh
+
+      - name: push to transfer
+        run: /bin/bash transfer.sh wet
+  mano:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: build
+        run: sudo /bin/bash create-mano-image.sh
 
       - name: push to transfer
         run: /bin/bash transfer.sh wet
