@@ -151,8 +151,9 @@ apt update
 DEBIAN_FRONTEND=noninteractive apt install -y $APPS
 
 echo Install Tacker
+export GIT_SSL_NO_VERIFY=1
 cd /tmp
-git clone --depth=1 https://github.com/openstack/tacker
+git clone --depth=1 https://opendev.org/openstack/tacker
 cd /tmp/tacker
 pip3 install -r requirements.txt
 python3 setup.py install
