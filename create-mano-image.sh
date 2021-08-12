@@ -111,7 +111,7 @@ EOF
 cat << "EOF" > ${MNTDIR}/usr/sbin/stack-install.sh
 #!/bin/bash
 set -ex
-APPS="git python3-pip"
+APPS="git python3-pip build-essential"
 DISABLE_SERVICES="e2scrub_all.timer \
 apt-daily-upgrade.timer \
 apt-daily.timer \
