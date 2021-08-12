@@ -188,6 +188,7 @@ Description=stack init script
 After=network.target
 [Service]
 Type=oneshot
+StandardOutput=journal+console
 ExecStart=/usr/sbin/stack-init.sh
 ExecStartPost=/bin/rm -f /etc/systemd/system/stack-init.service /etc/systemd/system/multi-user.target.wants/stack-init.service /usr/sbin/stack-init.sh
 RemainAfterExit=true
