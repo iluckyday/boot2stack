@@ -128,14 +128,13 @@ logrotate.service \
 systemd-timesyncd.service \
 barbican-keystone-listener.service \
 barbican-worker.service"
-REMOVE_APPS="ifupdown \
-build-essential \
-gcc-9 \
-libgcc-9-dev \
-g++-9 \
+REMOVE_APPS="ifupdown build-essential python3-dev iso-codes \ 
+gcc-gversion \
+libgcc-gversion-dev \
+g++-gversion \
 cpp \
-cpp-9 \
-iso-codes"
+cpp-gversion
+"
 mkdir -p /run/systemd/network
 cat << EOFF > /run/systemd/network/20-dhcp.network
 [Match]
@@ -157,9 +156,10 @@ cd /tmp/tacker
 pip3 install -r requirements.txt
 python3 setup.py install
 cp etc/systemd/system/tacker.service etc/systemd/system/tacker-conductor.service /etc/systemd/system
-DEBIAN_FRONTEND=noninteractive apt install -y python3-tackerclient
+DEBIAN_FRONTEND=noninteractive apt install -y python3-openstackclient python3-tackerclient
 
-dpkg -P --force-depends $REMOVE_APPS
+gv=$(dpkg -l | grep "GNU C compiler" | awk '/gcc-/ {sub("gcc-","",$2);print $2}')
+dpkg -P --force-depends ${REMOVE_APPS/gversion/$gv}
 systemctl disable $DISABLE_SERVICES
 rm -rf /etc/hostname /etc/resolv.conf /etc/networks /usr/share/doc /usr/share/man /var/tmp/* /var/cache/apt/* /var/lib/*/*.sqlite
 rm -rf /usr/bin/systemd-analyze /usr/bin/perl*.* /usr/bin/sqlite3 /usr/share/misc/pci.ids /usr/share/mysql /usr/share/ieee-data /usr/share/sphinx /usr/share/python-wheels /usr/share/fonts/truetype /usr/lib/udev/hwdb.d /usr/lib/udev/hwdb.bin
