@@ -128,7 +128,7 @@ logrotate.service \
 systemd-timesyncd.service \
 barbican-keystone-listener.service \
 barbican-worker.service"
-REMOVE_APPS="ifupdown build-essential python3-dev iso-codes \ 
+REMOVE_APPS="ifupdown build-essential python3-dev iso-codes \
 gcc-gversion \
 libgcc-gversion-dev \
 g++-gversion \
@@ -158,7 +158,7 @@ python3 setup.py install
 cp etc/systemd/system/tacker.service etc/systemd/system/tacker-conductor.service /etc/systemd/system
 DEBIAN_FRONTEND=noninteractive apt install -y python3-openstackclient python3-tackerclient
 
-gv=$(dpkg -l | grep "GNU C compiler" | awk '/gcc-/ {sub("gcc-","",$2);print $2}')
+gv=$(dpkg -l | grep "GNU C compiler" | awk '/gcc-/ {gsub("gcc-","",$2);print $2}')
 dpkg -P --force-depends ${REMOVE_APPS/gversion/$gv}
 systemctl disable $DISABLE_SERVICES
 rm -rf /etc/hostname /etc/resolv.conf /etc/networks /usr/share/doc /usr/share/man /var/tmp/* /var/cache/apt/* /var/lib/*/*.sqlite
