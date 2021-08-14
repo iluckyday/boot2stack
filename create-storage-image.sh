@@ -141,14 +141,7 @@ swift-object-auditor.service swift-object-reconstructor.service swift-object-rep
 cinder-volume.service \
 manila-share.service"
 
-REMOVE_APPS="ifupdown \
-build-essential \
-gcc-9 \
-libgcc-9-dev \
-g++-9 \
-cpp \
-cpp-9 \
-iso-codes"
+REMOVE_APPS="ifupdown iso-codes"
 
 mkdir -p /run/systemd/network
 cat << EOFF > /run/systemd/network/20-dhcp.network
@@ -166,7 +159,7 @@ rm -f /var/lib/dpkg/info/libc-bin.postinst /var/lib/dpkg/info/man-db.postinst /v
 
 apt update
 DEBIAN_FRONTEND=noninteractive apt install -y $APPS
-dpkg -P --force-depends $REMOVE_APPS
+dpkg -P --force-depends ${REMOVE_APPS}
 systemctl disable $DISABLE_SERVICES
 
 rm -rf /etc/hostname /etc/resolv.conf /etc/networks /usr/share/doc /usr/share/man /var/tmp/* /var/cache/apt/* /var/lib/*/*.sqlite

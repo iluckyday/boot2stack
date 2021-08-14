@@ -134,6 +134,7 @@ rabbitmq-server \
 memcached python3-memcache \
 etcd \
 python3-openstackclient \
+python3-tackerclient \
 keystone \
 glance \
 placement-api \

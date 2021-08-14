@@ -110,7 +110,7 @@ EOF
 cat << "EOF" > ${MNTDIR}/usr/sbin/stack-install.sh
 #!/bin/bash
 set -ex
-APPS="git python3-pip build-essential python3-dev"
+APPS="git python3-pip build-essential python3-dev python3-memcache"
 DISABLE_SERVICES="e2scrub_all.timer \
 apt-daily-upgrade.timer \
 apt-daily.timer \
@@ -156,7 +156,9 @@ cd /tmp/tacker
 pip3 install -r requirements.txt
 python3 setup.py install
 cp etc/systemd/system/tacker.service etc/systemd/system/tacker-conductor.service /etc/systemd/system
-DEBIAN_FRONTEND=noninteractive apt install -y python3-openstackclient python3-tackerclient
+#DEBIAN_FRONTEND=noninteractive apt install -y python3-openstackclient python3-tackerclient
+
+apt remove -y --purge git git-man
 
 gv=$(dpkg -l | grep "GNU C compiler" | awk '/gcc-/ {gsub("gcc-","",$2);print $2}')
 dpkg -P --force-depends ${REMOVE_APPS/gversion/$gv}
