@@ -128,12 +128,17 @@ cat << "EOF" > ${MNTDIR}/usr/sbin/stack-install.sh
 #!/bin/bash
 set -ex
 
+# apt install python3-*client
+
 APPS="python3-systemd \
 mariadb-server python3-pymysql \
 rabbitmq-server \
 memcached python3-memcache \
 etcd \
 python3-openstackclient \
+python3-manilaclient \
+python3-senlinclient \
+python3-mistralclient \
 python3-tackerclient \
 keystone \
 glance \

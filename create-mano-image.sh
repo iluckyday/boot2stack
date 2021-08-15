@@ -161,7 +161,7 @@ cp etc/systemd/system/tacker.service etc/systemd/system/tacker-conductor.service
 apt remove -y --purge git git-man
 
 gv=$(dpkg -l | grep "GNU C compiler" | awk '/gcc-/ {gsub("gcc-","",$2);print $2}')
-dpkg -P --force-depends ${REMOVE_APPS/gversion/$gv}
+dpkg -P --force-depends ${REMOVE_APPS//gversion/$gv}
 systemctl disable $DISABLE_SERVICES
 rm -rf /etc/hostname /etc/resolv.conf /etc/networks /usr/share/doc /usr/share/man /var/tmp/* /var/cache/apt/* /var/lib/*/*.sqlite
 rm -rf /usr/bin/systemd-analyze /usr/bin/perl*.* /usr/bin/sqlite3 /usr/share/misc/pci.ids /usr/share/mysql /usr/share/ieee-data /usr/share/sphinx /usr/share/python-wheels /usr/share/fonts/truetype /usr/lib/udev/hwdb.d /usr/lib/udev/hwdb.bin
