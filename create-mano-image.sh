@@ -246,6 +246,7 @@ umount ${MNTDIR}/proc
 sleep 1
 umount ${MNTDIR}/sys
 sleep 1
+mount
 umount ${MNTDIR}
 sleep 1
 losetup -d $loopx
