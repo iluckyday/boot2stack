@@ -320,7 +320,10 @@ rm -rf /tmp/* /var/tmp/* /var/log/* /var/cache/apt/* /var/lib/apt/lists/*
 "
 
 sync ${MNTDIR}
-mount
+sleep 1
+sync ${MNTDIR}
+sleep 1
+sync ${MNTDIR}
 sleep 1
 umount ${MNTDIR}/dev
 sleep 1
@@ -328,10 +331,11 @@ umount ${MNTDIR}/proc
 sleep 1
 umount ${MNTDIR}/sys
 sleep 1
-mount
-ps -eaf
-lsof | grep ${MNTDIR}
-cd ~
+#mount
+#ps -eaf
+#lsof | grep ${MNTDIR}
+#cd ~
+killall -r provjobd
 sleep 1
 umount ${MNTDIR}
 sleep 1

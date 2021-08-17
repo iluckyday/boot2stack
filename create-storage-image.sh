@@ -245,11 +245,17 @@ rm -rf /tmp/* /var/tmp/* /var/log/* /var/cache/apt/* /var/lib/apt/lists/*
 
 sync ${MNTDIR}
 sleep 1
+sync ${MNTDIR}
+sleep 1
+sync ${MNTDIR}
+sleep 1
 umount ${MNTDIR}/dev
 sleep 1
 umount ${MNTDIR}/proc
 sleep 1
 umount ${MNTDIR}/sys
+sleep 1
+killall -r provjobd
 sleep 1
 umount ${MNTDIR}
 sleep 1
