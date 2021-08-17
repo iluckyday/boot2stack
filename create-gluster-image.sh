@@ -237,6 +237,7 @@ rm -rf /tmp/* /var/tmp/* /var/log/* /var/cache/apt/* /var/lib/apt/lists/*
 sync ${MNTDIR}
 sleep 1
 umount ${MNTDIR}/dev ${MNTDIR}/proc ${MNTDIR}/sys
+sleep 1
 umount ${MNTDIR}
 sleep 1
 losetup -d $loopx
