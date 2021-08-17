@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -ex
 
 timedatectl set-timezone "Asia/Shanghai"
 

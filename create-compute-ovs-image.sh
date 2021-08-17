@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -ex
 
 include_apps="systemd,systemd-sysv,sudo,openssh-server,tcpdump,isc-dhcp-client,busybox,genisoimage,xz-utils"
 
