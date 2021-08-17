@@ -3,7 +3,7 @@ set -e
 
 timedatectl set-timezone "Asia/Shanghai"
 
-include_apps="systemd,systemd-sysv,sudo,bash-completion,openssh-server,tcpdump,isc-dhcp-client,busybox"
+include_apps="systemd,systemd-sysv,sudo,bash-completion,openssh-server,tcpdump,isc-dhcp-client,busybox,parallel"
 
 export DEBIAN_FRONTEND=noninteractive
 apt-config dump | grep -we Recommends -e Suggests | sed 's/1/0/' | tee /etc/apt/apt.conf.d/99norecommends
@@ -146,9 +146,9 @@ placement-api \
 nova-api nova-conductor nova-novncproxy nova-scheduler \
 neutron-server neutron-openvswitch-agent neutron-dhcp-agent neutron-metadata-agent neutron-l3-agent ironic-neutron-agent \
 swift swift-proxy \
-cinder-api cinder-scheduler \
-barbican-api barbican-keystone-listener barbican-worker \
-mistral-api mistral-engine mistral-event-engine mistral-executor"
+cinder-api cinder-scheduler"
+#barbican-api barbican-keystone-listener barbican-worker \
+#mistral-api mistral-engine mistral-event-engine mistral-executor"
 #ironic-api ironic-conductor python3-ironicclient syslinux-common pxelinux ipxe \
 #manila-api manila-scheduler python3-manilaclient \
 #senlin-api senlin-engine python3-senlinclient \
