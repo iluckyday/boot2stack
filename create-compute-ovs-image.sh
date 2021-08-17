@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-include_apps="systemd,systemd-sysv,sudo,openssh-server,tcpdump,isc-dhcp-client,busybox,genisoimage"
+include_apps="systemd,systemd-sysv,sudo,openssh-server,tcpdump,isc-dhcp-client,busybox,genisoimage,xz-utils"
 
 export DEBIAN_FRONTEND=noninteractive
 apt-config dump | grep -we Recommends -e Suggests | sed 's/1/0/' | tee /etc/apt/apt.conf.d/99norecommends
@@ -314,7 +314,11 @@ rm -rf /tmp/* /var/tmp/* /var/log/* /var/cache/apt/* /var/lib/apt/lists/*
 
 sync ${MNTDIR}
 sleep 1
-umount ${MNTDIR}/dev ${MNTDIR}/proc ${MNTDIR}/sys
+umount ${MNTDIR}/dev
+sleep 1
+umount ${MNTDIR}/proc
+sleep 1
+umount ${MNTDIR}/sys
 sleep 1
 umount ${MNTDIR}
 sleep 1
