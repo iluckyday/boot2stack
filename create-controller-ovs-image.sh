@@ -146,8 +146,8 @@ placement-api \
 nova-api nova-conductor nova-novncproxy nova-scheduler \
 neutron-server neutron-openvswitch-agent neutron-dhcp-agent neutron-metadata-agent neutron-l3-agent ironic-neutron-agent \
 swift swift-proxy \
-cinder-api cinder-scheduler"
-#barbican-api barbican-keystone-listener barbican-worker \
+cinder-api cinder-scheduler \
+barbican-api barbican-keystone-listener barbican-worker"
 #mistral-api mistral-engine mistral-event-engine mistral-executor"
 #ironic-api ironic-conductor python3-ironicclient syslinux-common pxelinux ipxe \
 #manila-api manila-scheduler python3-manilaclient \
