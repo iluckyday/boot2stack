@@ -323,6 +323,8 @@ umount ${MNTDIR}/sys
 sleep 1
 mount
 ps -eaf
+lsof | grep ${MNTDIR}
+cd ~
 sleep 1
 umount ${MNTDIR}
 sleep 1
