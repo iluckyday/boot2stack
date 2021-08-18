@@ -210,6 +210,7 @@ openvswitch-switch.service \
 mysql.service mariadb.service \
 keepalived.service haproxy.service \
 memcached.service \
+rabbitmq-server.service \
 etcd.service \
 apache2.service \
 keystone.service \
@@ -253,7 +254,7 @@ sleep 2
 rm -f /var/lib/dpkg/info/libc-bin.postinst /var/lib/dpkg/info/man-db.postinst /var/lib/dpkg/info/dbus.postinst /var/lib/dpkg/info/initramfs-tools.postinst
 
 #systemctl --runtime --dry-run mask $DISABLE_SERVICES
-systemd-run --on-unit-active=120 --on-boot=10 systemctl --no-block --quiet --force stop $STOP_SERVICES
+#systemd-run --on-unit-active=120 --on-boot=10 systemctl --no-block --quiet --force stop $STOP_SERVICES
 
 apt update
 DEBIAN_FRONTEND=noninteractive apt install -y $APPS
@@ -379,7 +380,7 @@ sleep 1
 losetup -d $loopx
 
 #qemu-system-x86_64 -name stack-c-building -machine q35,accel=kvm -cpu host -smp "$(nproc)" -m 4G -nographic -object rng-random,filename=/dev/urandom,id=rng0 -device virtio-rng-pci,rng=rng0 -boot c -drive file=/tmp/sid.raw,if=virtio,format=raw,media=disk -netdev user,id=n0,ipv6=off -device virtio-net,netdev=n0
-qemu-system-x86_64 -name stack-c-building -machine q35,accel=kvm:xen:hax:hvf:whpx:tcg -smp "$(nproc)" -m 4G -nographic -object rng-random,filename=/dev/urandom,id=rng0 -device virtio-rng-pci,rng=rng0 -boot c -drive file=/tmp/sid.raw,if=virtio,format=raw,media=disk -netdev user,id=n0,ipv6=off -device virtio-net,netdev=n0
+qemu-system-x86_64 -name stack-c-building -machine q35,accel=kvm:xen:hax:hvf:whpx:tcg -smp "$(nproc)" -m 6G -nographic -object rng-random,filename=/dev/urandom,id=rng0 -device virtio-rng-pci,rng=rng0 -boot c -drive file=/tmp/sid.raw,if=virtio,format=raw,media=disk -netdev user,id=n0,ipv6=off -device virtio-net,netdev=n0
 
 sleep 2
 
