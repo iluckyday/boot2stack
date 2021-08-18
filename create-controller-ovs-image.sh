@@ -191,6 +191,42 @@ senlin-api.service senlin-engine.service \
 designate-central.service designate-api.service designate-worker.service designate-producer.service designate-mdns.service \
 mistral-api.service mistral-engine.service mistral-event-engine.service mistral-executor.service"
 
+STOP_SERVICES="e2scrub_all.timer \
+apt-daily-upgrade.timer \
+apt-daily.timer \
+logrotate.timer \
+man-db.timer \
+fstrim.timer \
+apparmor.service \
+cron.service \
+rsyslog.service \
+e2scrub@.service \
+e2scrub_all.service \
+e2scrub_fail@.service \
+e2scrub_reap.service \
+logrotate.service \
+systemd-timesyncd.service \
+openvswitch-switch.service \
+mysql.service mariadb.service \
+keepalived.service haproxy.service \
+memcached.service \
+etcd.service \
+apache2.service \
+keystone.service \
+glance-api.service \
+placement-api.service \
+nova-api-metadata.service nova-api.service nova-conductor.service nova-novncproxy.service nova-scheduler.service nova-serialproxy.service nova-spicehtml5proxy.service nova-xenvncproxy.service \
+neutron-api.service neutron-dhcp-agent.service neutron-l3-agent.service neutron-openvswitch-agent.service neutron-metadata-agent.service neutron-rpc-server.service ironic_neutron_agent.service \
+rsync.service \
+swift-proxy.service \
+cinder-api.service cinder-scheduler.service \
+ironic-api.service ironic-conductor.service ironic-neutron-agent.service xinetd.service \
+manila-api.service manila-scheduler.service \
+barbican-api.service barbican-keystone-listener.service barbican-worker.service \
+senlin-api.service senlin-engine.service \
+designate-central.service designate-api.service designate-worker.service designate-producer.service designate-mdns.service \
+mistral-api.service mistral-engine.service mistral-event-engine.service mistral-executor.service"
+
 REMOVE_APPS="tzdata"
 
 mkdir -p /run/systemd/network
@@ -217,7 +253,7 @@ sleep 2
 rm -f /var/lib/dpkg/info/libc-bin.postinst /var/lib/dpkg/info/man-db.postinst /var/lib/dpkg/info/dbus.postinst /var/lib/dpkg/info/initramfs-tools.postinst
 
 #systemctl --runtime --dry-run mask $DISABLE_SERVICES
-systemd-run --on-unit-active=120 --on-boot=10 systemctl --no-block --quiet --force stop $DISABLE_SERVICES
+systemd-run --on-unit-active=120 --on-boot=10 systemctl --no-block --quiet --force stop $STOP_SERVICES
 
 apt update
 DEBIAN_FRONTEND=noninteractive apt install -y $APPS
