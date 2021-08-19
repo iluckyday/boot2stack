@@ -1,7 +1,7 @@
 #!/bin/bash
 set -ex
 
-include_apps="systemd,systemd-sysv,sudo,openssh-server,wget,xz-utils"
+include_apps="systemd,systemd-sysv,sudo,openssh-server,wget,xz-utils,parallel"
 
 export DEBIAN_FRONTEND=noninteractive
 apt-config dump | grep -we Recommends -e Suggests | sed 's/1/0/' | tee /etc/apt/apt.conf.d/99norecommends
@@ -111,8 +111,15 @@ cat << "EOF" > ${MNTDIR}/usr/sbin/stack-install.sh
 #!/bin/bash
 set -ex
 APPS="git python3-pip build-essential python3-dev python3-memcache \
+swift swift-proxy \
+cinder-api cinder-scheduler \
 barbican-api barbican-keystone-listener barbican-worker \
-mistral-api mistral-engine mistral-event-engine mistral-executor"
+mistral-api mistral-engine mistral-event-engine mistral-executor \
+ironic-api ironic-conductor python3-ironicclient syslinux-common pxelinux ipxe \
+manila-api manila-scheduler python3-manilaclient \
+senlin-api senlin-engine python3-senlinclient \
+designate bind9 bind9utils designate-worker designate-producer designate-mdns"
+
 DISABLE_SERVICES="e2scrub_all.timer \
 apt-daily-upgrade.timer \
 apt-daily.timer \
@@ -128,8 +135,14 @@ e2scrub_fail@.service \
 e2scrub_reap.service \
 logrotate.service \
 systemd-timesyncd.service \
+rsync.service \
+swift-proxy.service \
+cinder-api.service cinder-scheduler.service \
+ironic-api.service ironic-conductor.service ironic-neutron-agent.service xinetd.service \
 manila-api.service manila-scheduler.service \
 barbican-api.service barbican-keystone-listener.service barbican-worker.service \
+senlin-api.service senlin-engine.service \
+designate-central.service designate-api.service designate-worker.service designate-producer.service designate-mdns.service \
 mistral-api.service mistral-engine.service mistral-event-engine.service mistral-executor.service"
 
 REMOVE_APPS="ifupdown build-essential python3-dev iso-codes \
@@ -259,7 +272,7 @@ umount ${MNTDIR}
 sleep 1
 losetup -d $loopx
 
-qemu-system-x86_64 -name stack-m-building -machine q35,accel=kvm:xen:hax:hvf:whpx:tcg -smp "$(nproc)" -m 4G -nographic -object rng-random,filename=/dev/urandom,id=rng0 -device virtio-rng-pci,rng=rng0 -boot c -drive file=/tmp/sid.raw,if=virtio,format=raw,media=disk -netdev user,id=n0,ipv6=off -device virtio-net,netdev=n0
+qemu-system-x86_64 -name stack-m-building -machine q35,accel=kvm:xen:hax:hvf:whpx:tcg -smp "$(nproc)" -m 6G -nographic -object rng-random,filename=/dev/urandom,id=rng0 -device virtio-rng-pci,rng=rng0 -boot c -drive file=/tmp/sid.raw,if=virtio,format=raw,media=disk -netdev user,id=n0,ipv6=off -device virtio-net,netdev=n0
 
 qemu-img convert -c -f raw -O qcow2 /tmp/sid.raw /dev/shm/stack-m.img
 
