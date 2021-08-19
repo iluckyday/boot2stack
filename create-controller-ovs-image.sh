@@ -144,9 +144,10 @@ keystone \
 glance \
 placement-api \
 nova-api nova-conductor nova-novncproxy nova-scheduler \
-neutron-server neutron-openvswitch-agent neutron-dhcp-agent neutron-metadata-agent neutron-l3-agent ironic-neutron-agent \
-swift swift-proxy \
-cinder-api cinder-scheduler"
+neutron-server neutron-openvswitch-agent neutron-dhcp-agent neutron-metadata-agent neutron-l3-agent"
+#ironic-neutron-agent \
+#swift swift-proxy \
+#cinder-api cinder-scheduler"
 #barbican-api barbican-keystone-listener barbican-worker"
 #mistral-api mistral-engine mistral-event-engine mistral-executor"
 #ironic-api ironic-conductor python3-ironicclient syslinux-common pxelinux ipxe \
@@ -244,7 +245,7 @@ sleep 2
 rm -f /var/lib/dpkg/info/libc-bin.postinst /var/lib/dpkg/info/man-db.postinst /var/lib/dpkg/info/dbus.postinst /var/lib/dpkg/info/initramfs-tools.postinst
 
 #systemctl --runtime --dry-run mask $DISABLE_SERVICES
-systemd-run --on-unit-active=120 --on-boot=10 systemctl --no-block --quiet --force stop $STOP_SERVICES
+#systemd-run --on-unit-active=120 --on-boot=10 systemctl --no-block --quiet --force stop $STOP_SERVICES
 
 apt update
 DEBIAN_FRONTEND=noninteractive apt install -y $APPS
