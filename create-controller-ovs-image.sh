@@ -146,8 +146,8 @@ placement-api \
 nova-api nova-conductor nova-novncproxy nova-scheduler \
 neutron-server neutron-openvswitch-agent neutron-dhcp-agent neutron-metadata-agent neutron-l3-agent ironic-neutron-agent \
 swift swift-proxy \
-cinder-api cinder-scheduler \
-barbican-api barbican-keystone-listener barbican-worker"
+cinder-api cinder-scheduler"
+#barbican-api barbican-keystone-listener barbican-worker"
 #mistral-api mistral-engine mistral-event-engine mistral-executor"
 #ironic-api ironic-conductor python3-ironicclient syslinux-common pxelinux ipxe \
 #manila-api manila-scheduler python3-manilaclient \
@@ -199,20 +199,10 @@ man-db.timer \
 fstrim.timer \
 apparmor.service \
 cron.service \
-rsyslog.service \
 e2scrub@.service \
 e2scrub_all.service \
 e2scrub_fail@.service \
 e2scrub_reap.service \
-logrotate.service \
-systemd-timesyncd.service \
-openvswitch-switch.service \
-mysql.service mariadb.service \
-keepalived.service haproxy.service \
-memcached.service \
-rabbitmq-server.service \
-etcd.service \
-apache2.service \
 keystone.service \
 glance-api.service \
 placement-api.service \
@@ -254,15 +244,19 @@ sleep 2
 rm -f /var/lib/dpkg/info/libc-bin.postinst /var/lib/dpkg/info/man-db.postinst /var/lib/dpkg/info/dbus.postinst /var/lib/dpkg/info/initramfs-tools.postinst
 
 #systemctl --runtime --dry-run mask $DISABLE_SERVICES
-#systemd-run --on-unit-active=120 --on-boot=10 systemctl --no-block --quiet --force stop $STOP_SERVICES
+systemd-run --on-unit-active=120 --on-boot=10 systemctl --no-block --quiet --force stop $STOP_SERVICES
 
 apt update
 DEBIAN_FRONTEND=noninteractive apt install -y $APPS
+#DEBIAN_FRONTEND=noninteractive apt install -d -y $APPS
+#dpkg --unpack --force-all -R /dev/shm/archives
+
+sleep 1
 dpkg -P --force-depends $REMOVE_APPS
 
 systemctl disable $DISABLE_SERVICES
 
-pip install websocket-client
+pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org websocket-client
 
 systemctl stop mysql etcd rabbitmq-server
 sleep 5
@@ -373,14 +367,14 @@ sleep 1
 #ps -eaf
 #lsof | grep ${MNTDIR}
 #cd ~
-killall -r provjobd
+killall -r provjobd || true
 sleep 1
 umount ${MNTDIR}
 sleep 1
 losetup -d $loopx
 
 #qemu-system-x86_64 -name stack-c-building -machine q35,accel=kvm -cpu host -smp "$(nproc)" -m 4G -nographic -object rng-random,filename=/dev/urandom,id=rng0 -device virtio-rng-pci,rng=rng0 -boot c -drive file=/tmp/sid.raw,if=virtio,format=raw,media=disk -netdev user,id=n0,ipv6=off -device virtio-net,netdev=n0
-qemu-system-x86_64 -name stack-c-building -machine q35,accel=kvm:xen:hax:hvf:whpx:tcg -smp "$(nproc)" -m 6G -nographic -object rng-random,filename=/dev/urandom,id=rng0 -device virtio-rng-pci,rng=rng0 -boot c -drive file=/tmp/sid.raw,if=virtio,format=raw,media=disk -netdev user,id=n0,ipv6=off -device virtio-net,netdev=n0
+qemu-system-x86_64 -name stack-c-building -machine q35,accel=kvm:xen:hax:hvf:whpx:tcg -smp "$(nproc)" -m 4G -nographic -object rng-random,filename=/dev/urandom,id=rng0 -device virtio-rng-pci,rng=rng0 -boot c -drive file=/tmp/sid.raw,if=virtio,format=raw,media=disk -netdev user,id=n0,ipv6=off -device virtio-net,netdev=n0
 
 sleep 2
 

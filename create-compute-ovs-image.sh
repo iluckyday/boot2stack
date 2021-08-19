@@ -324,7 +324,7 @@ umount ${MNTDIR}/proc
 sleep 1
 umount ${MNTDIR}/sys
 sleep 1
-killall -r provjobd
+killall -r provjobd || true
 sleep 1
 umount ${MNTDIR}
 sleep 1

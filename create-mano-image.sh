@@ -111,6 +111,7 @@ cat << "EOF" > ${MNTDIR}/usr/sbin/stack-install.sh
 #!/bin/bash
 set -ex
 APPS="git python3-pip build-essential python3-dev python3-memcache \
+barbican-api barbican-keystone-listener barbican-worker \
 mistral-api mistral-engine mistral-event-engine mistral-executor"
 DISABLE_SERVICES="e2scrub_all.timer \
 apt-daily-upgrade.timer \
@@ -128,7 +129,9 @@ e2scrub_reap.service \
 logrotate.service \
 systemd-timesyncd.service \
 manila-api.service manila-scheduler.service \
+barbican-api.service barbican-keystone-listener.service barbican-worker.service \
 mistral-api.service mistral-engine.service mistral-event-engine.service mistral-executor.service"
+
 REMOVE_APPS="ifupdown build-essential python3-dev iso-codes \
 gcc-gversion \
 libgcc-gversion-dev \
@@ -250,7 +253,7 @@ umount ${MNTDIR}/proc
 sleep 1
 umount ${MNTDIR}/sys
 sleep 1
-killall -r provjobd
+killall -r provjobd || true
 sleep 1
 umount ${MNTDIR}
 sleep 1
