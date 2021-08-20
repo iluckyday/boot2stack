@@ -128,18 +128,11 @@ cat << "EOF" > ${MNTDIR}/usr/sbin/stack-install.sh
 #!/bin/bash
 set -ex
 
-# apt install python3-*client
-
 APPS="python3-systemd \
 mariadb-server python3-pymysql \
 rabbitmq-server \
 memcached python3-memcache \
 etcd \
-python3-openstackclient \
-python3-manilaclient \
-python3-senlinclient \
-python3-mistralclient \
-python3-tackerclient \
 keystone \
 glance \
 placement-api \
@@ -221,7 +214,8 @@ rm -f /var/lib/dpkg/info/libc-bin.postinst /var/lib/dpkg/info/man-db.postinst /v
 #systemd-run --on-unit-active=120 --on-boot=10 systemctl --no-block --quiet --force stop $STOP_SERVICES
 
 apt update
-DEBIAN_FRONTEND=noninteractive apt install -y $APPS
+DEBIAN_FRONTEND=noninteractive apt install -y $APPS || true
+DEBIAN_FRONTEND=noninteractive apt install -y $(apt search --names-only "python3-.*client" | awk '/[oO]pen[sS]tack/ {sub(/\/.*/,"",a);if (a != "") print a}{a=$0}') || true
 #DEBIAN_FRONTEND=noninteractive apt install -d -y $APPS
 #dpkg --unpack --force-all -R /dev/shm/archives
 
