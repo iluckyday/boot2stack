@@ -3,6 +3,8 @@ set -ex
 
 timedatectl set-timezone "Asia/Shanghai"
 
+release=$(curl https://www.debian.org/releases/ | grep -oP 'codenamed <em>\K(.*)(?=</em>)')
+release="sid"
 include_apps="systemd,systemd-sysv,sudo,bash-completion,openssh-server,tcpdump,isc-dhcp-client,busybox,parallel,xz-utils"
 
 export DEBIAN_FRONTEND=noninteractive
@@ -13,13 +15,13 @@ apt install -y debootstrap qemu-system-x86 qemu-utils
 MNTDIR=/tmp/debian
 mkdir -p ${MNTDIR}
 
-qemu-img create -f raw /tmp/sid.raw 201G
-loopx=$(losetup --show -f -P /tmp/sid.raw)
+qemu-img create -f raw /tmp/debian.raw 201G
+loopx=$(losetup --show -f -P /tmp/debian.raw)
 mkfs.ext4 -F -L debian-root -b 1024 -I 128 -O "^has_journal" $loopx
 mount $loopx ${MNTDIR}
 
 sed -i 's/ls -A/ls --ignore=lost+found -A/' /usr/sbin/debootstrap
-/usr/sbin/debootstrap --no-check-gpg --no-check-certificate --components=main,contrib,non-free --include="$include_apps" --variant minbase sid ${MNTDIR}
+/usr/sbin/debootstrap --no-check-gpg --no-check-certificate --components=main,contrib,non-free --include="$include_apps" --variant minbase ${release} ${MNTDIR}
 
 mount -t proc none ${MNTDIR}/proc
 mount -o bind /sys ${MNTDIR}/sys
@@ -137,7 +139,8 @@ keystone \
 glance \
 placement-api \
 nova-api nova-conductor nova-novncproxy nova-scheduler \
-neutron-server neutron-openvswitch-agent neutron-dhcp-agent neutron-metadata-agent neutron-l3-agent ironic-neutron-agent"
+neutron-server neutron-openvswitch-agent neutron-dhcp-agent neutron-metadata-agent neutron-l3-agent ironic-neutron-agent \
+"
 
 DISABLE_SERVICES="e2scrub_all.timer \
 apt-daily-upgrade.timer \
@@ -165,7 +168,8 @@ keystone.service \
 glance-api.service \
 placement-api.service \
 nova-api-metadata.service nova-api.service nova-conductor.service nova-novncproxy.service nova-scheduler.service nova-serialproxy.service nova-spicehtml5proxy.service nova-xenvncproxy.service \
-neutron-api.service neutron-dhcp-agent.service neutron-l3-agent.service neutron-openvswitch-agent.service neutron-metadata-agent.service neutron-rpc-server.service ironic_neutron_agent.service"
+neutron-api.service neutron-dhcp-agent.service neutron-l3-agent.service neutron-openvswitch-agent.service neutron-metadata-agent.service neutron-rpc-server.service ironic_neutron_agent.service \
+"
 
 STOP_SERVICES="e2scrub_all.timer \
 apt-daily-upgrade.timer \
@@ -183,7 +187,8 @@ keystone.service \
 glance-api.service \
 placement-api.service \
 nova-api-metadata.service nova-api.service nova-conductor.service nova-novncproxy.service nova-scheduler.service nova-serialproxy.service nova-spicehtml5proxy.service nova-xenvncproxy.service \
-neutron-api.service neutron-dhcp-agent.service neutron-l3-agent.service neutron-openvswitch-agent.service neutron-metadata-agent.service neutron-rpc-server.service ironic_neutron_agent.service"
+neutron-api.service neutron-dhcp-agent.service neutron-l3-agent.service neutron-openvswitch-agent.service neutron-metadata-agent.service neutron-rpc-server.service ironic_neutron_agent.service \
+"
 
 REMOVE_APPS="tzdata"
 
@@ -341,11 +346,11 @@ umount ${MNTDIR}
 sleep 1
 losetup -d $loopx
 
-#qemu-system-x86_64 -name stack-c-building -machine q35,accel=kvm -cpu host -smp "$(nproc)" -m 4G -nographic -object rng-random,filename=/dev/urandom,id=rng0 -device virtio-rng-pci,rng=rng0 -boot c -drive file=/tmp/sid.raw,if=virtio,format=raw,media=disk -netdev user,id=n0,ipv6=off -device virtio-net,netdev=n0
-qemu-system-x86_64 -name stack-c-building -machine q35,accel=kvm:xen:hax:hvf:whpx:tcg -smp "$(nproc)" -m 6G -nographic -object rng-random,filename=/dev/urandom,id=rng0 -device virtio-rng-pci,rng=rng0 -boot c -drive file=/tmp/sid.raw,if=virtio,format=raw,media=disk -netdev user,id=n0,ipv6=off -device virtio-net,netdev=n0
+#qemu-system-x86_64 -name stack-c-building -machine q35,accel=kvm -cpu host -smp "$(nproc)" -m 4G -nographic -object rng-random,filename=/dev/urandom,id=rng0 -device virtio-rng-pci,rng=rng0 -boot c -drive file=/tmp/debian.raw,if=virtio,format=raw,media=disk -netdev user,id=n0,ipv6=off -device virtio-net,netdev=n0
+qemu-system-x86_64 -name stack-c-building -machine q35,accel=kvm:xen:hax:hvf:whpx:tcg -smp "$(nproc)" -m 6G -nographic -object rng-random,filename=/dev/urandom,id=rng0 -device virtio-rng-pci,rng=rng0 -boot c -drive file=/tmp/debian.raw,if=virtio,format=raw,media=disk -netdev user,id=n0,ipv6=off -device virtio-net,netdev=n0
 
 sleep 2
 
-qemu-img convert -c -f raw -O qcow2 /tmp/sid.raw /dev/shm/stack-c.img
+qemu-img convert -c -f raw -O qcow2 /tmp/debian.raw /dev/shm/stack-c.img
 
 exit 0

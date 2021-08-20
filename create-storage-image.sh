@@ -6,6 +6,8 @@ set -ex
 # target_core_mod: use normal kernel
 #########################
 
+release=$(curl https://www.debian.org/releases/ | grep -oP 'codenamed <em>\K(.*)(?=</em>)')
+release="sid"
 include_apps="systemd,systemd-sysv,sudo,openssh-server,xz-utils"
 
 export DEBIAN_FRONTEND=noninteractive
@@ -16,13 +18,13 @@ apt install -y debootstrap qemu-system-x86 qemu-utils
 MNTDIR=/tmp/debian
 mkdir -p ${MNTDIR}
 
-qemu-img create -f raw /tmp/sid.raw 201G
-loopx=$(losetup --show -f -P /tmp/sid.raw)
+qemu-img create -f raw /tmp/debian.raw 201G
+loopx=$(losetup --show -f -P /tmp/debian.raw)
 mkfs.ext4 -F -L debian-root -b 1024 -I 128 -O "^has_journal" $loopx
 mount $loopx ${MNTDIR}
 
 sed -i 's/ls -A/ls --ignore=lost+found -A/' /usr/sbin/debootstrap
-/usr/sbin/debootstrap --no-check-gpg --no-check-certificate --components=main,contrib,non-free --include="$include_apps" sid ${MNTDIR}
+/usr/sbin/debootstrap --no-check-gpg --no-check-certificate --components=main,contrib,non-free --include="$include_apps" ${release} ${MNTDIR}
 
 mount -t proc none ${MNTDIR}/proc
 mount -o bind /sys ${MNTDIR}/sys
@@ -261,8 +263,8 @@ umount ${MNTDIR}
 sleep 1
 losetup -d $loopx
 
-qemu-system-x86_64 -name stack-s-building -machine q35,accel=kvm:xen:hax:hvf:whpx:tcg -smp "$(nproc)" -m 4G -nographic -object rng-random,filename=/dev/urandom,id=rng0 -device virtio-rng-pci,rng=rng0 -boot c -drive file=/tmp/sid.raw,if=virtio,format=raw,media=disk -netdev user,id=n0,ipv6=off -device virtio-net,netdev=n0
+qemu-system-x86_64 -name stack-s-building -machine q35,accel=kvm:xen:hax:hvf:whpx:tcg -smp "$(nproc)" -m 4G -nographic -object rng-random,filename=/dev/urandom,id=rng0 -device virtio-rng-pci,rng=rng0 -boot c -drive file=/tmp/debian.raw,if=virtio,format=raw,media=disk -netdev user,id=n0,ipv6=off -device virtio-net,netdev=n0
 
-qemu-img convert -c -f raw -O qcow2 /tmp/sid.raw /dev/shm/stack-s.img
+qemu-img convert -c -f raw -O qcow2 /tmp/debian.raw /dev/shm/stack-s.img
 
 exit 0
