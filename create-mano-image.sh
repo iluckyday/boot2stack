@@ -1,7 +1,7 @@
 #!/bin/bash
 set -ex
 
-release=$(curl https://www.debian.org/releases/ | grep -oP 'codenamed <em>\K(.*)(?=</em>)')
+release=$(curl -sSkL https://www.debian.org/releases/ | grep -oP 'codenamed <em>\K(.*)(?=</em>)')
 release="sid"
 include_apps="systemd,systemd-sysv,sudo,openssh-server,wget,xz-utils,parallel"
 
@@ -170,7 +170,7 @@ systemctl start systemd-networkd systemd-resolved
 sleep 2
 rm -f /var/lib/dpkg/info/libc-bin.postinst /var/lib/dpkg/info/man-db.postinst /var/lib/dpkg/info/dbus.postinst /var/lib/dpkg/info/initramfs-tools.postinst
 apt update
-DEBIAN_FRONTEND=noninteractive apt install -y $APPS
+DEBIAN_FRONTEND=noninteractive apt install -y $APPS || true
 
 echo Install Tacker
 export GIT_SSL_NO_VERIFY=1

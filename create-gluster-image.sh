@@ -1,7 +1,7 @@
 #!/bin/bash
 set -ex
 
-release=$(curl https://www.debian.org/releases/ | grep -oP 'codenamed <em>\K(.*)(?=</em>)')
+release=$(curl -sSkL https://www.debian.org/releases/ | grep -oP 'codenamed <em>\K(.*)(?=</em>)')
 release="sid"
 include_apps="systemd,systemd-sysv,sudo,openssh-server,wget,xz-utils"
 

@@ -6,7 +6,7 @@ set -ex
 # target_core_mod: use normal kernel
 #########################
 
-release=$(curl https://www.debian.org/releases/ | grep -oP 'codenamed <em>\K(.*)(?=</em>)')
+release=$(curl -sSkL https://www.debian.org/releases/ | grep -oP 'codenamed <em>\K(.*)(?=</em>)')
 release="sid"
 include_apps="systemd,systemd-sysv,sudo,openssh-server,xz-utils"
 
