@@ -168,7 +168,7 @@ keystone.service \
 glance-api.service \
 placement-api.service \
 nova-api-metadata.service nova-api.service nova-conductor.service nova-novncproxy.service nova-scheduler.service nova-serialproxy.service nova-spicehtml5proxy.service nova-xenvncproxy.service \
-neutron-api.service neutron-dhcp-agent.service neutron-l3-agent.service neutron-openvswitch-agent.service neutron-metadata-agent.service neutron-rpc-server.service ironic_neutron_agent.service \
+neutron-api.service neutron-dhcp-agent.service neutron-l3-agent.service neutron-openvswitch-agent.service neutron-metadata-agent.service neutron-rpc-server.service ironic-neutron-agent.service \
 "
 
 STOP_SERVICES="e2scrub_all.timer \
@@ -183,11 +183,34 @@ e2scrub@.service \
 e2scrub_all.service \
 e2scrub_fail@.service \
 e2scrub_reap.service \
-keystone.service \
-glance-api.service \
-placement-api.service \
-nova-api-metadata.service nova-api.service nova-conductor.service nova-novncproxy.service nova-scheduler.service nova-serialproxy.service nova-spicehtml5proxy.service nova-xenvncproxy.service \
-neutron-api.service neutron-dhcp-agent.service neutron-l3-agent.service neutron-openvswitch-agent.service neutron-metadata-agent.service neutron-rpc-server.service ironic_neutron_agent.service \
+logrotate.service \
+systemd-timesyncd.service \
+"
+
+STOP_APPS_SERVICES="
+openvswitch-switch=openvswitch-switch.service
+mariadb-server=mysql.service,mariadb.service
+keepalived=keepalived.service
+haproxy=haproxy.service
+memcached=memcached.service
+rabbitmq-server=rabbitmq-server.service
+etcd=etcd.service
+apache2=apache2.service
+keystone=keystone.service
+glance=glance-api.service
+placement=placement-api.service
+nova-api=nova-api-metadata.service,nova-api.service
+nova-conductor=nova-conductor.service
+nova-novncproxy=nova-novncproxy.service
+nova-scheduler=nova-scheduler.service
+nova-consoleproxy=nova-serialproxy.service,nova-spicehtml5proxy.service,nova-xenvncproxy.service
+neutron-api=neutron-api.service
+neutron-dhcp-agent=neutron-dhcp-agent.service
+neutron-l3-agent=neutron-l3-agent.service
+neutron-openvswitch-agent=neutron-openvswitch-agent.service
+neutron-metadata-agent=neutron-metadata-agent.service
+neutron-rpc-server=neutron-rpc-server.service
+ironic-neutron-agent=ironic-neutron-agent.service
 "
 
 REMOVE_APPS="tzdata"
@@ -209,6 +232,22 @@ DefaultTimeoutStopSec=20min
 DefaultRestartSec=20min
 EEOOFF
 
+cat << "AEOF" > /tmp/stopservices.sh
+#!/bin/sh
+
+apps=$1
+
+for app in $apps; do
+	a=${app%=*}
+	s=${app#*=}
+	if dpkg -s $a 2>/dev/null | grep -q "Status: install ok installed"; then
+		systemctl --no-block --quiet --force stop ${s/,/ } 2>/dev/null
+	else
+		echo $a not installed yet
+	fi
+done
+AEOF
+
 systemctl daemon-reload
 systemctl start systemd-networkd systemd-resolved
 sleep 2
@@ -216,7 +255,8 @@ sleep 2
 rm -f /var/lib/dpkg/info/libc-bin.postinst /var/lib/dpkg/info/man-db.postinst /var/lib/dpkg/info/dbus.postinst /var/lib/dpkg/info/initramfs-tools.postinst
 
 #systemctl --runtime --dry-run mask $DISABLE_SERVICES
-#systemd-run --on-unit-active=120 --on-boot=10 systemctl --no-block --quiet --force stop $STOP_SERVICES
+systemctl --no-block --quiet --force stop $STOP_SERVICES
+systemd-run --service-type=oneshot --on-unit-active=120 --on-boot=10 /bin/bash /tmp/stopservices.sh "$STOP_APPS_SERVICES"
 
 apt update
 DEBIAN_FRONTEND=noninteractive apt install -y $APPS || true

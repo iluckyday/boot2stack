@@ -152,6 +152,71 @@ mistral-api.service mistral-engine.service mistral-event-engine.service mistral-
 vitrage-api.service vitrage-collector.service vitrage-graph.service vitrage-ml.service vitrage-notifier.service vitrage-persistor.service vitrage-snmp-parsing.service \
 masakari-api.service masakari-engine.service"
 
+STOP_SERVICES="e2scrub_all.timer \
+apt-daily-upgrade.timer \
+apt-daily.timer \
+logrotate.timer \
+man-db.timer \
+fstrim.timer \
+apparmor.service \
+cron.service \
+e2scrub@.service \
+e2scrub_all.service \
+e2scrub_fail@.service \
+e2scrub_reap.service \
+logrotate.service \
+systemd-timesyncd.service \
+"
+
+STOP_APPS_SERVICES="
+cinder-api=cinder-api.service
+cinder-scheduler=cinder-scheduler.service
+ironic-api=ironic-api.service
+ironic-conductor=ironic-conductor.service
+ironic-neutron-agent=ironic-neutron-agent.service
+manila-api=manila-api.service
+manila-scheduler=manila-scheduler.service
+barbican-api=barbican-api.service
+barbican-keystone-listener=barbican-keystone-listener.service
+barbican-worker=barbican-worker.service
+senlin-api=senlin-api.service
+senlin-engine=senlin-engine.service
+designate-central=designate-central.service
+designate-api=designate-api.service
+designate-worker=designate-worker.service
+designate-producer=designate-producer.service
+designate-mdns=designate-mdns.service
+mistral-api=mistral-api.service
+mistral-engine=mistral-engine.service
+mistral-event-engine=mistral-event-engine.service
+mistral-executor=mistral-executor.service
+vitrage-api=vitrage-api.service
+vitrage-collector=vitrage-collector.service
+vitrage-graph=vitrage-graph.service
+vitrage-ml=vitrage-ml.service
+vitrage-notifier=vitrage-notifier.service
+vitrage-persistor=vitrage-persistor.service
+vitrage-snmp-parsing=vitrage-snmp-parsing.service
+masakari-api=masakari-api.service
+masakari-engine=masakari-engine.service
+"
+
+cat << "AEOF" > /tmp/stopservices.sh
+#!/bin/sh
+
+apps=$1
+
+for app in $apps; do
+	a=${app%=*}
+	s=${app#*=}
+	if dpkg -s $a 2>/dev/null | grep -q "Status: install ok installed"; then
+		systemctl --no-block --quiet --force stop ${s/,/ } 2>/dev/null
+	else
+		echo $a not installed yet
+	fi
+done
+AEOF
+
 REMOVE_APPS="ifupdown build-essential python3-dev iso-codes \
 gcc-gversion \
 libgcc-gversion-dev \
@@ -166,9 +231,14 @@ Name=en*
 [Network]
 DHCP=ipv4
 EOFF
+systemctl daemon-reload
 systemctl start systemd-networkd systemd-resolved
 sleep 2
 rm -f /var/lib/dpkg/info/libc-bin.postinst /var/lib/dpkg/info/man-db.postinst /var/lib/dpkg/info/dbus.postinst /var/lib/dpkg/info/initramfs-tools.postinst
+
+systemctl --no-block --quiet --force stop $STOP_SERVICES
+systemd-run --service-type=oneshot --on-unit-active=120 --on-boot=10 /bin/bash /tmp/stopservices.sh "$STOP_APPS_SERVICES"
+
 apt update
 DEBIAN_FRONTEND=noninteractive apt install -y $APPS || true
 
