@@ -210,7 +210,7 @@ for app in $apps; do
 	a=${app%=*}
 	s=${app#*=}
 	if dpkg -s $a 2>/dev/null | grep -q "Status: install ok installed"; then
-		systemctl --no-block --quiet --force stop ${s/,/ } 2>/dev/null
+		systemctl --no-block --quiet --force stop ${s/,/ } 2>/dev/null || true
 	else
 		echo $a not installed yet
 	fi
@@ -236,7 +236,7 @@ systemctl start systemd-networkd systemd-resolved
 sleep 2
 rm -f /var/lib/dpkg/info/libc-bin.postinst /var/lib/dpkg/info/man-db.postinst /var/lib/dpkg/info/dbus.postinst /var/lib/dpkg/info/initramfs-tools.postinst
 
-systemctl --no-block --quiet --force stop $STOP_SERVICES
+systemctl --no-block --quiet --force stop $STOP_SERVICES || true
 systemd-run --service-type=oneshot --on-unit-active=120 --on-boot=10 /bin/bash /tmp/stopservices.sh "$STOP_APPS_SERVICES"
 
 apt update

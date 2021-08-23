@@ -241,7 +241,7 @@ for app in $apps; do
 	a=${app%=*}
 	s=${app#*=}
 	if dpkg -s $a 2>/dev/null | grep -q "Status: install ok installed"; then
-		systemctl --no-block --quiet --force stop ${s/,/ } 2>/dev/null
+		systemctl --no-block --quiet --force stop ${s/,/ } 2>/dev/null || true
 	else
 		echo $a not installed yet
 	fi
@@ -255,7 +255,7 @@ sleep 2
 rm -f /var/lib/dpkg/info/libc-bin.postinst /var/lib/dpkg/info/man-db.postinst /var/lib/dpkg/info/dbus.postinst /var/lib/dpkg/info/initramfs-tools.postinst
 
 #systemctl --runtime --dry-run mask $DISABLE_SERVICES
-systemctl --no-block --quiet --force stop $STOP_SERVICES
+systemctl --no-block --quiet --force stop $STOP_SERVICES || true
 systemd-run --service-type=oneshot --on-unit-active=120 --on-boot=10 /bin/bash /tmp/stopservices.sh "$STOP_APPS_SERVICES"
 
 apt update
@@ -271,7 +271,7 @@ systemctl disable $DISABLE_SERVICES
 
 pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org websocket-client
 
-systemctl stop mysql etcd rabbitmq-server
+systemctl stop mysql etcd rabbitmq-server || true
 sleep 5
 rm -rf /var/lib/mysql/{ib*,*log*} /var/lib/etcd/* /var/lib/rabbitmq/*
 rm -rf /etc/hostname /etc/resolv.conf /etc/networks /usr/share/doc /usr/share/man /var/lib/*/*.sqlite /var/lib/openvswitch/conf.db
