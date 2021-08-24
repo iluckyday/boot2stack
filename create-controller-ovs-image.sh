@@ -139,7 +139,7 @@ keystone \
 glance \
 placement-api \
 nova-api nova-conductor nova-novncproxy nova-scheduler \
-neutron-server neutron-openvswitch-agent neutron-dhcp-agent neutron-metadata-agent neutron-l3-agent ironic-neutron-agent \
+neutron-server neutron-openvswitch-agent neutron-dhcp-agent neutron-metadata-agent neutron-l3-agent ironic-neutron-agent neutron-vpnaas-vyatta-agent \
 "
 
 DISABLE_SERVICES="e2scrub_all.timer \
