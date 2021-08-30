@@ -113,7 +113,7 @@ cat << "EOF" > ${MNTDIR}/usr/sbin/stack-install.sh
 #!/bin/bash
 set -ex
 
-APPS="syslinux-common pxelinux ipxe ironic-api ironic-conductor python3-ironicclient"
+APPS="syslinux-common pxelinux ipxe ironic-api ironic-conductor"
 
 DISABLE_SERVICES="e2scrub_all.timer \
 apt-daily-upgrade.timer \

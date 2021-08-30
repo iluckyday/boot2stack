@@ -3,7 +3,7 @@ set -ex
 
 release=$(curl -sSkL https://www.debian.org/releases/ | grep -oP 'codenamed <em>\K(.*)(?=</em>)')
 release="sid"
-include_apps="systemd,systemd-sysv,sudo,openssh-server,wget,xz-utils,parallel"
+include_apps="systemd,systemd-sysv,sudo,openssh-server,wget,xz-utils,parallel,busybox"
 
 export DEBIAN_FRONTEND=noninteractive
 apt-config dump | grep -we Recommends -e Suggests | sed 's/1/0/' | tee /etc/apt/apt.conf.d/99norecommends
@@ -112,7 +112,7 @@ EOF
 cat << "EOF" > ${MNTDIR}/usr/sbin/stack-install.sh
 #!/bin/bash
 set -ex
-APPS="git python3-pip build-essential python3-dev python3-memcache \
+APPS="git python3-pip build-essential python3-dev python3-memcache python3-systemd \
 swift swift-proxy \
 cinder-api cinder-scheduler \
 barbican-api barbican-keystone-listener barbican-worker \
