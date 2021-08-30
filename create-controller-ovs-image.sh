@@ -168,7 +168,7 @@ keystone.service \
 glance-api.service \
 placement-api.service \
 nova-api-metadata.service nova-api.service nova-conductor.service nova-novncproxy.service nova-scheduler.service nova-serialproxy.service nova-spicehtml5proxy.service nova-xenvncproxy.service \
-neutron-api.service neutron-dhcp-agent.service neutron-l3-agent.service neutron-openvswitch-agent.service neutron-metadata-agent.service neutron-rpc-server.service ironic-neutron-agent.service \
+neutron-api.service neutron-dhcp-agent.service neutron-l3-agent.service neutron-openvswitch-agent.service neutron-metadata-agent.service neutron-rpc-server.service ironic-neutron-agent.service neutron-vpnaas-vyatta-agent.service \
 "
 
 STOP_SERVICES="e2scrub_all.timer \
@@ -210,6 +210,7 @@ neutron-l3-agent=neutron-l3-agent.service
 neutron-openvswitch-agent=neutron-openvswitch-agent.service
 neutron-metadata-agent=neutron-metadata-agent.service
 neutron-rpc-server=neutron-rpc-server.service
+neutron-vpnaas-vyatta-agent=neutron-vpnaas-vyatta-agent.service
 ironic-neutron-agent=ironic-neutron-agent.service
 "
 
@@ -265,7 +266,7 @@ DEBIAN_FRONTEND=noninteractive apt install -y $(apt search --names-only "python3
 #dpkg --unpack --force-all -R /dev/shm/archives
 
 sleep 1
-dpkg -P --force-depends $REMOVE_APPS
+#dpkg -P --force-depends $REMOVE_APPS
 
 systemctl disable $DISABLE_SERVICES
 
@@ -279,6 +280,7 @@ rm -rf /usr/bin/systemd-analyze /usr/bin/perl*.* /usr/bin/sqlite3 /usr/share/mis
 find /usr -type d -name __pycache__ -prune -exec rm -rf {} +
 find /usr -type d -name tests -prune -exec rm -rf {} +
 find /usr/*/locale -mindepth 1 -maxdepth 1 ! -name 'en' -prune -exec rm -rf {} +
+find /usr/share/zoneinfo -mindepth 1 -maxdepth 2 ! -name 'UTC' -a ! -name 'UCT' -a ! -name 'Etc' -a ! -name '*UTC' -a ! -name '*UCT' -a ! -name 'PRC' -a ! -name 'Asia' -a ! -name '*Shanghai' -prune -exec rm -rf {} +
 EOF
 chmod +x ${MNTDIR}/usr/sbin/stack-install.sh
 
