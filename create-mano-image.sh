@@ -124,6 +124,7 @@ designate bind9 bind9utils designate-worker designate-producer designate-mdns \
 vitrage-api vitrage-collector vitrage-graph vitrage-ml vitrage-notifier vitrage-persistor vitrage-snmp-parsing \
 masakari-api masakari-engine \
 heat-api heat-api-cfn heat-engine \
+aodh-api aodh-evaluator aodh-notifier aodh-listener aodh-expirer \
 "
 #octavia
 
@@ -154,6 +155,7 @@ mistral-api.service mistral-engine.service mistral-event-engine.service mistral-
 vitrage-api.service vitrage-collector.service vitrage-graph.service vitrage-ml.service vitrage-notifier.service vitrage-persistor.service vitrage-snmp-parsing.service \
 masakari-api.service masakari-engine.service \
 heat-api.service heat-api-cfn.service heat-engine.service \
+aodh-api.service aodh-evaluator.service aodh-notifier.service aodh-listener.service aodh-expirer.service \
 "
 
 STOP_SERVICES="e2scrub_all.timer \
@@ -206,6 +208,11 @@ masakari-engine=masakari-engine.service
 heat-api=heat-api.service
 heat-api-cfn=heat-api.service
 heat-engine=heat-api.service
+aodh-api=aodh-api.service
+aodh-evaluator=aodh-evaluator.service
+aodh-notifier=aodh-notifier.service
+aodh-listener=aodh-listener.service
+aodh-expirer=aodh-expirer.service
 "
 
 cat << "AEOF" > /tmp/stopservices.sh
