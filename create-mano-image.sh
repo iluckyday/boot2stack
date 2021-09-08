@@ -122,7 +122,9 @@ manila-api manila-scheduler python3-manilaclient \
 senlin-api senlin-engine python3-senlinclient \
 designate bind9 bind9utils designate-worker designate-producer designate-mdns \
 vitrage-api vitrage-collector vitrage-graph vitrage-ml vitrage-notifier vitrage-persistor vitrage-snmp-parsing \
-masakari-api masakari-engine"
+masakari-api masakari-engine \
+heat-api heat-api-cfn heat-engine \
+"
 #octavia
 
 DISABLE_SERVICES="e2scrub_all.timer \
@@ -150,7 +152,9 @@ senlin-api.service senlin-engine.service \
 designate-central.service designate-api.service designate-worker.service designate-producer.service designate-mdns.service \
 mistral-api.service mistral-engine.service mistral-event-engine.service mistral-executor.service \
 vitrage-api.service vitrage-collector.service vitrage-graph.service vitrage-ml.service vitrage-notifier.service vitrage-persistor.service vitrage-snmp-parsing.service \
-masakari-api.service masakari-engine.service"
+masakari-api.service masakari-engine.service \
+heat-api.service heat-api-cfn.service heat-engine.service \
+"
 
 STOP_SERVICES="e2scrub_all.timer \
 apt-daily-upgrade.timer \
@@ -199,6 +203,9 @@ vitrage-persistor=vitrage-persistor.service
 vitrage-snmp-parsing=vitrage-snmp-parsing.service
 masakari-api=masakari-api.service
 masakari-engine=masakari-engine.service
+heat-api=heat-api.service
+heat-api-cfn=heat-api.service
+heat-engine=heat-api.service
 "
 
 cat << "AEOF" > /tmp/stopservices.sh
@@ -222,7 +229,7 @@ gcc-gversion \
 libgcc-gversion-dev \
 g++-gversion \
 cpp \
-cpp-gversion
+cpp-gversion \
 "
 mkdir -p /run/systemd/network
 cat << EOFF > /run/systemd/network/20-dhcp.network
