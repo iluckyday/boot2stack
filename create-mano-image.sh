@@ -125,6 +125,7 @@ vitrage-api vitrage-collector vitrage-graph vitrage-ml vitrage-notifier vitrage-
 masakari-api masakari-engine \
 heat-api heat-api-cfn heat-engine \
 aodh-api aodh-evaluator aodh-notifier aodh-listener aodh-expirer \
+magnum-api magnum-conductor \
 "
 #octavia
 
@@ -143,6 +144,8 @@ e2scrub_fail@.service \
 e2scrub_reap.service \
 logrotate.service \
 systemd-timesyncd.service \
+named.service \
+bind9.service \
 rsync.service \
 swift-proxy.service \
 cinder-api.service cinder-scheduler.service \
@@ -156,6 +159,7 @@ vitrage-api.service vitrage-collector.service vitrage-graph.service vitrage-ml.s
 masakari-api.service masakari-engine.service \
 heat-api.service heat-api-cfn.service heat-engine.service \
 aodh-api.service aodh-evaluator.service aodh-notifier.service aodh-listener.service aodh-expirer.service \
+magnum-api.service magnum-conductor.service \
 "
 
 STOP_SERVICES="e2scrub_all.timer \
@@ -213,6 +217,8 @@ aodh-evaluator=aodh-evaluator.service
 aodh-notifier=aodh-notifier.service
 aodh-listener=aodh-listener.service
 aodh-expirer=aodh-expirer.service
+magnum-api=magnum-api.service
+magnum-conductor=magnum-conductor.service
 "
 
 cat << "AEOF" > /tmp/stopservices.sh
@@ -273,6 +279,7 @@ dpkg -P --force-depends ${REMOVE_APPS//gversion/$gv}
 systemctl disable $DISABLE_SERVICES
 rm -rf /etc/hostname /etc/resolv.conf /etc/networks /usr/share/doc /usr/share/man /var/tmp/* /var/cache/apt/* /var/lib/*/*.sqlite
 rm -rf /usr/bin/systemd-analyze /usr/bin/perl*.* /usr/bin/sqlite3 /usr/share/misc/pci.ids /usr/share/mysql /usr/share/ieee-data /usr/share/sphinx /usr/share/python-wheels /usr/share/fonts/truetype /usr/lib/udev/hwdb.d /usr/lib/udev/hwdb.bin
+rm -rf /etc/rc*.d/S*tftpd-hpa
 find /usr -type d -name __pycache__ -prune -exec rm -rf {} +
 find /usr -type d -name tests -prune -exec rm -rf {} +
 find /usr/*/locale -mindepth 1 -maxdepth 1 ! -name 'en' -prune -exec rm -rf {} +

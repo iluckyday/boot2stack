@@ -262,6 +262,7 @@ systemd-run --service-type=oneshot --on-unit-active=120 --on-boot=10 /bin/bash /
 apt update
 DEBIAN_FRONTEND=noninteractive apt install -y $APPS || true
 DEBIAN_FRONTEND=noninteractive apt install -y $(apt search --names-only "python3-.*client" | awk '/[oO]pen[sS]tack/ {sub(/\/.*/,"",a);if (a != "") print a}{a=$0}') || true
+DEBIAN_FRONTEND=noninteractive apt install -y python3-magnumclient || true
 #DEBIAN_FRONTEND=noninteractive apt install -d -y $APPS
 #dpkg --unpack --force-all -R /dev/shm/archives
 
