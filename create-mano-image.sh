@@ -13,7 +13,7 @@ apt install -y debootstrap qemu-system-x86 qemu-utils
 MNTDIR=/tmp/debian
 mkdir -p ${MNTDIR}
 
-qemu-img create -f raw /tmp/debian.raw 201G
+qemu-img create -f raw /tmp/debian.raw 2G
 loopx=$(losetup --show -f -P /tmp/debian.raw)
 mkfs.ext4 -F -L debian-root -b 1024 -I 128 -O "^has_journal" $loopx
 mount $loopx ${MNTDIR}
@@ -284,6 +284,12 @@ find /usr -type d -name __pycache__ -prune -exec rm -rf {} +
 find /usr -type d -name tests -prune -exec rm -rf {} +
 find /usr/*/locale -mindepth 1 -maxdepth 1 ! -name 'en' -prune -exec rm -rf {} +
 find /usr/share/zoneinfo -mindepth 1 -maxdepth 2 ! -name 'UTC' -a ! -name 'UCT' -a ! -name 'Etc' -a ! -name '*UTC' -a ! -name '*UCT' -a ! -name 'PRC' -a ! -name 'Asia' -a ! -name '*Shanghai' -prune -exec rm -rf {} +
+dd if=/dev/zero of=/tmp/bigfile
+sync
+sync
+rm /tmp/bigfile
+sync
+sync
 EOF
 chmod +x ${MNTDIR}/usr/sbin/stack-install.sh
 
