@@ -171,7 +171,7 @@ find /usr -type d -name __pycache__ -prune -exec rm -rf {} +
 find /usr -type d -name tests -prune -exec rm -rf {} +
 find /usr/*/locale -mindepth 1 -maxdepth 1 ! -name 'en' -prune -exec rm -rf {} +
 find /usr/share/zoneinfo -mindepth 1 -maxdepth 2 ! -name 'UTC' -a ! -name 'UCT' -a ! -name 'Etc' -a ! -name '*UTC' -a ! -name '*UCT' -a ! -name 'PRC' -a ! -name 'Asia' -a ! -name '*Shanghai' -prune -exec rm -rf {} +
-dd if=/dev/zero of=/tmp/bigfile
+dd if=/dev/zero of=/tmp/bigfile || true
 sync
 sync
 rm /tmp/bigfile
