@@ -15,7 +15,7 @@ apt install -y debootstrap qemu-system-x86 qemu-utils
 MNTDIR=/tmp/debian
 mkdir -p ${MNTDIR}
 
-qemu-img create -f raw /tmp/debian.raw 2G
+qemu-img create -f raw /tmp/debian.raw 5G
 loopx=$(losetup --show -f -P /tmp/debian.raw)
 mkfs.ext4 -F -L debian-root -b 1024 -I 128 -O "^has_journal" $loopx
 mount $loopx ${MNTDIR}
