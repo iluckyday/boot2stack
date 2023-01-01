@@ -5,7 +5,7 @@ timedatectl set-timezone "Asia/Shanghai"
 
 release=$(curl -sSkL https://www.debian.org/releases/ | grep -oP 'codenamed <em>\K(.*)(?=</em>)')
 release="sid"
-include_apps="systemd,systemd-sysv,sudo,bash-completion,openssh-server,tcpdump,isc-dhcp-client,busybox,parallel,xz-utils"
+include_apps="systemd,systemd-resolved,systemd-sysv,sudo,bash-completion,openssh-server,tcpdump,isc-dhcp-client,busybox,parallel,xz-utils"
 
 export DEBIAN_FRONTEND=noninteractive
 apt-config dump | grep -we Recommends -e Suggests | sed 's/1/0/' | tee /etc/apt/apt.conf.d/99norecommends
