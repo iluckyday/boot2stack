@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-include_apps="systemd,systemd-resolved,systemd-sysv,sudo,bash-completion,openssh-server,tcpdump,isc-dhcp-client"
+include_apps="systemd,systemd-resolved,dbus,systemd-sysv,sudo,bash-completion,openssh-server,tcpdump,isc-dhcp-client"
 
 export DEBIAN_FRONTEND=noninteractive
 apt-config dump | grep -we Recommends -e Suggests | sed 's/1/0/' | tee /etc/apt/apt.conf.d/99norecommends

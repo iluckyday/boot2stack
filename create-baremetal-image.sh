@@ -3,7 +3,7 @@ set -ex
 
 release=$(curl -sSkL https://www.debian.org/releases/ | grep -oP 'codenamed <em>\K(.*)(?=</em>)')
 release="sid"
-include_apps="systemd,systemd-resolved,systemd-sysv,sudo,openssh-server,isc-dhcp-client,busybox,xz-utils"
+include_apps="systemd,systemd-resolved,dbus,systemd-sysv,sudo,openssh-server,isc-dhcp-client,busybox,xz-utils"
 
 export DEBIAN_FRONTEND=noninteractive
 apt-config dump | grep -we Recommends -e Suggests | sed 's/1/0/' | tee /etc/apt/apt.conf.d/99norecommends
