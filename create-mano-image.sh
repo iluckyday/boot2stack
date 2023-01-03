@@ -1,5 +1,5 @@
 #!/bin/bash
-set -ex
+set -x
 
 release=$(curl -sSkL https://www.debian.org/releases/ | grep -oP 'codenamed <em>\K(.*)(?=</em>)')
 release="sid"
@@ -112,7 +112,7 @@ EOF
 
 cat << "EOF" > ${MNTDIR}/usr/sbin/stack-install.sh
 #!/bin/bash
-set -ex
+set -x
 APPS="git python3-pip build-essential python3-dev python3-memcache python3-systemd \
 swift swift-proxy \
 cinder-api cinder-scheduler \
@@ -319,7 +319,7 @@ EOF
 
 cat << "EOF" > ${MNTDIR}/usr/sbin/stack-init.sh
 #!/bin/bash
-set -ex
+set -x
 dhcp_nic=$(basename /sys/class/net/en*10)
 [ "$dhcp_nic" = "en*10" ] && exit 1
 for (( n=1; n<=5; n++)); do

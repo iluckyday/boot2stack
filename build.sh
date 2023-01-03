@@ -143,7 +143,7 @@ EOF
 
 cat << "EOF" > ${MNTCDIR}/usr/sbin/stack-install.sh
 #!/bin/sh
-set -ex
+set -x
 
 APPS="mariadb-server python3-pymysql \
 rabbitmq-server \

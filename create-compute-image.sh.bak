@@ -83,7 +83,7 @@ EOF
 
 cat << "EOF" > ${MNTDIR}/usr/sbin/stack-install.sh
 #!/bin/bash
-set -ex
+set -x
 
 APPS="nova-compute neutron-linuxbridge-agent"
 DISABLE_SERVICES="nova-compute neutron-linuxbridge-agent"
@@ -260,7 +260,7 @@ EOF
 
 cat << "EOF" > ${MNTDIR}/usr/sbin/stack-init.sh
 #!/bin/bash
-set -ex
+set -x
 
 dhcp_nic=$(basename /sys/class/net/en*20)
 [ "$dhcp_nic" = "en*20" ] && exit

@@ -1,5 +1,5 @@
 #!/bin/bash
-set -ex
+set -x
 
 timedatectl set-timezone "Asia/Shanghai"
 
@@ -129,7 +129,7 @@ EOF
 
 cat << "EOF" > ${MNTDIR}/usr/sbin/stack-install.sh
 #!/bin/bash
-set -ex
+set -x
 
 APPS="python3-systemd \
 mariadb-server python3-pymysql \
@@ -319,7 +319,7 @@ EOF
 
 cat << "EOF" > ${MNTDIR}/usr/sbin/stack-init.sh
 #!/bin/bash
-set -ex
+set -x
 
 dhcp_nic=$(basename /sys/class/net/en*10)
 [ "$dhcp_nic" = "en*10" ] && exit 1

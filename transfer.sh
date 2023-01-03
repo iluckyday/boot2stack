@@ -1,5 +1,5 @@
 #!/bin/bash
-set -ex
+set -x
 
 END=$1
 

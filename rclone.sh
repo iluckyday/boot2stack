@@ -1,5 +1,5 @@
 #!/bin/bash
-set -ex
+set -x
 
 sudo apt update
 sudo apt install -y rclone

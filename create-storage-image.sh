@@ -1,5 +1,5 @@
 #!/bin/bash
-set -ex
+set -x
 
 #########################
 # exit 0
@@ -120,7 +120,7 @@ EOF
 
 cat << "EOF" > ${MNTDIR}/usr/sbin/stack-install.sh
 #!/bin/bash
-set -ex
+set -x
 
 APPS="python3-systemd xfsprogs rsync swift swift-account swift-container swift-object cinder-volume tgt manila-share nfs-kernel-server"
 
@@ -208,7 +208,7 @@ EOF
 
 cat << "EOF" > ${MNTDIR}/usr/sbin/stack-init.sh
 #!/bin/bash
-set -ex
+set -x
 
 dhcp_nic=$(basename /sys/class/net/en*10)
 [ "$dhcp_nic" = "en*10" ] && exit 1

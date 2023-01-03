@@ -1,5 +1,5 @@
 #!/bin/bash
-set -ex
+set -x
 
 sudo apt update
 sudo apt install -y libcrypto++-dev libz-dev libsqlite3-dev libssl-dev libcurl4-gnutls-dev libreadline-dev libpcre++-dev libsodium-dev libc-ares-dev libfreeimage-dev libavcodec-dev libavutil-dev libavformat-dev libswscale-dev libmediainfo-dev libzen-dev libuv1-dev

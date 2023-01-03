@@ -84,7 +84,7 @@ EOF
 
 cat << "EOF" > ${MNTDIR}/usr/sbin/stack-install.sh
 #!/bin/bash
-set -ex
+set -x
 
 APPS="mariadb-server python3-pymysql \
 rabbitmq-server \
@@ -176,7 +176,7 @@ EOF
 
 cat << "EOF" > ${MNTDIR}/usr/sbin/stack-init.sh
 #!/bin/bash
-set -ex
+set -x
 
 dhcp_nic=$(basename /sys/class/net/en*10)
 [ "$dhcp_nic" = "en*10" ] && exit
