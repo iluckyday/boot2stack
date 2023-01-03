@@ -4,6 +4,7 @@ set -ex
 release=$(curl -sSkL https://www.debian.org/releases/ | grep -oP 'codenamed <em>\K(.*)(?=</em>)')
 release="sid"
 include_apps="systemd,systemd-resolved,dbus,systemd-sysv,sudo,openssh-server,isc-dhcp-client,busybox,xz-utils"
+include_apps+=",linux-image-cloud-amd64,extlinux,initramfs-tools"
 
 export DEBIAN_FRONTEND=noninteractive
 apt-config dump | grep -we Recommends -e Suggests | sed 's/1/0/' | tee /etc/apt/apt.conf.d/99norecommends
@@ -233,9 +234,6 @@ EOF
 chroot ${MNTDIR} /bin/bash -c "
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin PYTHONDONTWRITEBYTECODE=1 DEBIAN_FRONTEND=noninteractive
 sed -i 's/root:\*:/root::/' /etc/shadow
-apt update
-apt install -y -o APT::Install-Recommends=0 -o APT::Install-Suggests=0 linux-image-cloud-amd64 extlinux initramfs-tools
-#apt install -y -o APT::Install-Recommends=0 -o APT::Install-Suggests=0 linux-image-amd64 extlinux initramfs-tools
 dd if=/usr/lib/EXTLINUX/mbr.bin of=$loopx
 extlinux -i /boot/syslinux
 
