@@ -135,7 +135,7 @@ APPS="python3-systemd \
 mariadb-server python3-pymysql \
 rabbitmq-server \
 memcached python3-memcache \
-etcd \
+etcd-server \
 keystone \
 glance \
 placement-api \
@@ -207,7 +207,7 @@ keepalived=keepalived.service
 haproxy=haproxy.service
 memcached=memcached.service
 rabbitmq-server=rabbitmq-server.service
-etcd=etcd.service
+etcd-server=etcd.service
 apache2=apache2.service
 keystone=keystone.service
 glance=glance-api.service
