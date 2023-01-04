@@ -141,6 +141,7 @@ glance \
 placement-api \
 nova-api nova-conductor nova-novncproxy nova-scheduler \
 neutron-server neutron-openvswitch-agent neutron-dhcp-agent neutron-metadata-agent neutron-l3-agent ironic-neutron-agent neutron-vpnaas-vyatta-agent \
+ovn-central ovn-common ovn-controller-vtep ovn-host \
 "
 
 DISABLE_SERVICES="e2scrub_all.timer \
@@ -170,6 +171,7 @@ glance-api.service \
 placement-api.service \
 nova-api-metadata.service nova-api.service nova-conductor.service nova-novncproxy.service nova-scheduler.service nova-serialproxy.service nova-spicehtml5proxy.service nova-xenvncproxy.service \
 neutron-api.service neutron-dhcp-agent.service neutron-l3-agent.service neutron-openvswitch-agent.service neutron-metadata-agent.service neutron-rpc-server.service ironic-neutron-agent.service neutron-vpnaas-vyatta-agent.service \
+ovn-central.service ovn-northd.service ovn-ovsdb-server-nb.service ovn-ovsdb-server-sb.service ovn-controller.service ovn-host.service ovn-controller-vtep.service \
 "
 
 STOP_SERVICES="e2scrub_all.timer \
@@ -186,6 +188,16 @@ e2scrub_fail@.service \
 e2scrub_reap.service \
 logrotate.service \
 systemd-timesyncd.service \
+"
+
+MASK_SERVICES="sysstat-collect.timer \
+systemd-tmpfiles-clean.timer \
+apt-daily-upgrade.timer \
+apt-daily.timer \
+dpkg-db-backup.timer \
+sysstat-summary.timer \
+e2scrub_all.timer \
+fstrim.timer \
 "
 
 STOP_APPS_SERVICES="
@@ -213,6 +225,9 @@ neutron-metadata-agent=neutron-metadata-agent.service
 neutron-rpc-server=neutron-rpc-server.service
 neutron-vpnaas-vyatta-agent=neutron-vpnaas-vyatta-agent.service
 ironic-neutron-agent=ironic-neutron-agent.service
+ovn-central=ovn-central.service,ovn-northd.service,ovn-ovsdb-server-nb.service,ovn-ovsdb-server-sb.service
+ovn-host=ovn-controller.service,ovn-host.service
+ovn-controller-vtep=ovn-controller-vtep.service
 "
 
 REMOVE_APPS="tzdata"
@@ -271,6 +286,7 @@ sleep 1
 #dpkg -P --force-depends $REMOVE_APPS
 
 systemctl disable $DISABLE_SERVICES
+systemctl mask $MASK_SERVICES
 
 pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org websocket-client
 

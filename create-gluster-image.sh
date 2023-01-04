@@ -135,6 +135,16 @@ logrotate.service \
 systemd-timesyncd.service \
 "
 
+MASK_SERVICES="sysstat-collect.timer \                                                                                                                                                                             
+systemd-tmpfiles-clean.timer \                                                                                                                                                                                     
+apt-daily-upgrade.timer \                                                                                                                                                                                          
+apt-daily.timer \                                                                                                                                                                                                  
+dpkg-db-backup.timer \                                                                                                                                                                                             
+sysstat-summary.timer \                                                                                                                                                                                            
+e2scrub_all.timer \                                                                                                                                                                                                
+fstrim.timer \                                                                                                                                                                                                     
+"
+
 REMOVE_APPS="ifupdown iso-codes"
 
 mkdir -p /run/systemd/network
@@ -155,6 +165,7 @@ apt update
 DEBIAN_FRONTEND=noninteractive apt install -y $APPS
 dpkg -P --force-depends ${REMOVE_APPS}
 systemctl disable $DISABLE_SERVICES
+systemctl mask $MASK_SERVICES
 
 rm -rf /etc/hostname /etc/resolv.conf /etc/networks /usr/share/doc /usr/share/man /var/tmp/* /var/cache/apt/* /var/lib/*/*.sqlite
 rm -rf /usr/bin/systemd-analyze /usr/bin/perl*.* /usr/bin/sqlite3 /usr/share/misc/pci.ids /usr/share/mysql /usr/share/ieee-data /usr/share/sphinx /usr/share/python-wheels /usr/share/fonts/truetype /usr/lib/udev/hwdb.d /usr/lib/udev/hwdb.bin

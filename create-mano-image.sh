@@ -163,6 +163,16 @@ aodh-api.service aodh-evaluator.service aodh-notifier.service aodh-listener.serv
 magnum-api.service magnum-conductor.service \
 "
 
+MASK_SERVICES="sysstat-collect.timer \                                                                                                                                                                             
+systemd-tmpfiles-clean.timer \                                                                                                                                                                                     
+apt-daily-upgrade.timer \                                                                                                                                                                                          
+apt-daily.timer \                                                                                                                                                                                                  
+dpkg-db-backup.timer \                                                                                                                                                                                             
+sysstat-summary.timer \                                                                                                                                                                                            
+e2scrub_all.timer \                                                                                                                                                                                                
+fstrim.timer \                                                                                                                                                                                                     
+"
+
 STOP_SERVICES="e2scrub_all.timer \
 apt-daily-upgrade.timer \
 apt-daily.timer \
@@ -278,6 +288,8 @@ apt remove -y --purge git git-man
 gv=$(dpkg -l | grep "GNU C compiler" | awk '/gcc-/ {gsub("gcc-","",$2);print $2}')
 dpkg -P --force-depends ${REMOVE_APPS//gversion/$gv}
 systemctl disable $DISABLE_SERVICES
+systemctl mask $MASK_SERVICES
+
 rm -rf /etc/hostname /etc/resolv.conf /etc/networks /usr/share/doc /usr/share/man /var/tmp/* /var/cache/apt/* /var/lib/*/*.sqlite
 rm -rf /usr/bin/systemd-analyze /usr/bin/perl*.* /usr/bin/sqlite3 /usr/share/misc/pci.ids /usr/share/mysql /usr/share/ieee-data /usr/share/sphinx /usr/share/python-wheels /usr/share/fonts/truetype /usr/lib/udev/hwdb.d /usr/lib/udev/hwdb.bin
 rm -rf /etc/rc*.d/S*tftpd-hpa

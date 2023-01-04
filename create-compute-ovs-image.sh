@@ -194,6 +194,7 @@ set -x
 APPS="python3-systemd \
 nova-compute \
 neutron-openvswitch-agent neutron-dhcp-agent neutron-l3-agent neutron-metadata-agent \
+ovn-controller-vtep ovn-host \
 masakari-host-monitor masakari-instance-monitor masakari-introspective-instance-monitor masakari-process-monitor \
 "
 
@@ -217,7 +218,18 @@ openvswitch-switch.service \
 libvirtd.service libvirt-guests.service \
 nova-compute.service \
 neutron-openvswitch-agent.service neutron-dhcp-agent.service neutron-l3-agent.service neutron-metadata-agent.service \
+ovn-controller.service ovn-host.service ovn-controller-vtep.service \
 masakari-host-monitor.service masakari-instance-monitor.service masakari-introspective-instance-monitor.service masakari-process-monitor.service \
+"
+
+MASK_SERVICES="sysstat-collect.timer \                                                                                                                                                                             
+systemd-tmpfiles-clean.timer \                                                                                                                                                                                     
+apt-daily-upgrade.timer \                                                                                                                                                                                          
+apt-daily.timer \                                                                                                                                                                                                  
+dpkg-db-backup.timer \                                                                                                                                                                                             
+sysstat-summary.timer \                                                                                                                                                                                            
+e2scrub_all.timer \                                                                                                                                                                                                
+fstrim.timer \                                                                                                                                                                                                     
 "
 
 REMOVE_APPS="tzdata"
@@ -240,6 +252,7 @@ apt update
 DEBIAN_FRONTEND=noninteractive apt install -y $APPS
 #dpkg -P --force-depends $REMOVE_APPS
 systemctl disable $DISABLE_SERVICES
+systemctl mask $MASK_SERVICES
 
 rm -rf /etc/hostname /etc/resolv.conf /etc/networks /usr/share/doc /usr/share/man /var/tmp/* /var/cache/apt/* /var/lib/*/*.sqlite
 rm -rf /usr/bin/systemd-analyze /usr/bin/perl*.* /usr/bin/sqlite3 /usr/share/misc/pci.ids /usr/share/mysql /usr/share/ieee-data /usr/share/sphinx /usr/share/python-wheels /usr/share/fonts/truetype /usr/lib/udev/hwdb.d /usr/lib/udev/hwdb.bin
