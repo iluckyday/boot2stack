@@ -287,7 +287,10 @@ apt remove -y --purge git git-man
 
 gv=$(dpkg -l | grep "GNU C compiler" | awk '/gcc-/ {gsub("gcc-","",$2);print $2}')
 dpkg -P --force-depends ${REMOVE_APPS//gversion/$gv}
-systemctl disable $DISABLE_SERVICES
+for SVC in $DISABLE_SERVICES
+do
+	systemctl disable $SVC
+done
 systemctl mask $MASK_SERVICES
 
 rm -rf /etc/hostname /etc/resolv.conf /etc/networks /usr/share/doc /usr/share/man /var/tmp/* /var/cache/apt/* /var/lib/*/*.sqlite

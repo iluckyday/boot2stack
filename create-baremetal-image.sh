@@ -163,7 +163,10 @@ apt update
 DEBIAN_FRONTEND=noninteractive apt install -y $APPS
 
 #dpkg -P --force-depends $REMOVE_APPS
-systemctl disable $DISABLE_SERVICES
+for SVC in $DISABLE_SERVICES
+do
+	systemctl disable $SVC
+done
 systemctl mask $MASK_SERVICES
 
 rm -rf /etc/hostname /etc/resolv.conf /etc/networks /usr/share/doc /usr/share/man
