@@ -9,7 +9,7 @@ MNTUDIR=$WORKDIR/mntu
 mkdir -p {${MNTCDIR},${MNTUDIR}}
 cd $WORKDIR
 
-version=$(curl -skL https://cdimage.debian.org/cdimage/cloud/$DEBIAN_RELEASE/daily | awk '/href/ {s=$0} END {print s}' | awk -F'"' '{sub(/\//,"",$6);print $6}')
+version=$(curl -skL https://cdimage.debian.org/cdimage/cloud/$DEBIAN_RELEASE/daily | awk '/href/ {s=$0} END {print s}' | awk -F'"' '{sub(/\
 curl -skL https://cdimage.debian.org/cdimage/cloud/$DEBIAN_RELEASE/daily/${version}/debian-sid-nocloud-amd64-daily-${version}.tar.xz | tar -xJ
 
 cp disk.raw c.raw

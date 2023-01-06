@@ -6,7 +6,7 @@ set -x
 # target_core_mod: use normal kernel
 #########################
 
-release=$(curl -sSkL https://www.debian.org/releases/ | grep -oP 'codenamed <em>\K(.*)(?=</em>)')
+release=$(curl -sSkL https://www.debian.org/releases/ | grep -oP 'codenamed <em>\
 release="sid"
 include_apps="systemd,systemd-resolved,dbus,systemd-sysv,sudo,openssh-server,xz-utils"
 include_apps+=",linux-image-cloud-amd64,extlinux,initramfs-tools"
@@ -145,14 +145,14 @@ swift-object-auditor.service swift-object-reconstructor.service swift-object-rep
 cinder-volume.service \
 manila-share.service"
 
-MASK_SERVICES="sysstat-collect.timer \                                                                                                                                                                             
-systemd-tmpfiles-clean.timer \                                                                                                                                                                                     
-apt-daily-upgrade.timer \                                                                                                                                                                                          
-apt-daily.timer \                                                                                                                                                                                                  
-dpkg-db-backup.timer \                                                                                                                                                                                             
-sysstat-summary.timer \                                                                                                                                                                                            
-e2scrub_all.timer \                                                                                                                                                                                                
-fstrim.timer \                                                                                                                                                                                                     
+MASK_SERVICES="sysstat-collect.timer \
+apt-daily-upgrade.timer \
+apt-daily.timer \
+dpkg-db-backup.timer \
+sysstat-summary.timer \
+e2scrub_all.timer \
+fstrim.timer \
+logrotate.timer \
 "
 
 REMOVE_APPS="ifupdown iso-codes"
@@ -258,7 +258,7 @@ EOF
 
 chroot ${MNTDIR} /bin/bash -c "
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin PYTHONDONTWRITEBYTECODE=1 DEBIAN_FRONTEND=noninteractive
-sed -i 's/root:\*:/root::/' etc/shadow
+sed -i 's/root:\
 dd if=/usr/lib/EXTLINUX/mbr.bin of=$loopx
 extlinux -i /boot/syslinux
 

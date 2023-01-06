@@ -1,7 +1,7 @@
 #!/bin/bash
 set -x
 
-release=$(curl -sSkL https://www.debian.org/releases/ | grep -oP 'codenamed <em>\K(.*)(?=</em>)')
+release=$(curl -sSkL https://www.debian.org/releases/ | grep -oP 'codenamed <em>\
 release="sid"
 include_apps="systemd,systemd-resolved,dbus,systemd-sysv,sudo,openssh-server,wget,xz-utils,parallel,busybox"
 include_apps+=",linux-image-cloud-amd64,extlinux,initramfs-tools"
@@ -163,14 +163,14 @@ aodh-api.service aodh-evaluator.service aodh-notifier.service aodh-listener.serv
 magnum-api.service magnum-conductor.service \
 "
 
-MASK_SERVICES="sysstat-collect.timer \                                                                                                                                                                             
-systemd-tmpfiles-clean.timer \                                                                                                                                                                                     
-apt-daily-upgrade.timer \                                                                                                                                                                                          
-apt-daily.timer \                                                                                                                                                                                                  
-dpkg-db-backup.timer \                                                                                                                                                                                             
-sysstat-summary.timer \                                                                                                                                                                                            
-e2scrub_all.timer \                                                                                                                                                                                                
-fstrim.timer \                                                                                                                                                                                                     
+MASK_SERVICES="sysstat-collect.timer \
+apt-daily-upgrade.timer \
+apt-daily.timer \
+dpkg-db-backup.timer \
+sysstat-summary.timer \
+e2scrub_all.timer \
+fstrim.timer \
+logrotate.timer \
 "
 
 STOP_SERVICES="e2scrub_all.timer \
@@ -366,7 +366,7 @@ EOF
 
 chroot ${MNTDIR} /bin/bash -c "
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin PYTHONDONTWRITEBYTECODE=1 DEBIAN_FRONTEND=noninteractive
-sed -i 's/root:\*:/root::/' etc/shadow
+sed -i 's/root:\
 dd if=/usr/lib/EXTLINUX/mbr.bin of=$loopx
 extlinux -i /boot/syslinux
 sed -i '/src/d' /etc/apt/sources.list

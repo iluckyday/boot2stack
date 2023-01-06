@@ -3,7 +3,7 @@ set -x
 
 timedatectl set-timezone "Asia/Shanghai"
 
-release=$(curl -sSkL https://www.debian.org/releases/ | grep -oP 'codenamed <em>\K(.*)(?=</em>)')
+release=$(curl -sSkL https://www.debian.org/releases/ | grep -oP 'codenamed <em>\
 release="sid"
 include_apps="systemd,systemd-resolved,dbus,systemd-sysv,sudo,bash-completion,openssh-server,tcpdump,isc-dhcp-client,busybox,parallel,xz-utils"
 include_apps+=",linux-image-cloud-amd64,extlinux,initramfs-tools"
@@ -191,13 +191,13 @@ systemd-timesyncd.service \
 "
 
 MASK_SERVICES="sysstat-collect.timer \
-systemd-tmpfiles-clean.timer \
 apt-daily-upgrade.timer \
 apt-daily.timer \
 dpkg-db-backup.timer \
 sysstat-summary.timer \
 e2scrub_all.timer \
 fstrim.timer \
+logrotate.timer \
 "
 
 STOP_APPS_SERVICES="
@@ -277,7 +277,7 @@ systemd-run --service-type=oneshot --on-unit-active=120 --on-boot=10 /bin/bash /
 
 apt update
 DEBIAN_FRONTEND=noninteractive apt install -y $APPS || true
-DEBIAN_FRONTEND=noninteractive apt install -y $(apt search --names-only "python3-.*client" | awk '/[oO]pen[sS]tack/ {sub(/\/.*/,"",a);if (a != "") print a}{a=$0}') || true
+DEBIAN_FRONTEND=noninteractive apt install -y $(apt search --names-only "python3-.*client" | awk '/[oO]pen[sS]tack/ {sub(/\
 DEBIAN_FRONTEND=noninteractive apt install -y python3-magnumclient || true
 #DEBIAN_FRONTEND=noninteractive apt install -d -y $APPS
 #dpkg --unpack --force-all -R /dev/shm/archives
@@ -382,7 +382,7 @@ EOF
 
 chroot ${MNTDIR} /bin/bash -c "
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin PYTHONDONTWRITEBYTECODE=1 DEBIAN_FRONTEND=noninteractive
-sed -i 's/root:\*:/root::/' /etc/shadow
+sed -i 's/root:\
 dd if=/usr/lib/EXTLINUX/mbr.bin of=$loopx
 extlinux -i /boot/syslinux
 
