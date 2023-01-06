@@ -1,7 +1,7 @@
 #!/bin/bash
 set -x
 
-release=$(curl -sSkL https://www.debian.org/releases/ | grep -oP 'codenamed <em>\
+release=$(curl -sSkL https://www.debian.org/releases/ | grep -oP 'codenamed <em>\K(.*)(?=</em>)')
 release="sid"
 include_apps="systemd,systemd-resolved,dbus,systemd-sysv,sudo,openssh-server,wget,xz-utils,parallel,busybox"
 include_apps+=",linux-image-cloud-amd64,extlinux,initramfs-tools"
@@ -366,7 +366,7 @@ EOF
 
 chroot ${MNTDIR} /bin/bash -c "
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin PYTHONDONTWRITEBYTECODE=1 DEBIAN_FRONTEND=noninteractive
-sed -i 's/root:\
+sed -i 's/root:\*:/root::/' /etc/shadow
 dd if=/usr/lib/EXTLINUX/mbr.bin of=$loopx
 extlinux -i /boot/syslinux
 sed -i '/src/d' /etc/apt/sources.list
