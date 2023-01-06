@@ -4,7 +4,7 @@ set -x
 END=$1
 
 for (( n=1; n<=3; n++)); do
-  ver="$(curl -skL https://api.github.com/repos/Mikubill/transfer/releases/latest | grep -oP '"tag_name": "\
+  ver="$(curl -skL https://api.github.com/repos/Mikubill/transfer/releases/latest | grep -oP '"tag_name": "\K(.*)(?=")')"
   [ ! "$ver" ] || break
 done
 
